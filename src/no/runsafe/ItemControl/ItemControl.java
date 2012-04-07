@@ -8,11 +8,6 @@ import no.runsafe.framework.interfaces.IConfigurationFile;
 
 public class ItemControl extends RunsafePlugin implements IConfigurationFile, IConfigurationDefaults {
 
-	public ItemControl()
-	{
-		super();
-	}
-	
 	@Override
 	protected void PluginSetup()
 	{

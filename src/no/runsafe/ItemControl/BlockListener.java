@@ -1,7 +1,9 @@
 package no.runsafe.ItemControl;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 import no.runsafe.framework.interfaces.IConfiguration;
 import no.runsafe.framework.interfaces.IPluginEnabled;
@@ -12,6 +14,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.craftbukkit.block.CraftCreatureSpawner;
 import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.entity.EntityType;
@@ -26,7 +29,7 @@ public class BlockListener implements Listener, IPluginEnabled
 {
 	private IConfiguration config;
 	private IScheduler scheduler;
-	private ArrayList<Integer> blockDrops = new ArrayList<Integer>();
+	private HashMap<String, List<Integer>> worldBlockDrops = new HashMap<String, List<Integer>>();
 	
 	public BlockListener(IConfiguration config, IScheduler scheduler)
 	{
@@ -117,7 +120,7 @@ public class BlockListener implements Listener, IPluginEnabled
 		ItemStack heldItem = thePlayer.getItemInHand();
 		Block theBlock = event.getBlock();
 		
-		if (this.blockDrops.contains(theBlock.getTypeId()) && heldItem.containsEnchantment(new EnchantmentWrapper(33)))
+		if (this.blockShouldDrop(event.getPlayer().getWorld(), theBlock.getTypeId()) && heldItem.containsEnchantment(new EnchantmentWrapper(33)))
 		{
 			World theWorld = theBlock.getWorld();
 			
@@ -131,21 +134,11 @@ public class BlockListener implements Listener, IPluginEnabled
 				
 				ItemStack itemToDrop = new ItemStack(theBlock.getTypeId(), 1, spawner.getSpawnedType().getTypeId());
 				theWorld.dropItem(theBlock.getLocation(), itemToDrop);
-				
-				//TileEntityMobSpawner rawSpawner = (TileEntityMobSpawner) tileField.get(spawner);
-				//rawSpawner.a("COW");
-				
-				//spawner.setSpawnedType(EntityType.COW);
-				//blockState.update();
 			}
 			catch (Exception e)
 			{
 				//Diddums
 			}
-			
-			//mobIDField = net.minecraft.server.TileEntityMobSpawner.class.getDeclaredField("mobName");  // MCP "mobID"
-               // mobIDField.setAccessible(true);
-			
 		}
 	}
 
@@ -155,14 +148,31 @@ public class BlockListener implements Listener, IPluginEnabled
 		this.loadConfig();
 	}
 	
+	private Boolean blockShouldDrop(World world, Integer blockId)
+	{
+		if(worldBlockDrops.containsKey("*") && worldBlockDrops.get("*").contains(blockId))
+			return true;
+				
+		if(worldBlockDrops.containsKey(world.getName()) && worldBlockDrops.get(world.getName()).contains(blockId))
+			return true;
+			
+		return false;
+	}
+	
 	private void loadConfig()
 	{
-		String blockDrops = this.config.getConfigValueAsString("blockDrops");
-		String[] blockList = blockDrops.split(",");
+		ConfigurationSection block = this.config.getSection("blockDrops");
+		if(block == null)
+			return;
 		
-		for (int i = 0; i < blockList.length; i++)
+		Set<String> keys = block.getKeys(true);
+		if(keys == null)
+			return;
+		
+		for(String key : block.getKeys(true))
 		{
-			this.blockDrops.add(Integer.parseInt(blockList[i]));
+			if(!this.worldBlockDrops.containsKey(key))
+				this.worldBlockDrops.put(key, block.getIntegerList(key));
 		}
 	}
 	
