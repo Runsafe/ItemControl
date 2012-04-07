@@ -47,10 +47,10 @@ public class PlayerListener implements Listener, IPluginEnabled
 	
 	private Boolean itemIsDisabled(World world, int itemID)
 	{
-		if(this.disabledItems.containsKey("world.*") && this.disabledItems.get("world.*").contains(itemID))
+		if(this.disabledItems.containsKey("*") && this.disabledItems.get("*").contains(itemID))
 			return true;
 		
-		if(this.disabledItems.containsKey("world." + world.getName()) && this.disabledItems.get("world." + world.getName()).contains(itemID))
+		if(this.disabledItems.containsKey(world.getName()) && this.disabledItems.get(world.getName()).contains(itemID))
 			return true;
 		
 		return false;
