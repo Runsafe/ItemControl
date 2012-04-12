@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import no.runsafe.framework.interfaces.IConfiguration;
-import no.runsafe.framework.interfaces.IPluginEnabled;
-import no.runsafe.framework.interfaces.IScheduler;
+import no.runsafe.framework.configuration.IConfiguration;
+import no.runsafe.framework.event.IPluginEnabled;
 
+import no.runsafe.framework.timer.IScheduler;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;

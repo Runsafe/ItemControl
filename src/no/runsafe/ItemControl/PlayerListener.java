@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 
-import no.runsafe.framework.interfaces.IConfiguration;
-import no.runsafe.framework.interfaces.IOutput;
-import no.runsafe.framework.interfaces.IPluginEnabled;
+import no.runsafe.framework.configuration.IConfiguration;
+import no.runsafe.framework.event.IPluginEnabled;
 
+import no.runsafe.framework.output.IOutput;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
