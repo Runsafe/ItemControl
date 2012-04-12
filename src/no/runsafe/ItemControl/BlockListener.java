@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 import no.runsafe.framework.configuration.IConfiguration;
-import no.runsafe.framework.event.IPluginEnabled;
 
+import no.runsafe.framework.event.subscriber.IPluginEnabled;
 import no.runsafe.framework.timer.IScheduler;
 import org.bukkit.Material;
 import org.bukkit.World;

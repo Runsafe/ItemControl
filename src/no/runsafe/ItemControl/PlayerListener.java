@@ -6,8 +6,8 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import no.runsafe.framework.configuration.IConfiguration;
-import no.runsafe.framework.event.IPluginEnabled;
 
+import no.runsafe.framework.event.subscriber.IPluginEnabled;
 import no.runsafe.framework.output.IOutput;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
