@@ -7,7 +7,7 @@ import java.util.Set;
 
 import no.runsafe.framework.configuration.IConfiguration;
 
-import no.runsafe.framework.event.subscriber.IPluginEnabled;
+import no.runsafe.framework.event.IPluginEnabled;
 import no.runsafe.framework.timer.IScheduler;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -49,7 +49,7 @@ public class BlockListener implements Listener, IPluginEnabled
 		{
 			final short mobID = heldItem.getDurability();
 			
-			this.scheduler.setTimedEvent(new Runnable() {
+			this.scheduler.startSyncTask(new Runnable() {
 
 			@Override
 			public void run() {
