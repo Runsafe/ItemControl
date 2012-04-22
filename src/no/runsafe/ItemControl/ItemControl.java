@@ -12,6 +12,7 @@ public class ItemControl extends RunsafePlugin implements IConfigurationFile, IC
 	@Override
 	protected void PluginSetup()
 	{
+        this.addComponent(Globals.class);
 		this.addComponent(PlayerListener.class);
 		this.addComponent(BlockListener.class);
 	}

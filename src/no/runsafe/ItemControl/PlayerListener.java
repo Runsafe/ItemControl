@@ -1,76 +1,27 @@
 package no.runsafe.ItemControl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
+import no.runsafe.framework.event.player.IPlayerInteractEvent;
+import no.runsafe.framework.server.RunsafeWorld;
+import no.runsafe.framework.server.event.player.RunsafePlayerInteractEvent;
+import no.runsafe.framework.server.player.RunsafePlayer;
 
-import no.runsafe.framework.configuration.IConfiguration;
-
-import no.runsafe.framework.event.IPluginEnabled;
-import no.runsafe.framework.output.IOutput;
-import org.bukkit.World;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEvent;
-
-public class PlayerListener implements Listener, IPluginEnabled
+public class PlayerListener implements IPlayerInteractEvent
 {	
-	private HashMap<String, List<Integer>> disabledItems = new HashMap<String, List<Integer>>();
-	private IConfiguration config;
-	private IOutput debug;
-
-	public PlayerListener(IConfiguration config, IOutput debug)
+	public PlayerListener(Globals globals)
 	{
-		this.config = config;
-		this.debug = debug;
-	}
-	
-	@EventHandler
-	public void onPlayerInteract(PlayerInteractEvent event)
-	{
-		Player thePlayer = event.getPlayer();
-		World theWorld = thePlayer.getWorld();
-		
-		int itemID = thePlayer.getItemInHand().getTypeId();
-		if(itemIsDisabled(theWorld, itemID))
-			event.setCancelled(true);
+		this.globals = globals;
 	}
 
-	@Override
-	public void OnPluginEnabled()
-	{
-		this.loadConfig();
-	}
+    @Override
+    public void OnPlayerInteractEvent(RunsafePlayerInteractEvent event)
+    {
+        RunsafePlayer thePlayer = event.getPlayer();
+        RunsafeWorld theWorld = thePlayer.getWorld();
+
+        int itemID = thePlayer.getItemInHand().getItemId();
+        if(globals.itemIsDisabled(theWorld, itemID))
+            event.setCancelled(true);
+    }
 	
-	private Boolean itemIsDisabled(World world, int itemID)
-	{
-		if(this.disabledItems.containsKey("*") && this.disabledItems.get("*").contains(itemID))
-			return true;
-		
-		if(this.disabledItems.containsKey(world.getName()) && this.disabledItems.get(world.getName()).contains(itemID))
-			return true;
-		
-		return false;
-	}
-	
-	private void loadConfig()
-	{
-		ConfigurationSection disabledItems = this.config.getSection("disabledItems");
-		if(disabledItems == null)
-			return;
-		
-		Set<String> keys = disabledItems.getKeys(true);
-		if(keys == null)
-			return;
-		
-		for(String key : keys)
-		{
-			debug.outputDebugToConsole(String.format("key: '%s'", key), Level.INFO);
-			if(!this.disabledItems.containsKey(key))
-				this.disabledItems.put(key, disabledItems.getIntegerList(key));
-		}
-	}	
+    private Globals globals;
 }

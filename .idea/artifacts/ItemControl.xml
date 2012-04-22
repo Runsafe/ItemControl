@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="ItemControl">
+  <artifact type="jar" build-on-make="true" name="ItemControl">
     <output-path>$PROJECT_DIR$/out/</output-path>
     <root id="archive" name="ItemControl.jar">
       <element id="directory" name="META-INF">
