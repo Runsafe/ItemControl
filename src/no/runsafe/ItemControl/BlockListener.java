@@ -66,7 +66,6 @@ public class BlockListener implements IBlockPlaceEvent, IBlockBreakEvent, IBlock
     @Override
     public void OnBlockPlaceEvent(RunsafeBlockPlaceEvent event)
     {
-        output.outputToConsole("I see a mob spawner placement...");
         final RunsafePlayer thePlayer = event.getPlayer();
         RunsafeItemStack heldItem = thePlayer.getItemInHand();
 

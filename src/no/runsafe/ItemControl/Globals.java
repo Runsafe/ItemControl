@@ -56,7 +56,6 @@ public class Globals implements IPluginEnabled
 
     public void setSpawnerEntityID(RunsafeBlock block, short entityID)
     {
-        output.outputToConsole("Trying to change the spawner to " + entityID);
         try
         {
             Field mobIDField = net.minecraft.server.TileEntityMobSpawner.class.getDeclaredField("mobName");
