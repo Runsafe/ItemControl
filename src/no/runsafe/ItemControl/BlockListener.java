@@ -33,13 +33,18 @@ public class BlockListener implements IBlockPlaceEvent, IBlockBreakEvent, IBlock
 	@Override
 	public void OnBlockBreakEvent(RunsafeBlockBreakEvent event)
 	{
+		if (event.getCancelled())
+			return;
+
+		final RunsafeBlockBreakEvent blockBreakEvent = event;
+
 		RunsafePlayer thePlayer = event.getPlayer();
 		RunsafeItemStack heldItem = thePlayer.getItemInHand();
-		RunsafeBlock theBlock = event.getBlock();
+		final RunsafeBlock theBlock = event.getBlock();
 
 		if (this.globals.blockShouldDrop(thePlayer.getWorld(), theBlock.getTypeId()) && heldItem.containsEnchantment(new RunsafeEnchantmentWrapper(33)))
 		{
-			RunsafeWorld theBlockWorld = theBlock.getWorld();
+			final RunsafeWorld theBlockWorld = theBlock.getWorld();
 
 			try
 			{
@@ -47,7 +52,7 @@ public class BlockListener implements IBlockPlaceEvent, IBlockBreakEvent, IBlock
 				tileField.setAccessible(true);
 
 				RunsafeBlockState blockState = theBlock.getBlockState();
-				CraftCreatureSpawner spawner = (CraftCreatureSpawner) blockState.getRaw();
+				final CraftCreatureSpawner spawner = (CraftCreatureSpawner) blockState.getRaw();
 
 				int itemId = Material.MONSTER_EGG.getId();
 				switch (spawner.getSpawnedType())
@@ -117,8 +122,22 @@ public class BlockListener implements IBlockPlaceEvent, IBlockBreakEvent, IBlock
 				}
 				if (itemId > 0)
 				{
-					RunsafeItemStack itemToDrop = new RunsafeItemStack(itemId, 1, (short) 0, (byte) spawner.getSpawnedType().getTypeId());
-					theBlockWorld.dropItem(theBlock.getLocation(), itemToDrop);
+					final int finalItemId = itemId;
+					scheduler.createSyncTimer(
+						new Runnable()
+						{
+							@Override
+							public void run()
+							{
+								if (blockBreakEvent.getCancelled())
+									return;
+								RunsafeItemStack itemToDrop = new RunsafeItemStack(finalItemId, 1, (short) 0, (byte) spawner.getSpawnedType().getTypeId());
+								theBlockWorld.dropItem(theBlock.getLocation(), itemToDrop);
+							}
+						},
+						10L
+					);
+					blockBreakEvent.setXP(0);
 				}
 			}
 			catch (Exception e)
