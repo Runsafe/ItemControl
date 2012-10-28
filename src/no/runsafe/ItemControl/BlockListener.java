@@ -62,7 +62,6 @@ public class BlockListener implements IBlockPlaceEvent, IBlockBreakEvent, IBlock
 					case PAINTING:
 					case ARROW:
 					case SNOWBALL:
-					case FIREBALL:
 					case SMALL_FIREBALL:
 					case ENDER_PEARL:
 					case ENDER_SIGNAL:
@@ -100,6 +99,13 @@ public class BlockListener implements IBlockPlaceEvent, IBlockBreakEvent, IBlock
 					case PLAYER:
 					case COMPLEX_PART:
 					case UNKNOWN:
+					case LARGE_FIREBALL:
+					case ITEM_FRAME:
+					case WITHER_SKULL:
+					case WITHER:
+					case BAT:
+					case WITCH:
+					default:
 						// Invalid spawners, do naught
 						output.outputToConsole(
 							String.format(
