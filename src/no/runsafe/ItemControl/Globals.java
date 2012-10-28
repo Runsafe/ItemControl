@@ -1,6 +1,7 @@
 package no.runsafe.ItemControl;
 
 import no.runsafe.framework.configuration.IConfiguration;
+import no.runsafe.framework.event.IConfigurationChanged;
 import no.runsafe.framework.event.IPluginEnabled;
 import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeLocation;
@@ -19,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-public class Globals implements IPluginEnabled
+public class Globals implements IConfigurationChanged
 {
 	public Globals(IConfiguration config, IOutput output)
 	{
@@ -28,7 +29,7 @@ public class Globals implements IPluginEnabled
 	}
 
 	@Override
-	public void OnPluginEnabled()
+	public void OnConfigurationChanged()
 	{
 		this.disabledItems = this.loadConfigurationIdList("disabledItems");
 		this.worldBlockDrops = this.loadConfigurationIdList("blockDrops");
@@ -109,5 +110,4 @@ public class Globals implements IPluginEnabled
 	private HashMap<String, List<Integer>> disabledItems = new HashMap<String, List<Integer>>();
 	private IConfiguration config;
 	private IOutput output;
-
 }
