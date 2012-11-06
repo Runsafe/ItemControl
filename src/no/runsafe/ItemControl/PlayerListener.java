@@ -40,5 +40,5 @@ public class PlayerListener implements IPlayerInteractEvent
 			event.setCancelled(true);
 	}
 
-	private Globals globals;
+	private final Globals globals;
 }

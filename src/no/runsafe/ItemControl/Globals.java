@@ -22,39 +22,27 @@ import java.util.Set;
 
 public class Globals implements IConfigurationChanged
 {
-	public Globals(IConfiguration config, IOutput output)
+	public Globals()
 	{
-		this.output = output;
-		this.config = config;
 	}
 
 	@Override
-	public void OnConfigurationChanged()
+	public void OnConfigurationChanged(IConfiguration config)
 	{
-		this.disabledItems = this.loadConfigurationIdList("disabledItems");
-		this.worldBlockDrops = this.loadConfigurationIdList("blockDrops");
+		this.disabledItems = this.loadConfigurationIdList(config, "disabledItems");
+		this.worldBlockDrops = this.loadConfigurationIdList(config, "blockDrops");
 	}
 
 	public Boolean itemIsDisabled(RunsafeWorld world, int itemID)
 	{
-		if (this.disabledItems.containsKey("*") && this.disabledItems.get("*").contains(itemID))
-			return true;
-
-		if (this.disabledItems.containsKey(world.getName()) && this.disabledItems.get(world.getName()).contains(itemID))
-			return true;
-
-		return false;
+		return (this.disabledItems.containsKey("*") && this.disabledItems.get("*").contains(itemID))
+			|| (this.disabledItems.containsKey(world.getName()) && this.disabledItems.get(world.getName()).contains(itemID));
 	}
 
 	public Boolean blockShouldDrop(RunsafeWorld world, Integer blockId)
 	{
-		if (this.worldBlockDrops.containsKey("*") && this.worldBlockDrops.get("*").contains(blockId))
-			return true;
-
-		if (this.worldBlockDrops.containsKey(world.getName()) && this.worldBlockDrops.get(world.getName()).contains(blockId))
-			return true;
-
-		return false;
+		return (this.worldBlockDrops.containsKey("*") && this.worldBlockDrops.get("*").contains(blockId))
+			|| (this.worldBlockDrops.containsKey(world.getName()) && this.worldBlockDrops.get(world.getName()).contains(blockId));
 	}
 
 	public void setSpawnerEntityID(RunsafeBlock block, short entityID)
@@ -85,10 +73,10 @@ public class Globals implements IConfigurationChanged
 		return false;
 	}
 
-	private HashMap<String, List<Integer>> loadConfigurationIdList(String configurationValue)
+	private HashMap<String, List<Integer>> loadConfigurationIdList(IConfiguration config, String configurationValue)
 	{
 		HashMap<String, List<Integer>> returnMap = new HashMap<String, List<Integer>>();
-		ConfigurationSection disabledItems = this.config.getSection(configurationValue);
+		ConfigurationSection disabledItems = config.getSection(configurationValue);
 
 		if (disabledItems == null)
 			return null;
@@ -108,6 +96,4 @@ public class Globals implements IConfigurationChanged
 
 	private HashMap<String, List<Integer>> worldBlockDrops = new HashMap<String, List<Integer>>();
 	private HashMap<String, List<Integer>> disabledItems = new HashMap<String, List<Integer>>();
-	private IConfiguration config;
-	private IOutput output;
 }

@@ -6,7 +6,7 @@
         <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
       </element>
       <element id="module-output" name="ItemControl" />
-      <element id="file-copy" path="$PROJECT_DIR$/defaultConfig.yml" />
+      <element id="file-copy" path="$PROJECT_DIR$/defaults.yml" />
       <element id="file-copy" path="$PROJECT_DIR$/plugin.yml" />
     </root>
   </artifact>

@@ -1,5 +1,5 @@
 name: ItemControl
-main: no.runsafe.ItemControl.ItemControl
+main: no.runsafe.ItemControl.Plugin
 version: 1.0
 author: Kruithne
 depend: []
