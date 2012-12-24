@@ -12,7 +12,7 @@ import no.runsafe.framework.server.item.RunsafeItemStack;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import no.runsafe.framework.timer.IScheduler;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.block.CraftCreatureSpawner;
+import org.bukkit.craftbukkit.v1_4_6.block.CraftCreatureSpawner;
 
 import java.lang.reflect.Field;
 import java.util.logging.Level;
@@ -95,12 +95,13 @@ public class BlockListener implements IBlockBreakEvent, IBlockDispense
 					case PLAYER:
 					case COMPLEX_PART:
 					case UNKNOWN:
-					case LARGE_FIREBALL:
 					case ITEM_FRAME:
 					case WITHER_SKULL:
 					case WITHER:
 					case BAT:
 					case WITCH:
+					case FIREBALL:
+					case FIREWORK:
 					default:
 						// Invalid spawners, do naught
 						output.outputToConsole(
