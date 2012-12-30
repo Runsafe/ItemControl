@@ -2,13 +2,9 @@ package no.runsafe.ItemControl;
 
 import no.runsafe.framework.configuration.IConfiguration;
 import no.runsafe.framework.event.IConfigurationChanged;
-import no.runsafe.framework.event.IPluginEnabled;
-import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeWorld;
-import no.runsafe.framework.server.block.RunsafeBlock;
 import no.runsafe.framework.server.item.RunsafeItemStack;
-import no.runsafe.framework.server.player.RunsafePlayer;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -22,10 +18,6 @@ import java.util.Set;
 
 public class Globals implements IConfigurationChanged
 {
-	public Globals()
-	{
-	}
-
 	@Override
 	public void OnConfigurationChanged(IConfiguration config)
 	{
@@ -45,14 +37,19 @@ public class Globals implements IConfigurationChanged
 			|| (this.worldBlockDrops.containsKey(world.getName()) && this.worldBlockDrops.get(world.getName()).contains(blockId));
 	}
 
-	public void setSpawnerEntityID(RunsafeBlock block, short entityID)
+	private boolean setSpawnerEntityID(Block block, EntityType entityType)
 	{
-		Block bukkitBlock = block.getRaw();
-		BlockState state = bukkitBlock.getState();
-		if (!(state instanceof CreatureSpawner)) return;
-		CreatureSpawner bukkit = (CreatureSpawner) state;
-		bukkit.setSpawnedType(EntityType.fromId(entityID));
-		bukkit.setDelay(1);
+		if (block == null || block.isEmpty())
+			return false;
+
+		BlockState state = block.getState();
+		if (!(state instanceof CreatureSpawner))
+			return false;
+
+		CreatureSpawner spawner = (CreatureSpawner) state;
+		spawner.setSpawnedType(entityType);
+		spawner.update(true);
+		return true;
 	}
 
 	public boolean createSpawner(RunsafeWorld world, RunsafeLocation location, RunsafeItemStack itemInHand)
@@ -62,15 +59,80 @@ public class Globals implements IConfigurationChanged
 			location.getBlockY(),
 			location.getBlockZ()
 		);
-		if (target.isEmpty())
+		EntityType spawnerType = EntityType.fromId(itemInHand.getRaw().getData().getData());
+		if (target.isEmpty() && spawnerTypeValid(spawnerType))
 		{
 			target.setType(Material.MOB_SPAWNER);
-			CreatureSpawner spawner = (CreatureSpawner) target.getState();
-			spawner.setSpawnedType(EntityType.fromId(itemInHand.getRaw().getData().getData()));
-			spawner.update(true);
-			return true;
+			if (setSpawnerEntityID(target, spawnerType))
+				return true;
+			target.setType(Material.AIR);
 		}
 		return false;
+	}
+
+	public boolean spawnerTypeValid(EntityType entityType)
+	{
+		switch (entityType)
+		{
+			case DROPPED_ITEM:
+			case EXPERIENCE_ORB:
+			case PAINTING:
+			case ARROW:
+			case SNOWBALL:
+			case SMALL_FIREBALL:
+			case ENDER_PEARL:
+			case ENDER_SIGNAL:
+			case THROWN_EXP_BOTTLE:
+			case PRIMED_TNT:
+			case FALLING_BLOCK:
+			case MINECART:
+			case BOAT:
+			case CREEPER:
+			case GIANT:
+			case SLIME:
+			case GHAST:
+			case PIG_ZOMBIE:
+			case ENDERMAN:
+			case SILVERFISH:
+			case MAGMA_CUBE:
+			case ENDER_DRAGON:
+			case PIG:
+			case SHEEP:
+			case COW:
+			case CHICKEN:
+			case SQUID:
+			case WOLF:
+			case MUSHROOM_COW:
+			case SNOWMAN:
+			case OCELOT:
+			case IRON_GOLEM:
+			case VILLAGER:
+			case ENDER_CRYSTAL:
+			case SPLASH_POTION:
+			case EGG:
+			case FISHING_HOOK:
+			case LIGHTNING:
+			case WEATHER:
+			case PLAYER:
+			case COMPLEX_PART:
+			case UNKNOWN:
+			case ITEM_FRAME:
+			case WITHER_SKULL:
+			case WITHER:
+			case BAT:
+			case WITCH:
+			case FIREBALL:
+			case FIREWORK:
+			default:
+				return false;
+
+			case SKELETON:
+			case SPIDER:
+			case ZOMBIE:
+			case CAVE_SPIDER:
+			case BLAZE:
+				return true;
+		}
 	}
 
 	private HashMap<String, List<Integer>> loadConfigurationIdList(IConfiguration config, String configurationValue)

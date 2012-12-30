@@ -1,6 +1,7 @@
 package no.runsafe.ItemControl;
 
-import no.runsafe.framework.event.block.*;
+import no.runsafe.framework.event.block.IBlockBreakEvent;
+import no.runsafe.framework.event.block.IBlockDispense;
 import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeWorld;
@@ -49,79 +50,19 @@ public class BlockListener implements IBlockBreakEvent, IBlockDispense
 
 				RunsafeBlockState blockState = theBlock.getBlockState();
 				final CraftCreatureSpawner spawner = (CraftCreatureSpawner) blockState.getRaw();
-
 				int itemId = Material.MONSTER_EGG.getId();
-				switch (spawner.getSpawnedType())
-				{
-					case DROPPED_ITEM:
-					case EXPERIENCE_ORB:
-					case PAINTING:
-					case ARROW:
-					case SNOWBALL:
-					case SMALL_FIREBALL:
-					case ENDER_PEARL:
-					case ENDER_SIGNAL:
-					case THROWN_EXP_BOTTLE:
-					case PRIMED_TNT:
-					case FALLING_BLOCK:
-					case MINECART:
-					case BOAT:
-					case CREEPER:
-					case GIANT:
-					case SLIME:
-					case GHAST:
-					case PIG_ZOMBIE:
-					case ENDERMAN:
-					case SILVERFISH:
-					case MAGMA_CUBE:
-					case ENDER_DRAGON:
-					case PIG:
-					case SHEEP:
-					case COW:
-					case CHICKEN:
-					case SQUID:
-					case WOLF:
-					case MUSHROOM_COW:
-					case SNOWMAN:
-					case OCELOT:
-					case IRON_GOLEM:
-					case VILLAGER:
-					case ENDER_CRYSTAL:
-					case SPLASH_POTION:
-					case EGG:
-					case FISHING_HOOK:
-					case LIGHTNING:
-					case WEATHER:
-					case PLAYER:
-					case COMPLEX_PART:
-					case UNKNOWN:
-					case ITEM_FRAME:
-					case WITHER_SKULL:
-					case WITHER:
-					case BAT:
-					case WITCH:
-					case FIREBALL:
-					case FIREWORK:
-					default:
-						// Invalid spawners, do naught
-						output.outputToConsole(
-							String.format(
-								"%s tried harvesting an invalid %s spawner!",
-								thePlayer.getName(),
-								spawner.getSpawnedType().getName()
-							),
-							Level.WARNING
-						);
-						itemId = 0;
-						break;
 
-					case SKELETON:
-					case SPIDER:
-					case ZOMBIE:
-					case CAVE_SPIDER:
-					case BLAZE:
-						// Valid spawners, drop one.
-						break;
+				if (!globals.spawnerTypeValid(spawner.getSpawnedType()))
+				{
+					output.outputToConsole(
+						String.format(
+							"%s tried harvesting an invalid %s spawner!",
+							thePlayer.getName(),
+							spawner.getSpawnedType().getName()
+						),
+						Level.WARNING
+					);
+					itemId = 0;
 				}
 				if (itemId > 0)
 				{
@@ -145,7 +86,7 @@ public class BlockListener implements IBlockBreakEvent, IBlockDispense
 			}
 			catch (Exception e)
 			{
-				//Diddums
+				output.write(e.toString());
 			}
 		}
 	}
