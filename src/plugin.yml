@@ -1,6 +1,7 @@
 name: ItemControl
 main: no.runsafe.ItemControl.Plugin
-version: 1.0
+version: 1.0.@BUILD@
 author: Kruithne
+authors: mortenn
 depend: []
 description: Item control for Minecraft (CraftBukkit)
