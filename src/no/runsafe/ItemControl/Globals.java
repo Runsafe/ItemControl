@@ -120,7 +120,6 @@ public class Globals implements IConfigurationChanged
 			case GHAST:
 			case PIG_ZOMBIE:
 			case ENDERMAN:
-			case SILVERFISH:
 			case MAGMA_CUBE:
 			case ENDER_DRAGON:
 			case PIG:
@@ -169,6 +168,7 @@ public class Globals implements IConfigurationChanged
 			case SKELETON:
 			case SPIDER:
 			case ZOMBIE:
+			case SILVERFISH:
 			case CAVE_SPIDER:
 			case BLAZE:
 				return true;
