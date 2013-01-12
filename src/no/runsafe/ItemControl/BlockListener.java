@@ -50,8 +50,8 @@ public class BlockListener implements IBlockBreakEvent, IBlockDispense
 
 				RunsafeBlockState blockState = theBlock.getBlockState();
 				final CraftCreatureSpawner spawner = (CraftCreatureSpawner) blockState.getRaw();
-				int itemId = Material.MONSTER_EGG.getId();
-
+				final int itemId = Material.MONSTER_EGG.getId();
+				final byte monsterType = (byte) spawner.getSpawnedType().getTypeId();
 				if (!globals.spawnerTypeValid(spawner.getSpawnedType(), thePlayer))
 				{
 					output.outputToConsole(
@@ -62,27 +62,24 @@ public class BlockListener implements IBlockBreakEvent, IBlockDispense
 						),
 						Level.WARNING
 					);
-					itemId = 0;
+					return;
 				}
-				if (itemId > 0)
-				{
-					final int finalItemId = itemId;
-					scheduler.createSyncTimer(
-						new Runnable()
+				final int finalItemId = itemId;
+				scheduler.createSyncTimer(
+					new Runnable()
+					{
+						@Override
+						public void run()
 						{
-							@Override
-							public void run()
-							{
-								if (blockBreakEvent.getCancelled())
-									return;
-								RunsafeItemStack itemToDrop = new RunsafeItemStack(finalItemId, 1, (short) 0, (byte) spawner.getSpawnedType().getTypeId());
-								theBlockWorld.dropItem(theBlock.getLocation(), itemToDrop);
-							}
-						},
-						10L
-					);
-					blockBreakEvent.setXP(0);
-				}
+							if (blockBreakEvent.getCancelled())
+								return;
+							RunsafeItemStack itemToDrop = new RunsafeItemStack(finalItemId, 1, (short) 0, monsterType);
+							theBlockWorld.dropItem(theBlock.getLocation(), itemToDrop);
+						}
+					},
+					10L
+				);
+				blockBreakEvent.setXP(0);
 			}
 			catch (Exception e)
 			{
