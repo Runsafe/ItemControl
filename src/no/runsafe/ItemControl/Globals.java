@@ -2,9 +2,12 @@ package no.runsafe.ItemControl;
 
 import no.runsafe.framework.configuration.IConfiguration;
 import no.runsafe.framework.event.IConfigurationChanged;
+import no.runsafe.framework.output.ChatColour;
+import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeWorld;
 import no.runsafe.framework.server.item.RunsafeItemStack;
+import no.runsafe.framework.server.player.RunsafePlayer;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -18,6 +21,11 @@ import java.util.Set;
 
 public class Globals implements IConfigurationChanged
 {
+	public Globals(IOutput output)
+	{
+		console = output;
+	}
+
 	@Override
 	public void OnConfigurationChanged(IConfiguration config)
 	{
@@ -52,7 +60,7 @@ public class Globals implements IConfigurationChanged
 		return true;
 	}
 
-	public boolean createSpawner(RunsafeWorld world, RunsafeLocation location, RunsafeItemStack itemInHand)
+	public boolean createSpawner(RunsafePlayer actor, RunsafeWorld world, RunsafeLocation location, RunsafeItemStack itemInHand)
 	{
 		Block target = world.getRaw().getChunkAt(location.getRaw()).getBlock(
 			location.getBlockX(),
@@ -60,7 +68,7 @@ public class Globals implements IConfigurationChanged
 			location.getBlockZ()
 		);
 		EntityType spawnerType = EntityType.fromId(itemInHand.getRaw().getData().getData());
-		if (target.isEmpty() && spawnerTypeValid(spawnerType))
+		if (target.isEmpty() && spawnerTypeValid(spawnerType, actor))
 		{
 			target.setType(Material.MOB_SPAWNER);
 			if (setSpawnerEntityID(target, spawnerType))
@@ -70,10 +78,20 @@ public class Globals implements IConfigurationChanged
 		return false;
 	}
 
-	public boolean spawnerTypeValid(EntityType entityType)
+	public boolean spawnerTypeValid(EntityType entityType, RunsafePlayer actor)
 	{
-		if(entityType == null)
+		if (entityType == null)
+		{
+			console.write(
+				ChatColour.ToConsole(
+					String.format(
+						"SPAWNER WARNING: %s tried to create a NULL spawner!",
+						actor.getPrettyName()
+					)
+				)
+			);
 			return false;
+		}
 		switch (entityType)
 		{
 			case DROPPED_ITEM:
@@ -126,6 +144,15 @@ public class Globals implements IConfigurationChanged
 			case FIREBALL:
 			case FIREWORK:
 			default:
+				console.write(
+					ChatColour.ToConsole(
+						String.format(
+							"SPAWNER WARNING: %s tried to create an invalid %s spawner!",
+							actor.getPrettyName(),
+							entityType.name()
+						)
+					)
+				);
 				return false;
 
 			case SKELETON:
@@ -158,6 +185,7 @@ public class Globals implements IConfigurationChanged
 		return returnMap;
 	}
 
-	private HashMap<String, List<Integer>> worldBlockDrops = new HashMap<String, List<Integer>>();
-	private HashMap<String, List<Integer>> disabledItems = new HashMap<String, List<Integer>>();
+	private final HashMap<String, List<Integer>> worldBlockDrops = new HashMap<String, List<Integer>>();
+	private final HashMap<String, List<Integer>> disabledItems = new HashMap<String, List<Integer>>();
+	private final IOutput console;
 }

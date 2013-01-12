@@ -52,7 +52,7 @@ public class BlockListener implements IBlockBreakEvent, IBlockDispense
 				final CraftCreatureSpawner spawner = (CraftCreatureSpawner) blockState.getRaw();
 				int itemId = Material.MONSTER_EGG.getId();
 
-				if (!globals.spawnerTypeValid(spawner.getSpawnedType()))
+				if (!globals.spawnerTypeValid(spawner.getSpawnedType(), actor))
 				{
 					output.outputToConsole(
 						String.format(
