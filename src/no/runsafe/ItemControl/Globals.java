@@ -72,6 +72,8 @@ public class Globals implements IConfigurationChanged
 
 	public boolean spawnerTypeValid(EntityType entityType)
 	{
+		if(entityType == null)
+			return false;
 		switch (entityType)
 		{
 			case DROPPED_ITEM:
