@@ -26,7 +26,7 @@ public class PlayerListener implements IPlayerInteractEvent
 			&& !globals.itemIsDisabled(theWorld, Material.MOB_SPAWNER.getId())
 			&& this.globals.blockShouldDrop(thePlayer.getWorld(), Material.MOB_SPAWNER.getId()))
 		{
-			if (globals.createSpawner(event.getBlock().getWorld(), event.getTargetBlock(), item))
+			if (globals.createSpawner(event.getPlayer(), event.getBlock().getWorld(), event.getTargetBlock(), item))
 			{
 				if (item.getAmount() > 1)
 					item.remove(1);

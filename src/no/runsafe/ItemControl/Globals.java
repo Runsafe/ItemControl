@@ -29,8 +29,10 @@ public class Globals implements IConfigurationChanged
 	@Override
 	public void OnConfigurationChanged(IConfiguration config)
 	{
-		this.disabledItems = this.loadConfigurationIdList(config, "disabledItems");
-		this.worldBlockDrops = this.loadConfigurationIdList(config, "blockDrops");
+		this.disabledItems.clear();
+		this.worldBlockDrops.clear();
+		this.disabledItems.putAll(this.loadConfigurationIdList(config, "disabledItems"));
+		this.worldBlockDrops.putAll(this.loadConfigurationIdList(config, "blockDrops"));
 	}
 
 	public Boolean itemIsDisabled(RunsafeWorld world, int itemID)
@@ -85,8 +87,12 @@ public class Globals implements IConfigurationChanged
 			console.write(
 				ChatColour.ToConsole(
 					String.format(
-						"SPAWNER WARNING: %s tried to create a NULL spawner!",
-						actor.getPrettyName()
+						"SPAWNER WARNING: %s tried to create/break a NULL spawner [%.1f,%1.f,%1.f]!",
+						actor.getPrettyName(),
+						actor.getWorld().getName(),
+						actor.getLocation().getBlockX(),
+						actor.getLocation().getBlockY(),
+						actor.getLocation().getBlockZ()
 					)
 				)
 			);
@@ -147,9 +153,13 @@ public class Globals implements IConfigurationChanged
 				console.write(
 					ChatColour.ToConsole(
 						String.format(
-							"SPAWNER WARNING: %s tried to create an invalid %s spawner!",
+							"SPAWNER WARNING: %s tried to create/break an invalid %s spawner [%s,%.1f,%1.f,%1.f]!",
 							actor.getPrettyName(),
-							entityType.name()
+							entityType.name(),
+							actor.getWorld().getName(),
+							actor.getLocation().getBlockX(),
+							actor.getLocation().getBlockY(),
+							actor.getLocation().getBlockZ()
 						)
 					)
 				);
