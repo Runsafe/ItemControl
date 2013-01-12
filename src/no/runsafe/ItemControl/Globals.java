@@ -83,7 +83,7 @@ public class Globals implements IConfigurationChanged
 
 	public boolean spawnerTypeValid(EntityType entityType, RunsafePlayer actor)
 	{
-		if (entityType == null)
+		if (entityType == null && actor != null)
 		{
 			console.write(
 				ChatColour.ToConsole(
@@ -150,19 +150,20 @@ public class Globals implements IConfigurationChanged
 			case FIREBALL:
 			case FIREWORK:
 			default:
-				console.write(
-					ChatColour.ToConsole(
-						String.format(
-							"SPAWNER WARNING: %s tried to create/break an invalid %s spawner [%s,%d,%d,%d]!",
-							ConsoleColors.FromMinecraft(actor.getPrettyName()),
-							entityType.name(),
-							actor.getWorld().getName(),
-							actor.getLocation().getBlockX(),
-							actor.getLocation().getBlockY(),
-							actor.getLocation().getBlockZ()
+				if (actor != null)
+					console.write(
+						ChatColour.ToConsole(
+							String.format(
+								"SPAWNER WARNING: %s tried to create/break an invalid %s spawner [%s,%d,%d,%d]!",
+								ConsoleColors.FromMinecraft(actor.getPrettyName()),
+								entityType.name(),
+								actor.getWorld().getName(),
+								actor.getLocation().getBlockX(),
+								actor.getLocation().getBlockY(),
+								actor.getLocation().getBlockZ()
+							)
 						)
-					)
-				);
+					);
 				return false;
 
 			case SKELETON:
