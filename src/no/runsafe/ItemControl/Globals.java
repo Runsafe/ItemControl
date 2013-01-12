@@ -87,7 +87,7 @@ public class Globals implements IConfigurationChanged
 			console.write(
 				ChatColour.ToConsole(
 					String.format(
-						"SPAWNER WARNING: %s tried to create/break a NULL spawner [%.1f,%1.f,%1.f]!",
+						"SPAWNER WARNING: %s tried to create/break a NULL spawner [%s,%d,%d,%d]!",
 						actor.getPrettyName(),
 						actor.getWorld().getName(),
 						actor.getLocation().getBlockX(),
@@ -153,7 +153,7 @@ public class Globals implements IConfigurationChanged
 				console.write(
 					ChatColour.ToConsole(
 						String.format(
-							"SPAWNER WARNING: %s tried to create/break an invalid %s spawner [%s,%.1f,%1.f,%1.f]!",
+							"SPAWNER WARNING: %s tried to create/break an invalid %s spawner [%s,%d,%d,%d]!",
 							actor.getPrettyName(),
 							entityType.name(),
 							actor.getWorld().getName(),
