@@ -3,6 +3,7 @@ package no.runsafe.ItemControl;
 import no.runsafe.framework.configuration.IConfiguration;
 import no.runsafe.framework.event.IConfigurationChanged;
 import no.runsafe.framework.output.ChatColour;
+import no.runsafe.framework.output.ConsoleColors;
 import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeWorld;
@@ -88,7 +89,7 @@ public class Globals implements IConfigurationChanged
 				ChatColour.ToConsole(
 					String.format(
 						"SPAWNER WARNING: %s tried to create/break a NULL spawner [%s,%d,%d,%d]!",
-						actor.getPrettyName(),
+						ConsoleColors.FromMinecraft(actor.getPrettyName()),
 						actor.getWorld().getName(),
 						actor.getLocation().getBlockX(),
 						actor.getLocation().getBlockY(),
@@ -154,7 +155,7 @@ public class Globals implements IConfigurationChanged
 					ChatColour.ToConsole(
 						String.format(
 							"SPAWNER WARNING: %s tried to create/break an invalid %s spawner [%s,%d,%d,%d]!",
-							actor.getPrettyName(),
+							ConsoleColors.FromMinecraft(actor.getPrettyName()),
 							entityType.name(),
 							actor.getWorld().getName(),
 							actor.getLocation().getBlockX(),
