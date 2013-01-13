@@ -73,7 +73,7 @@ public class BlockListener implements IBlockBreakEvent, IBlockDispense
 							if (blockBreakEvent.getCancelled())
 								return;
 							output.fine(String.format("Dropping a spawn egg [%d:%d]", itemId, monsterType));
-							RunsafeItemStack itemToDrop = new RunsafeItemStack(itemId, 1, (short) 0, monsterType);
+							RunsafeItemStack itemToDrop = new RunsafeItemStack(itemId, 1, (short) monsterType);
 							theBlockWorld.dropItem(theBlock.getLocation(), itemToDrop);
 						}
 					},
