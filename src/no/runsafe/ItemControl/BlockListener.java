@@ -64,7 +64,6 @@ public class BlockListener implements IBlockBreakEvent, IBlockDispense
 					);
 					return;
 				}
-				final int finalItemId = itemId;
 				scheduler.createSyncTimer(
 					new Runnable()
 					{
@@ -73,7 +72,8 @@ public class BlockListener implements IBlockBreakEvent, IBlockDispense
 						{
 							if (blockBreakEvent.getCancelled())
 								return;
-							RunsafeItemStack itemToDrop = new RunsafeItemStack(finalItemId, 1, (short) 0, monsterType);
+							output.fine(String.format("Dropping a spawn egg [%d:%d]", itemId, monsterType));
+							RunsafeItemStack itemToDrop = new RunsafeItemStack(itemId, 1, (short) 0, monsterType);
 							theBlockWorld.dropItem(theBlock.getLocation(), itemToDrop);
 						}
 					},
