@@ -7,9 +7,6 @@ import no.runsafe.framework.server.event.player.RunsafePlayerInteractEvent;
 import no.runsafe.framework.server.item.RunsafeItemStack;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import org.bukkit.Material;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-
-import java.util.Map;
 
 public class PlayerListener implements IPlayerInteractEvent
 {
@@ -21,14 +18,16 @@ public class PlayerListener implements IPlayerInteractEvent
 	@Override
 	public void OnPlayerInteractEvent(RunsafePlayerInteractEvent event)
 	{
-		RunsafePlayer thePlayer = event.getPlayer();
-		RunsafeWorld theWorld = thePlayer.getWorld();
+		RunsafePlayer player = event.getPlayer();
+		if (!player.canBuildNow())
+			return;
+		RunsafeWorld world = player.getWorld();
 
-		RunsafeItemStack item = thePlayer.getItemInHand();
+		RunsafeItemStack item = player.getItemInHand();
 		if (event.getBlock() != null
 			&& item.getItemId() == Material.MONSTER_EGG.getId()
-			&& !globals.itemIsDisabled(theWorld, Material.MOB_SPAWNER.getId())
-			&& this.globals.blockShouldDrop(thePlayer.getWorld(), Material.MOB_SPAWNER.getId()))
+			&& !globals.itemIsDisabled(world, Material.MOB_SPAWNER.getId())
+			&& this.globals.blockShouldDrop(player.getWorld(), Material.MOB_SPAWNER.getId()))
 		{
 			if (globals.createSpawner(event.getPlayer(), event.getBlock().getWorld(), event.getTargetBlock(), item))
 			{
@@ -40,7 +39,7 @@ public class PlayerListener implements IPlayerInteractEvent
 			event.setCancelled(true);
 			return;
 		}
-		if (globals.itemIsDisabled(theWorld, item.getItemId()))
+		if (globals.itemIsDisabled(world, item.getItemId()))
 			event.setCancelled(true);
 	}
 
