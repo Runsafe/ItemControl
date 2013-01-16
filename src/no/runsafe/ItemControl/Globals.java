@@ -114,7 +114,6 @@ public class Globals implements IConfigurationChanged
 			case FALLING_BLOCK:
 			case MINECART:
 			case BOAT:
-			case CREEPER:
 			case GIANT:
 			case SLIME:
 			case GHAST:
