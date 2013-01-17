@@ -13,12 +13,10 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class Globals implements IConfigurationChanged
 {
@@ -32,8 +30,8 @@ public class Globals implements IConfigurationChanged
 	{
 		this.disabledItems.clear();
 		this.worldBlockDrops.clear();
-		this.disabledItems.putAll(this.loadConfigurationIdList(config, "disabledItems"));
-		this.worldBlockDrops.putAll(this.loadConfigurationIdList(config, "blockDrops"));
+		this.disabledItems.putAll(config.getConfigSectionsAsIntegerList("disabledItems"));
+		this.worldBlockDrops.putAll(config.getConfigSectionsAsIntegerList("blockDrops"));
 	}
 
 	public Boolean itemIsDisabled(RunsafeWorld world, int itemID)
@@ -174,27 +172,6 @@ public class Globals implements IConfigurationChanged
 			case BLAZE:
 				return true;
 		}
-	}
-
-	private HashMap<String, List<Integer>> loadConfigurationIdList(IConfiguration config, String configurationValue)
-	{
-		HashMap<String, List<Integer>> returnMap = new HashMap<String, List<Integer>>();
-		ConfigurationSection disabledItems = config.getSection(configurationValue);
-
-		if (disabledItems == null)
-			return null;
-
-		Set<String> keys = disabledItems.getKeys(true);
-		if (keys == null)
-			return null;
-
-		for (String key : keys)
-		{
-			if (!returnMap.containsKey(key))
-				returnMap.put(key, disabledItems.getIntegerList(key));
-		}
-
-		return returnMap;
 	}
 
 	private final HashMap<String, List<Integer>> worldBlockDrops = new HashMap<String, List<Integer>>();
