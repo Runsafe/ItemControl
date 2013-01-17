@@ -15,6 +15,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.EntityType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,8 +31,10 @@ public class Globals implements IConfigurationChanged
 	{
 		this.disabledItems.clear();
 		this.worldBlockDrops.clear();
+		this.validSpawners.clear();
 		this.disabledItems.putAll(config.getConfigSectionsAsIntegerList("disabledItems"));
 		this.worldBlockDrops.putAll(config.getConfigSectionsAsIntegerList("blockDrops"));
+		this.validSpawners.addAll(config.getConfigValueAsList("spawner.allow"));
 	}
 
 	public Boolean itemIsDisabled(RunsafeWorld world, int itemID)
@@ -97,84 +100,30 @@ public class Globals implements IConfigurationChanged
 			);
 			return false;
 		}
-		switch (entityType)
-		{
-			case DROPPED_ITEM:
-			case EXPERIENCE_ORB:
-			case PAINTING:
-			case ARROW:
-			case SNOWBALL:
-			case SMALL_FIREBALL:
-			case ENDER_PEARL:
-			case ENDER_SIGNAL:
-			case THROWN_EXP_BOTTLE:
-			case PRIMED_TNT:
-			case FALLING_BLOCK:
-			case MINECART:
-			case BOAT:
-			case GIANT:
-			case SLIME:
-			case GHAST:
-			case PIG_ZOMBIE:
-			case ENDERMAN:
-			case MAGMA_CUBE:
-			case ENDER_DRAGON:
-			case PIG:
-			case SHEEP:
-			case COW:
-			case CHICKEN:
-			case SQUID:
-			case WOLF:
-			case MUSHROOM_COW:
-			case SNOWMAN:
-			case OCELOT:
-			case IRON_GOLEM:
-			case VILLAGER:
-			case ENDER_CRYSTAL:
-			case SPLASH_POTION:
-			case EGG:
-			case FISHING_HOOK:
-			case LIGHTNING:
-			case WEATHER:
-			case PLAYER:
-			case COMPLEX_PART:
-			case UNKNOWN:
-			case ITEM_FRAME:
-			case WITHER_SKULL:
-			case WITHER:
-			case BAT:
-			case WITCH:
-			case FIREBALL:
-			case FIREWORK:
-			default:
-				if (actor != null)
-					console.write(
-						ChatColour.ToConsole(
-							String.format(
-								"SPAWNER WARNING: %s tried to create/break an invalid %s spawner [%s,%d,%d,%d]!",
-								ConsoleColors.FromMinecraft(actor.getPrettyName()),
-								entityType.name(),
-								actor.getWorld().getName(),
-								actor.getLocation().getBlockX(),
-								actor.getLocation().getBlockY(),
-								actor.getLocation().getBlockZ()
-							)
-						)
-					);
-				return false;
 
-			case SKELETON:
-			case SPIDER:
-			case ZOMBIE:
-			case SILVERFISH:
-			case CAVE_SPIDER:
-			case BLAZE:
-			case CREEPER:
-				return true;
+		if (entityType == null || entityType.name() == null || !validSpawners.contains(entityType.name().toLowerCase()))
+		{
+			if (actor != null)
+				console.write(
+					ChatColour.ToConsole(
+						String.format(
+							"SPAWNER WARNING: %s tried to create/break an invalid %s spawner [%s,%d,%d,%d]!",
+							ConsoleColors.FromMinecraft(actor.getPrettyName()),
+							entityType.name(),
+							actor.getWorld().getName(),
+							actor.getLocation().getBlockX(),
+							actor.getLocation().getBlockY(),
+							actor.getLocation().getBlockZ()
+						)
+					)
+				);
+			return false;
 		}
+		return true;
 	}
 
 	private final HashMap<String, List<Integer>> worldBlockDrops = new HashMap<String, List<Integer>>();
 	private final HashMap<String, List<Integer>> disabledItems = new HashMap<String, List<Integer>>();
+	private final List<String> validSpawners = new ArrayList<String>();
 	private final IOutput console;
 }

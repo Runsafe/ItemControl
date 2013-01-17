@@ -3,3 +3,10 @@
 disabledItems.*: [384]
 disabledItems.Creative: [385]
 blockDrops.*: [52]
+spawner.allow:
+  - skeleton
+  - spider
+  - zombie
+  - silverfish
+  - cave_spider
+  - blaze
