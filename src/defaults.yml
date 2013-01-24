@@ -8,5 +8,5 @@ spawner.allow:
   - spider
   - zombie
   - silverfish
-  - cave_spider
+  - cavespider
   - blaze
