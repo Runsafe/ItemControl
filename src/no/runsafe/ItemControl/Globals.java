@@ -72,7 +72,7 @@ public class Globals implements IConfigurationChanged
 			location.getBlockZ()
 		);
 		EntityType spawnerType = EntityType.fromId(itemInHand.getRaw().getData().getData());
-		if (target.isEmpty() && spawnerTypeValid(spawnerType, actor))
+		if (target.isEmpty() && spawnerTypeValid(spawnerType.name(), actor))
 		{
 			target.setType(Material.MOB_SPAWNER);
 			if (setSpawnerEntityID(target, spawnerType))
@@ -82,7 +82,7 @@ public class Globals implements IConfigurationChanged
 		return false;
 	}
 
-	public boolean spawnerTypeValid(EntityType entityType, RunsafePlayer actor)
+	public boolean spawnerTypeValid(String entityType, RunsafePlayer actor)
 	{
 		if (entityType == null && actor != null)
 		{
@@ -101,7 +101,7 @@ public class Globals implements IConfigurationChanged
 			return false;
 		}
 
-		if (entityType == null || entityType.name() == null || !validSpawners.contains(entityType.name().toLowerCase()))
+		if (entityType == null || !validSpawners.contains(entityType.toLowerCase()))
 		{
 			if (actor != null)
 				console.write(
@@ -109,7 +109,7 @@ public class Globals implements IConfigurationChanged
 						String.format(
 							"SPAWNER WARNING: %s tried to create/break an invalid %s spawner [%s,%d,%d,%d]!",
 							ConsoleColors.FromMinecraft(actor.getPrettyName()),
-							entityType.name(),
+							entityType,
 							actor.getWorld().getName(),
 							actor.getLocation().getBlockX(),
 							actor.getLocation().getBlockY(),

@@ -6,14 +6,13 @@ import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeWorld;
 import no.runsafe.framework.server.block.RunsafeBlock;
-import no.runsafe.framework.server.block.RunsafeBlockState;
+import no.runsafe.framework.server.block.RunsafeSpawner;
 import no.runsafe.framework.server.enchantment.RunsafeEnchantmentWrapper;
 import no.runsafe.framework.server.event.block.RunsafeBlockBreakEvent;
 import no.runsafe.framework.server.item.RunsafeItemStack;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import no.runsafe.framework.timer.IScheduler;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_4_6.block.CraftCreatureSpawner;
 
 import java.util.logging.Level;
 
@@ -42,18 +41,17 @@ public class BlockListener implements IBlockBreakEvent, IBlockDispense
 		{
 			try
 			{
-				RunsafeBlockState blockState = theBlock.getBlockState();
+				RunsafeSpawner spawner = (RunsafeSpawner) theBlock;
 				final RunsafeWorld theBlockWorld = theBlock.getWorld();
-				final CraftCreatureSpawner spawner = (CraftCreatureSpawner) blockState.getRaw();
 				final int itemId = Material.MONSTER_EGG.getId();
-				final byte monsterType = (byte) spawner.getSpawnedType().getTypeId();
-				if (!globals.spawnerTypeValid(spawner.getSpawnedType(), thePlayer))
+				final byte monsterType = (byte) spawner.getCreatureId();
+				if (!globals.spawnerTypeValid(spawner.getCreatureType(), thePlayer))
 				{
 					output.outputToConsole(
 						String.format(
 							"%s tried harvesting an invalid %s spawner!",
 							thePlayer.getName(),
-							spawner.getSpawnedType().getName()
+							spawner.getCreatureType()
 						),
 						Level.WARNING
 					);

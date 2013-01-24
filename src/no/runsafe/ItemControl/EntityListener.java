@@ -16,7 +16,7 @@ public class EntityListener implements IMobSpawnerPulsed
 	@Override
 	public boolean OnMobSpawnerPulsed(RunsafeLivingEntity entity, RunsafeLocation location)
 	{
-		if (!globals.spawnerTypeValid(entity.getRaw().getType(), null))
+		if (!globals.spawnerTypeValid(entity.getRaw().getType().name(), null))
 		{
 			console.writeColoured(
 				"SPAWNER WARNING: &cBlocked invalid spawner of &e%s&c at (%s,%d,%d,%d)",
