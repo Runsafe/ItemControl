@@ -15,7 +15,6 @@ import no.runsafe.framework.timer.IScheduler;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_4_6.block.CraftCreatureSpawner;
 
-import java.lang.reflect.Field;
 import java.util.logging.Level;
 
 public class BlockListener implements IBlockBreakEvent, IBlockDispense
@@ -41,14 +40,10 @@ public class BlockListener implements IBlockBreakEvent, IBlockDispense
 
 		if (this.globals.blockShouldDrop(thePlayer.getWorld(), theBlock.getTypeId()) && heldItem.containsEnchantment(new RunsafeEnchantmentWrapper(33)))
 		{
-			final RunsafeWorld theBlockWorld = theBlock.getWorld();
-
 			try
 			{
-				Field tileField = CraftCreatureSpawner.class.getDeclaredField("spawner");
-				tileField.setAccessible(true);
-
 				RunsafeBlockState blockState = theBlock.getBlockState();
+				final RunsafeWorld theBlockWorld = theBlock.getWorld();
 				final CraftCreatureSpawner spawner = (CraftCreatureSpawner) blockState.getRaw();
 				final int itemId = Material.MONSTER_EGG.getId();
 				final byte monsterType = (byte) spawner.getSpawnedType().getTypeId();
@@ -83,7 +78,7 @@ public class BlockListener implements IBlockBreakEvent, IBlockDispense
 			}
 			catch (Exception e)
 			{
-				output.write(e.toString());
+				output.logException(e);
 			}
 		}
 	}
