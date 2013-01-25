@@ -2,6 +2,7 @@
 
 disabledItems.*: [384]
 disabledItems.Creative: [385]
+remove.disabledItems: true
 blockDrops.*: [52]
 spawner.allow:
   - skeleton

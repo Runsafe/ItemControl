@@ -40,7 +40,11 @@ public class PlayerListener implements IPlayerInteractEvent
 			return;
 		}
 		if (globals.itemIsDisabled(world, item.getItemId()))
+		{
+			if (globals.blockedItemShouldBeRemoved())
+				event.removeItemStack();
 			event.setCancelled(true);
+		}
 	}
 
 	private final Globals globals;

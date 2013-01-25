@@ -35,6 +35,7 @@ public class Globals implements IConfigurationChanged
 		this.disabledItems.putAll(config.getConfigSectionsAsIntegerList("disabledItems"));
 		this.worldBlockDrops.putAll(config.getConfigSectionsAsIntegerList("blockDrops"));
 		this.validSpawners.addAll(config.getConfigValueAsList("spawner.allow"));
+		this.removeBlocked = config.getConfigValueAsBoolean("remove.disabledItems");
 	}
 
 	public Boolean itemIsDisabled(RunsafeWorld world, int itemID)
@@ -47,21 +48,6 @@ public class Globals implements IConfigurationChanged
 	{
 		return (this.worldBlockDrops.containsKey("*") && this.worldBlockDrops.get("*").contains(blockId))
 			|| (this.worldBlockDrops.containsKey(world.getName()) && this.worldBlockDrops.get(world.getName()).contains(blockId));
-	}
-
-	private boolean setSpawnerEntityID(Block block, EntityType entityType)
-	{
-		if (block == null || block.isEmpty())
-			return false;
-
-		BlockState state = block.getState();
-		if (!(state instanceof CreatureSpawner))
-			return false;
-
-		CreatureSpawner spawner = (CreatureSpawner) state;
-		spawner.setSpawnedType(entityType);
-		spawner.update(true);
-		return true;
 	}
 
 	public boolean createSpawner(RunsafePlayer actor, RunsafeWorld world, RunsafeLocation location, RunsafeItemStack itemInHand)
@@ -122,8 +108,29 @@ public class Globals implements IConfigurationChanged
 		return true;
 	}
 
+	public boolean blockedItemShouldBeRemoved()
+	{
+		return removeBlocked;
+	}
+
+	private boolean setSpawnerEntityID(Block block, EntityType entityType)
+	{
+		if (block == null || block.isEmpty())
+			return false;
+
+		BlockState state = block.getState();
+		if (!(state instanceof CreatureSpawner))
+			return false;
+
+		CreatureSpawner spawner = (CreatureSpawner) state;
+		spawner.setSpawnedType(entityType);
+		spawner.update(true);
+		return true;
+	}
+
 	private final HashMap<String, List<Integer>> worldBlockDrops = new HashMap<String, List<Integer>>();
 	private final HashMap<String, List<Integer>> disabledItems = new HashMap<String, List<Integer>>();
 	private final List<String> validSpawners = new ArrayList<String>();
 	private final IOutput console;
+	private boolean removeBlocked;
 }
