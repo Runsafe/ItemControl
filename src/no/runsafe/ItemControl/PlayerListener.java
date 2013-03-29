@@ -19,11 +19,18 @@ public class PlayerListener implements IPlayerInteractEvent
 	public void OnPlayerInteractEvent(RunsafePlayerInteractEvent event)
 	{
 		RunsafePlayer player = event.getPlayer();
+		RunsafeWorld world = player.getWorld();
+		RunsafeItemStack item = player.getItemInHand();
+		if (globals.itemIsDisabled(world, item.getItemId()))
+		{
+			if (globals.blockedItemShouldBeRemoved())
+				event.removeItemStack();
+			event.setCancelled(true);
+			return;
+		}
 		if (!player.canBuildNow())
 			return;
-		RunsafeWorld world = player.getWorld();
 
-		RunsafeItemStack item = player.getItemInHand();
 		if (event.getBlock() != null
 			&& item.getItemId() == Material.MONSTER_EGG.getId()
 			&& !globals.itemIsDisabled(world, Material.MOB_SPAWNER.getId())
@@ -38,12 +45,6 @@ public class PlayerListener implements IPlayerInteractEvent
 			}
 			event.setCancelled(true);
 			return;
-		}
-		if (globals.itemIsDisabled(world, item.getItemId()))
-		{
-			if (globals.blockedItemShouldBeRemoved())
-				event.removeItemStack();
-			event.setCancelled(true);
 		}
 	}
 
