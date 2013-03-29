@@ -58,7 +58,7 @@ public class Globals implements IConfigurationChanged
 			location.getBlockZ()
 		);
 		EntityType spawnerType = EntityType.fromId(itemInHand.getRaw().getData().getData());
-		if (target.isEmpty() && spawnerTypeValid(spawnerType.name(), actor))
+		if (target.isEmpty() && spawnerTypeValid(spawnerType == null ? null : spawnerType.name(), actor))
 		{
 			target.setType(Material.MOB_SPAWNER);
 			if (setSpawnerEntityID(target, spawnerType))
