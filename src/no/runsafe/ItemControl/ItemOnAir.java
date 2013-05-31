@@ -24,7 +24,8 @@ public class ItemOnAir implements IPlayerRightClickAir
 					if (entity.getEntityType() == PassiveEntity.Boat)
 					{
 						Boat boat = (Boat) entity.getRaw();
-						boat.setMaxSpeed(0.4D * 10);
+						boat.setMaxSpeed(boat.getMaxSpeed() * 100);
+						boat.setOccupiedDeceleration(boat.getOccupiedDeceleration() * 100);
 						usingItem.remove(1);
 					}
 				}
