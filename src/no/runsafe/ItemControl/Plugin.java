@@ -15,6 +15,5 @@ public class Plugin extends RunsafeConfigurablePlugin implements IConfigurationF
 		this.addComponent(PlayerListener.class);
 		this.addComponent(BlockListener.class);
 		this.addComponent(EntityListener.class);
-		this.addComponent(ItemOnAir.class);
 	}
 }
