@@ -30,6 +30,6 @@ public class ItemOnAir implements IPlayerRightClickAir
 				}
 			}
 		}
-		return false;
+		return true;
 	}
 }
