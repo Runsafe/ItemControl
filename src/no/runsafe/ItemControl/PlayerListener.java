@@ -1,16 +1,15 @@
 package no.runsafe.ItemControl;
 
 import no.runsafe.framework.event.player.IPlayerInteractEvent;
-import no.runsafe.framework.output.IOutput;
+import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.server.RunsafeWorld;
 import no.runsafe.framework.server.event.player.RunsafePlayerInteractEvent;
 import no.runsafe.framework.server.item.RunsafeItemStack;
 import no.runsafe.framework.server.player.RunsafePlayer;
-import org.bukkit.Material;
 
 public class PlayerListener implements IPlayerInteractEvent
 {
-	public PlayerListener(Globals globals, IOutput output)
+	public PlayerListener(Globals globals)
 	{
 		this.globals = globals;
 	}
@@ -21,28 +20,24 @@ public class PlayerListener implements IPlayerInteractEvent
 		RunsafePlayer player = event.getPlayer();
 		RunsafeWorld world = player.getWorld();
 		RunsafeItemStack item = player.getItemInHand();
+
 		if (globals.itemIsDisabled(world, item.getItemId()))
 		{
 			if (globals.blockedItemShouldBeRemoved())
 				event.removeItemStack();
+
 			event.setCancelled(true);
 			return;
 		}
-		if (!player.canBuildNow())
+
+		if (!player.canBuildNow() || event.getBlock() == null)
 			return;
 
-		if (event.getBlock() != null
-			&& item.getItemId() == Material.MONSTER_EGG.getId()
-			&& !globals.itemIsDisabled(world, Material.MOB_SPAWNER.getId())
-			&& this.globals.blockShouldDrop(player.getWorld(), Material.MOB_SPAWNER.getId()))
+		if (item.is(Item.Miscellaneous.MonsterEgg.Any) && this.globals.blockShouldDrop(world, Item.Miscellaneous.MonsterEgg.Any.getTypeID()))
 		{
-			if (globals.createSpawner(event.getPlayer(), event.getBlock().getWorld(), event.getTargetBlock(), item))
-			{
-				if (item.getAmount() > 1)
-					item.remove(1);
-				else
-					event.removeItemStack();
-			}
+			if (this.globals.createSpawner(player, world, event.getTargetBlock(), item))
+				player.removeItem(item.getItemType(), 1);
+
 			event.setCancelled(true);
 		}
 	}
