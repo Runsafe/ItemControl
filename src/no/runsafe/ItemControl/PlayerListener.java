@@ -44,7 +44,6 @@ public class PlayerListener implements IPlayerInteractEvent
 					event.removeItemStack();
 			}
 			event.setCancelled(true);
-			return;
 		}
 	}
 
