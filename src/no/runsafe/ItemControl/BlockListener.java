@@ -37,7 +37,7 @@ public class BlockListener implements IBlockBreakEvent, IBlockDispense
 		RunsafeItemStack heldItem = thePlayer.getItemInHand();
 		final RunsafeBlock theBlock = event.getBlock();
 
-		if (this.globals.blockShouldDrop(thePlayer.getWorld(), theBlock.getTypeId()) && heldItem.containsEnchantment(Enchant.SilkTouch.getEnchant()))
+		if (this.globals.blockShouldDrop(thePlayer.getWorld(), theBlock.getTypeId()) && heldItem.enchanted(Enchant.SilkTouch))
 		{
 			try
 			{
