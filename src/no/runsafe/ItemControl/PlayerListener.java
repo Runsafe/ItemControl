@@ -3,6 +3,7 @@ package no.runsafe.ItemControl;
 import no.runsafe.framework.event.player.IPlayerInteractEvent;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.server.RunsafeWorld;
+import no.runsafe.framework.server.block.RunsafeBlock;
 import no.runsafe.framework.server.event.player.RunsafePlayerInteractEvent;
 import no.runsafe.framework.server.item.RunsafeItemStack;
 import no.runsafe.framework.server.player.RunsafePlayer;
@@ -35,6 +36,12 @@ public class PlayerListener implements IPlayerInteractEvent
 
 		if (item.is(Item.Miscellaneous.MonsterEgg.Any) && this.globals.blockShouldDrop(world, Item.Miscellaneous.MonsterEgg.Any.getTypeID()))
 		{
+			RunsafeBlock block = event.getBlock();
+
+			// If the block has an interface or is interact block, don't let them place a spawner
+			if (block.hasInterface() || block.isInteractBlock())
+				return;
+
 			if (this.globals.createSpawner(player, world, event.getTargetBlock(), item))
 				player.removeItem(item.getItemType(), 1);
 
