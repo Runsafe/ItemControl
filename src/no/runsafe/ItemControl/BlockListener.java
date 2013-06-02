@@ -1,5 +1,6 @@
 package no.runsafe.ItemControl;
 
+import no.runsafe.framework.enchant.Enchant;
 import no.runsafe.framework.event.block.IBlockBreakEvent;
 import no.runsafe.framework.event.block.IBlockDispense;
 import no.runsafe.framework.output.IOutput;
@@ -7,8 +8,6 @@ import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeWorld;
 import no.runsafe.framework.server.block.RunsafeBlock;
 import no.runsafe.framework.server.block.RunsafeSpawner;
-import no.runsafe.framework.server.enchantment.RunsafeEnchantment;
-import no.runsafe.framework.server.enchantment.RunsafeEnchantmentType;
 import no.runsafe.framework.server.event.block.RunsafeBlockBreakEvent;
 import no.runsafe.framework.server.item.RunsafeItemStack;
 import no.runsafe.framework.server.player.RunsafePlayer;
@@ -38,7 +37,7 @@ public class BlockListener implements IBlockBreakEvent, IBlockDispense
 		RunsafeItemStack heldItem = thePlayer.getItemInHand();
 		final RunsafeBlock theBlock = event.getBlock();
 
-		if (this.globals.blockShouldDrop(thePlayer.getWorld(), theBlock.getTypeId()) && heldItem.containsEnchantment(RunsafeEnchantmentType.SILK_TOUCH))
+		if (this.globals.blockShouldDrop(thePlayer.getWorld(), theBlock.getTypeId()) && heldItem.containsEnchantment(Enchant.SilkTouch.getEnchant()))
 		{
 			try
 			{
