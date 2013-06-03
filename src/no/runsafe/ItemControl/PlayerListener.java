@@ -41,7 +41,7 @@ public class PlayerListener implements IPlayerInteractEvent
 
 		this.output.fine("Checking for Monster Egg");
 		this.output.fine("Egg ID: " + Item.Miscellaneous.MonsterEgg.Any.getTypeID());
-		this.output.fine("Any Data: " + Item.Miscellaneous.MonsterEgg.Any.getDataByte());
+		this.output.fine("Any Data: " + Item.Miscellaneous.MonsterEgg.Any.getData());
 		this.output.fine("Item ID: " + item.getItemId());
 		this.output.fine("Item Data: " + item.getData().getData());
 
