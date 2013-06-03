@@ -39,13 +39,7 @@ public class PlayerListener implements IPlayerInteractEvent
 		if (!player.canBuildNow() || event.getBlock() == null)
 			return;
 
-		this.output.fine("Checking for Monster Egg");
-		this.output.fine("Egg ID: " + Item.Miscellaneous.MonsterEgg.Any.getTypeID());
-		this.output.fine("Any Data: " + Item.Miscellaneous.MonsterEgg.Any.getData());
-		this.output.fine("Item ID: " + item.getItemId());
-		this.output.fine("Item Data: " + item.getData().getData());
-
-		if (item.is(Item.Miscellaneous.MonsterEgg.Any) && this.globals.blockShouldDrop(world, Item.Miscellaneous.MonsterEgg.Any.getTypeID()))
+		if (item.is(Item.Miscellaneous.MonsterEgg.Any) && this.globals.blockShouldDrop(world, Item.Unavailable.MobSpawner.getTypeID()))
 		{
 			this.output.fine("Monster Egg placement detected by " + playerName);
 			RunsafeBlock block = event.getBlock();
