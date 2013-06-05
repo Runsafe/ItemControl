@@ -38,7 +38,7 @@ public class PlayerListener implements IPlayerInteractEvent
 			event.setCancelled(true);
 		}
 
-		RunsafeBlock targetBlock = event.getTargetBlock().getBlock();
+		RunsafeBlock targetBlock = event.getBlock();
 		if (!player.canBuildNow() || targetBlock == null)
 			return;
 
@@ -51,7 +51,7 @@ public class PlayerListener implements IPlayerInteractEvent
 			if (targetBlock.hasInterface() || targetBlock.isInteractBlock())
 				return;
 
-			if (this.globals.createSpawner(player, targetBlock.getLocation(), usingItem))
+			if (this.globals.createSpawner(player, event.getTargetBlock(), usingItem))
 				player.removeItem(usingItem.getItemType(), 1);
 
 			event.setCancelled(true);
