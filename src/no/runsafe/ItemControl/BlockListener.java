@@ -64,7 +64,7 @@ public class BlockListener implements IBlockBreakEvent, IBlockDispense
 						{
 							if (blockBreakEvent.getCancelled())
 								return;
-							Item.Miscellaneous.MonsterEgg.Get(creature).Drop(theBlock.getLocation());
+							Item.Miscellaneous.MonsterEgg.Get(creature).Drop(theBlock.getLocation(), 1);
 						}
 					},
 					10L
