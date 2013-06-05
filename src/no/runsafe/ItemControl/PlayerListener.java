@@ -20,6 +20,9 @@ public class PlayerListener implements IPlayerInteractEvent
 	@Override
 	public void OnPlayerInteractEvent(RunsafePlayerInteractEvent event)
 	{
+		if (!event.isRightClick())
+			return;
+
 		RunsafePlayer player = event.getPlayer();
 		RunsafeWorld world = player.getWorld();
 		RunsafeItemStack usingItem = player.getItemInHand();
