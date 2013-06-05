@@ -51,7 +51,7 @@ public class Globals implements IConfigurationChanged
 			|| (this.worldBlockDrops.containsKey(world.getName()) && this.worldBlockDrops.get(world.getName()).contains(blockId));
 	}
 
-	public boolean createSpawner(RunsafePlayer actor, RunsafeWorld world, RunsafeLocation location, RunsafeItemStack itemInHand)
+	public boolean createSpawner(RunsafePlayer actor, RunsafeLocation location, RunsafeItemStack itemInHand)
 	{
 		RunsafeBlock target = location.getBlock();
 		Item inHand = Item.Get(itemInHand);
@@ -90,6 +90,7 @@ public class Globals implements IConfigurationChanged
 			return false;
 		}
 
+		console.writeColoured("Checking spawner of type %s (%s)", entityType, entityType.getName().toLowerCase());
 		if (entityType == null || !validSpawners.contains(entityType.getName().toLowerCase()))
 		{
 			if (actor != null)

@@ -48,7 +48,7 @@ public class PlayerListener implements IPlayerInteractEvent
 			if (block.hasInterface() || block.isInteractBlock())
 				return;
 
-			if (this.globals.createSpawner(player, world, event.getTargetBlock(), item))
+			if (this.globals.createSpawner(player, event.getTargetBlock(), item))
 				player.removeItem(item.getItemType(), 1);
 
 			event.setCancelled(true);
