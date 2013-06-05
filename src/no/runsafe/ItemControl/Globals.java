@@ -90,7 +90,6 @@ public class Globals implements IConfigurationChanged
 			return false;
 		}
 
-		console.writeColoured("Checking spawner of type %s (%s)", entityType, entityType.getName().toLowerCase());
 		if (entityType == null || !validSpawners.contains(entityType.getName().toLowerCase()))
 		{
 			if (actor != null)
