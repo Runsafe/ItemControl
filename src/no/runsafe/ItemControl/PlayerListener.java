@@ -1,14 +1,15 @@
 package no.runsafe.ItemControl;
 
-import no.runsafe.framework.event.player.IPlayerRightClick;
+import no.runsafe.framework.event.player.IPlayerInteractEvent;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeWorld;
 import no.runsafe.framework.server.block.RunsafeBlock;
+import no.runsafe.framework.server.event.player.RunsafePlayerInteractEvent;
 import no.runsafe.framework.server.item.RunsafeItemStack;
 import no.runsafe.framework.server.player.RunsafePlayer;
 
-public class PlayerListener implements IPlayerRightClick
+public class PlayerListener implements IPlayerInteractEvent
 {
 	public PlayerListener(Globals globals, IOutput output)
 	{
@@ -17,39 +18,42 @@ public class PlayerListener implements IPlayerRightClick
 	}
 
 	@Override
-	public boolean OnPlayerRightClick(RunsafePlayer player, RunsafeItemStack usingItem, RunsafeBlock targetBlock)
+	public void OnPlayerInteractEvent(RunsafePlayerInteractEvent event)
 	{
+		RunsafePlayer player = event.getPlayer();
 		RunsafeWorld world = player.getWorld();
-		RunsafeItemStack item = player.getItemInHand();
+		RunsafeItemStack usingItem = player.getItemInHand();
 
 		String playerName = player.getName();
 
-		if (globals.itemIsDisabled(world, item.getItemId()))
+		if (globals.itemIsDisabled(world, usingItem.getItemId()))
 		{
-			this.output.fine(String.format("%s tried to use disabled item %s", playerName, item.getItemId()));
+			this.output.fine(String.format("%s tried to use disabled item %s", playerName, usingItem.getItemId()));
 			if (globals.blockedItemShouldBeRemoved())
 				player.removeItem(usingItem.getItemType());
 
-			return false;
+			event.setCancelled(true);
 		}
 
+		RunsafeBlock targetBlock = event.getTargetBlock().getBlock();
 		if (!player.canBuildNow() || targetBlock == null)
-			return true;
+			return;
 
-		if (item.is(Item.Miscellaneous.MonsterEgg.Any) && this.globals.blockShouldDrop(world, Item.Unavailable.MobSpawner.getTypeID()))
+		if (usingItem.is(Item.Miscellaneous.MonsterEgg.Any)
+			&& this.globals.blockShouldDrop(world, Item.Unavailable.MobSpawner.getTypeID()))
 		{
 			this.output.fine("Monster Egg placement detected by " + playerName);
 
 			// If the block has an interface or is interact block, don't let them place a spawner
 			if (targetBlock.hasInterface() || targetBlock.isInteractBlock())
-				return true;
+				return;
 
-			if (this.globals.createSpawner(player, targetBlock.getLocation(), item))
-				player.removeItem(item.getItemType(), 1);
+			if (this.globals.createSpawner(player, targetBlock.getLocation(), usingItem))
+				player.removeItem(usingItem.getItemType(), 1);
 
-			return false;
+			event.setCancelled(true);
+			return;
 		}
-		return true;
 	}
 
 	private final Globals globals;
