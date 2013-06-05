@@ -2,18 +2,19 @@ package no.runsafe.ItemControl;
 
 import no.runsafe.framework.configuration.IConfiguration;
 import no.runsafe.framework.event.IConfigurationChanged;
+import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.output.ChatColour;
 import no.runsafe.framework.output.ConsoleColors;
 import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeWorld;
+import no.runsafe.framework.server.block.RunsafeBlock;
+import no.runsafe.framework.server.block.RunsafeBlockState;
+import no.runsafe.framework.server.block.RunsafeCreatureSpawner;
+import no.runsafe.framework.server.entity.EntityType;
+import no.runsafe.framework.server.entity.RunsafeEntityType;
 import no.runsafe.framework.server.item.RunsafeItemStack;
 import no.runsafe.framework.server.player.RunsafePlayer;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.CreatureSpawner;
-import org.bukkit.entity.EntityType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,23 +53,25 @@ public class Globals implements IConfigurationChanged
 
 	public boolean createSpawner(RunsafePlayer actor, RunsafeWorld world, RunsafeLocation location, RunsafeItemStack itemInHand)
 	{
-		Block target = world.getRaw().getChunkAt(location.getRaw()).getBlock(
-			location.getBlockX(),
-			location.getBlockY(),
-			location.getBlockZ()
-		);
-		EntityType spawnerType = EntityType.fromId(itemInHand.getRaw().getData().getData());
-		if (target.isEmpty() && spawnerTypeValid(spawnerType == null ? null : spawnerType.name(), actor))
+		RunsafeBlock target = location.getBlock();
+		Item inHand = Item.Get(itemInHand);
+		RunsafeEntityType spawnerType = EntityType.Get(inHand);
+		if (target.isAir() && spawnerTypeValid(inHand.getData(), actor))
 		{
-			target.setType(Material.MOB_SPAWNER);
+			Item.Unavailable.MobSpawner.Place(location);
 			if (setSpawnerEntityID(target, spawnerType))
 				return true;
-			target.setType(Material.AIR);
+			Item.Unavailable.Air.Place(location);
 		}
 		return false;
 	}
 
-	public boolean spawnerTypeValid(String entityType, RunsafePlayer actor)
+	private boolean spawnerTypeValid(byte data, RunsafePlayer actor)
+	{
+		return spawnerTypeValid(EntityType.Get(data), actor);
+	}
+
+	public boolean spawnerTypeValid(RunsafeEntityType entityType, RunsafePlayer actor)
 	{
 		if (entityType == null && actor != null)
 		{
@@ -87,7 +90,7 @@ public class Globals implements IConfigurationChanged
 			return false;
 		}
 
-		if (entityType == null || !validSpawners.contains(entityType.toLowerCase()))
+		if (entityType == null || !validSpawners.contains(entityType.getName().toLowerCase()))
 		{
 			if (actor != null)
 				console.write(
@@ -113,17 +116,17 @@ public class Globals implements IConfigurationChanged
 		return removeBlocked;
 	}
 
-	private boolean setSpawnerEntityID(Block block, EntityType entityType)
+	private boolean setSpawnerEntityID(RunsafeBlock block, RunsafeEntityType entityType)
 	{
-		if (block == null || block.isEmpty())
+		if (block == null || block.isAir())
 			return false;
 
-		BlockState state = block.getState();
-		if (!(state instanceof CreatureSpawner))
+		RunsafeBlockState state = block.getBlockState();
+		if (!(state instanceof RunsafeCreatureSpawner))
 			return false;
 
-		CreatureSpawner spawner = (CreatureSpawner) state;
-		spawner.setSpawnedType(entityType);
+		RunsafeCreatureSpawner spawner = (RunsafeCreatureSpawner) state;
+		spawner.SetCreature(entityType);
 		spawner.update(true);
 		return true;
 	}

@@ -3,16 +3,17 @@ package no.runsafe.ItemControl;
 import no.runsafe.framework.enchant.Enchant;
 import no.runsafe.framework.event.block.IBlockBreakEvent;
 import no.runsafe.framework.event.block.IBlockDispense;
+import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.output.IOutput;
 import no.runsafe.framework.server.RunsafeLocation;
 import no.runsafe.framework.server.RunsafeWorld;
 import no.runsafe.framework.server.block.RunsafeBlock;
 import no.runsafe.framework.server.block.RunsafeSpawner;
+import no.runsafe.framework.server.entity.RunsafeEntityType;
 import no.runsafe.framework.server.event.block.RunsafeBlockBreakEvent;
 import no.runsafe.framework.server.item.RunsafeItemStack;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import no.runsafe.framework.timer.IScheduler;
-import org.bukkit.Material;
 
 import java.util.logging.Level;
 
@@ -42,16 +43,14 @@ public class BlockListener implements IBlockBreakEvent, IBlockDispense
 			try
 			{
 				RunsafeSpawner spawner = (RunsafeSpawner) theBlock;
-				final RunsafeWorld theBlockWorld = theBlock.getWorld();
-				final int itemId = Material.MONSTER_EGG.getId();
-				final byte monsterType = (byte) spawner.getCreatureId();
-				if (!globals.spawnerTypeValid(spawner.getCreatureType(), thePlayer))
+				final RunsafeEntityType creature = spawner.getCreature();
+				if (!globals.spawnerTypeValid(creature, thePlayer))
 				{
 					output.outputToConsole(
 						String.format(
 							"%s tried harvesting an invalid %s spawner!",
 							thePlayer.getName(),
-							spawner.getCreatureType()
+							creature.getName()
 						),
 						Level.WARNING
 					);
@@ -65,9 +64,7 @@ public class BlockListener implements IBlockBreakEvent, IBlockDispense
 						{
 							if (blockBreakEvent.getCancelled())
 								return;
-							output.fine(String.format("Dropping a spawn egg [%d:%d]", itemId, monsterType));
-							RunsafeItemStack itemToDrop = new RunsafeItemStack(itemId, 1, (short) monsterType);
-							theBlockWorld.dropItem(theBlock.getLocation(), itemToDrop);
+							Item.Miscellaneous.MonsterEgg.Get(creature).Drop(theBlock.getLocation());
 						}
 					},
 					10L
