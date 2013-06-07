@@ -11,3 +11,6 @@ spawner.allow:
   - silverfish
   - cavespider
   - blaze
+preventDeathItemDrops:
+  - myWorld.myRegion
+  - myWorldTwo

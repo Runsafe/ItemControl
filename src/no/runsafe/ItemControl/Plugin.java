@@ -2,12 +2,14 @@ package no.runsafe.ItemControl;
 
 import no.runsafe.framework.RunsafeConfigurablePlugin;
 import no.runsafe.framework.configuration.IConfigurationFile;
+import no.runsafe.worldguardbridge.WorldGuardInterface;
 
 public class Plugin extends RunsafeConfigurablePlugin implements IConfigurationFile
 {
 	@Override
 	protected void PluginSetup()
 	{
+		this.addComponent(getPluginAPI(WorldGuardInterface.class));
 		this.addComponent(Globals.class);
 		this.addComponent(PlayerListener.class);
 		this.addComponent(BlockListener.class);

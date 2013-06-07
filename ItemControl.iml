@@ -9,6 +9,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="framework" level="project" />
     <orderEntry type="library" name="craftbukkit" level="project" />
+    <orderEntry type="library" name="RunsafeWorldGuardBridge" level="project" />
   </component>
 </module>
 
