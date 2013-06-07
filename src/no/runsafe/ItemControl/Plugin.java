@@ -9,7 +9,7 @@ public class Plugin extends RunsafeConfigurablePlugin implements IConfigurationF
 	@Override
 	protected void PluginSetup()
 	{
-		addComponent(Instances.get("RunsafeWorldGuardBridge").getComponent(WorldGuardInterface.class));
+		this.addComponent(getFirstPluginAPI(WorldGuardInterface.class));
 		this.addComponent(Globals.class);
 		this.addComponent(PlayerListener.class);
 		this.addComponent(BlockListener.class);
