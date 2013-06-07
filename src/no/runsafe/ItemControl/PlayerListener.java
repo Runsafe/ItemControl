@@ -13,7 +13,6 @@ import no.runsafe.framework.server.event.player.RunsafePlayerInteractEvent;
 import no.runsafe.framework.server.item.RunsafeItemStack;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import no.runsafe.worldguardbridge.WorldGuardInterface;
-import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -110,7 +109,7 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 		{
 			if (node.contains("."))
 			{
-				String[] parts = StringUtils.split(".");
+				String[] parts = node.split("\\.");
 				if (!this.noDeathItemsRegions.containsKey(parts[0]))
 					this.noDeathItemsRegions.put(parts[0], new ArrayList<String>());
 
