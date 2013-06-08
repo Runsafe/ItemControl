@@ -75,7 +75,7 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 		String currentWorld = player.getWorld().getName();
 		boolean stopItems = false;
 
-		if (!this.noDeathItemsWorlds.contains(currentWorld))
+		if (!this.noDeathItemsWorlds.contains(currentWorld) && this.noDeathItemsRegions.get(currentWorld) != null)
 		{
 			List<String> regions = this.worldGuardInterface.getApplicableRegions(player);
 
