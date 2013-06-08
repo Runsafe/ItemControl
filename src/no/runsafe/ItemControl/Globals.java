@@ -54,7 +54,7 @@ public class Globals implements IConfigurationChanged
 	public boolean createSpawner(RunsafePlayer actor, RunsafeLocation location, RunsafeItemStack itemInHand)
 	{
 		RunsafeBlock target = location.getBlock();
-		Item inHand = Item.Get(itemInHand);
+		Item inHand = itemInHand.getItemType();
 		RunsafeEntityType spawnerType = EntityType.Get(inHand);
 		if (target.isAir() && spawnerTypeValid(inHand.getData(), actor))
 		{
