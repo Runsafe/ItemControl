@@ -10,7 +10,7 @@ import no.runsafe.framework.server.RunsafeWorld;
 import no.runsafe.framework.server.block.RunsafeBlock;
 import no.runsafe.framework.server.event.player.RunsafePlayerDeathEvent;
 import no.runsafe.framework.server.event.player.RunsafePlayerInteractEvent;
-import no.runsafe.framework.server.item.RunsafeItemStack;
+import no.runsafe.framework.server.item.meta.RunsafeMeta;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import no.runsafe.worldguardbridge.WorldGuardInterface;
 
@@ -35,7 +35,7 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 
 		RunsafePlayer player = event.getPlayer();
 		RunsafeWorld world = player.getWorld();
-		RunsafeItemStack usingItem = player.getItemInHand();
+		RunsafeMeta usingItem = player.getItemInHand();
 
 		String playerName = player.getName();
 
@@ -95,7 +95,7 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 
 		if (stopItems)
 		{
-			event.setDrops(new ArrayList<RunsafeItemStack>());
+			event.setDrops(new ArrayList<RunsafeMeta>());
 			event.setNewExp(0);
 			event.setNewLevel(0);
 		}

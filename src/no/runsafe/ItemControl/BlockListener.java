@@ -12,6 +12,7 @@ import no.runsafe.framework.server.block.RunsafeSpawner;
 import no.runsafe.framework.server.entity.RunsafeEntityType;
 import no.runsafe.framework.server.event.block.RunsafeBlockBreakEvent;
 import no.runsafe.framework.server.item.RunsafeItemStack;
+import no.runsafe.framework.server.item.meta.RunsafeMeta;
 import no.runsafe.framework.server.player.RunsafePlayer;
 import no.runsafe.framework.timer.IScheduler;
 
@@ -79,7 +80,7 @@ public class BlockListener implements IBlockBreakEvent, IBlockDispense
 	}
 
 	@Override
-	public boolean OnBlockDispense(RunsafeBlock block, RunsafeItemStack itemStack)
+	public boolean OnBlockDispense(RunsafeBlock block, RunsafeMeta itemStack)
 	{
 		RunsafeWorld blockWorld = block.getWorld();
 		RunsafeLocation blockLocation = block.getLocation();
