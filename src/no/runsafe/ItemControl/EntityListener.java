@@ -1,9 +1,9 @@
 package no.runsafe.ItemControl;
 
-import no.runsafe.framework.event.entity.IMobSpawnerPulsed;
-import no.runsafe.framework.output.IOutput;
-import no.runsafe.framework.server.RunsafeLocation;
-import no.runsafe.framework.server.entity.RunsafeLivingEntity;
+import no.runsafe.framework.api.IOutput;
+import no.runsafe.framework.api.event.entity.IMobSpawnerPulsed;
+import no.runsafe.framework.minecraft.RunsafeLocation;
+import no.runsafe.framework.minecraft.entity.RunsafeLivingEntity;
 
 public class EntityListener implements IMobSpawnerPulsed
 {

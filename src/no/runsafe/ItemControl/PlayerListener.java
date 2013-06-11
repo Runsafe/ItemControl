@@ -1,17 +1,17 @@
 package no.runsafe.ItemControl;
 
-import no.runsafe.framework.configuration.IConfiguration;
-import no.runsafe.framework.event.IConfigurationChanged;
-import no.runsafe.framework.event.player.IPlayerDeathEvent;
-import no.runsafe.framework.event.player.IPlayerInteractEvent;
+import no.runsafe.framework.api.IConfiguration;
+import no.runsafe.framework.api.IOutput;
+import no.runsafe.framework.api.event.player.IPlayerDeathEvent;
+import no.runsafe.framework.api.event.player.IPlayerInteractEvent;
+import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.minecraft.Item;
-import no.runsafe.framework.output.IOutput;
-import no.runsafe.framework.server.RunsafeWorld;
-import no.runsafe.framework.server.block.RunsafeBlock;
-import no.runsafe.framework.server.event.player.RunsafePlayerDeathEvent;
-import no.runsafe.framework.server.event.player.RunsafePlayerInteractEvent;
-import no.runsafe.framework.server.item.meta.RunsafeMeta;
-import no.runsafe.framework.server.player.RunsafePlayer;
+import no.runsafe.framework.minecraft.RunsafeWorld;
+import no.runsafe.framework.minecraft.block.RunsafeBlock;
+import no.runsafe.framework.minecraft.event.player.RunsafePlayerDeathEvent;
+import no.runsafe.framework.minecraft.event.player.RunsafePlayerInteractEvent;
+import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
+import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.worldguardbridge.WorldGuardInterface;
 
 import java.util.ArrayList;

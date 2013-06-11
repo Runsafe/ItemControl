@@ -1,10 +1,9 @@
 package no.runsafe.ItemControl;
 
 import no.runsafe.framework.RunsafeConfigurablePlugin;
-import no.runsafe.framework.configuration.IConfigurationFile;
 import no.runsafe.worldguardbridge.WorldGuardInterface;
 
-public class Plugin extends RunsafeConfigurablePlugin implements IConfigurationFile
+public class Plugin extends RunsafeConfigurablePlugin
 {
 	@Override
 	protected void PluginSetup()

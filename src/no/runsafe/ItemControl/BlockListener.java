@@ -1,20 +1,20 @@
 package no.runsafe.ItemControl;
 
-import no.runsafe.framework.enchant.Enchant;
-import no.runsafe.framework.event.block.IBlockBreakEvent;
-import no.runsafe.framework.event.block.IBlockDispense;
+import no.runsafe.framework.api.IOutput;
+import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.event.block.IBlockBreakEvent;
+import no.runsafe.framework.api.event.block.IBlockDispense;
+import no.runsafe.framework.api.minecraft.RunsafeEntityType;
+import no.runsafe.framework.minecraft.Enchant;
 import no.runsafe.framework.minecraft.Item;
-import no.runsafe.framework.output.IOutput;
-import no.runsafe.framework.server.RunsafeLocation;
-import no.runsafe.framework.server.RunsafeWorld;
-import no.runsafe.framework.server.block.RunsafeBlock;
-import no.runsafe.framework.server.block.RunsafeSpawner;
-import no.runsafe.framework.server.entity.RunsafeEntityType;
-import no.runsafe.framework.server.event.block.RunsafeBlockBreakEvent;
-import no.runsafe.framework.server.item.RunsafeItemStack;
-import no.runsafe.framework.server.item.meta.RunsafeMeta;
-import no.runsafe.framework.server.player.RunsafePlayer;
-import no.runsafe.framework.timer.IScheduler;
+import no.runsafe.framework.minecraft.RunsafeLocation;
+import no.runsafe.framework.minecraft.RunsafeWorld;
+import no.runsafe.framework.minecraft.block.RunsafeBlock;
+import no.runsafe.framework.minecraft.block.RunsafeSpawner;
+import no.runsafe.framework.minecraft.event.block.RunsafeBlockBreakEvent;
+import no.runsafe.framework.minecraft.item.RunsafeItemStack;
+import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
+import no.runsafe.framework.minecraft.player.RunsafePlayer;
 
 import java.util.logging.Level;
 

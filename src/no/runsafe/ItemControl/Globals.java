@@ -1,20 +1,20 @@
 package no.runsafe.ItemControl;
 
-import no.runsafe.framework.configuration.IConfiguration;
-import no.runsafe.framework.event.IConfigurationChanged;
+import no.runsafe.framework.api.IConfiguration;
+import no.runsafe.framework.api.IOutput;
+import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
+import no.runsafe.framework.api.minecraft.RunsafeEntityType;
 import no.runsafe.framework.minecraft.Item;
-import no.runsafe.framework.output.ChatColour;
-import no.runsafe.framework.output.ConsoleColors;
-import no.runsafe.framework.output.IOutput;
-import no.runsafe.framework.server.RunsafeLocation;
-import no.runsafe.framework.server.RunsafeWorld;
-import no.runsafe.framework.server.block.RunsafeBlock;
-import no.runsafe.framework.server.block.RunsafeBlockState;
-import no.runsafe.framework.server.block.RunsafeCreatureSpawner;
-import no.runsafe.framework.server.entity.EntityType;
-import no.runsafe.framework.server.entity.RunsafeEntityType;
-import no.runsafe.framework.server.item.RunsafeItemStack;
-import no.runsafe.framework.server.player.RunsafePlayer;
+import no.runsafe.framework.minecraft.RunsafeLocation;
+import no.runsafe.framework.minecraft.RunsafeWorld;
+import no.runsafe.framework.minecraft.block.RunsafeBlock;
+import no.runsafe.framework.minecraft.block.RunsafeBlockState;
+import no.runsafe.framework.minecraft.block.RunsafeCreatureSpawner;
+import no.runsafe.framework.minecraft.entity.EntityType;
+import no.runsafe.framework.minecraft.item.RunsafeItemStack;
+import no.runsafe.framework.minecraft.player.RunsafePlayer;
+import no.runsafe.framework.text.ChatColour;
+import no.runsafe.framework.text.ConsoleColors;
 
 import java.util.ArrayList;
 import java.util.HashMap;
