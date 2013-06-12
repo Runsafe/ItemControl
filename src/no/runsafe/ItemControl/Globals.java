@@ -14,7 +14,7 @@ import no.runsafe.framework.minecraft.entity.EntityType;
 import no.runsafe.framework.minecraft.item.RunsafeItemStack;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.framework.text.ChatColour;
-import no.runsafe.framework.text.ConsoleColors;
+import no.runsafe.framework.text.ConsoleColour;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,7 +79,7 @@ public class Globals implements IConfigurationChanged
 				ChatColour.ToConsole(
 					String.format(
 						"SPAWNER WARNING: %s tried to create/break a NULL spawner [%s,%d,%d,%d]!",
-						ConsoleColors.FromMinecraft(actor.getPrettyName()),
+						ConsoleColour.FromMinecraft(actor.getPrettyName()),
 						actor.getWorld().getName(),
 						actor.getLocation().getBlockX(),
 						actor.getLocation().getBlockY(),
@@ -97,7 +97,7 @@ public class Globals implements IConfigurationChanged
 					ChatColour.ToConsole(
 						String.format(
 							"SPAWNER WARNING: %s tried to create/break an invalid %s spawner [%s,%d,%d,%d]!",
-							ConsoleColors.FromMinecraft(actor.getPrettyName()),
+							ConsoleColour.FromMinecraft(actor.getPrettyName()),
 							entityType,
 							actor.getWorld().getName(),
 							actor.getLocation().getBlockX(),
