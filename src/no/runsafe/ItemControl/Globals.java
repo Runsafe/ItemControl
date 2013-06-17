@@ -126,7 +126,7 @@ public class Globals implements IConfigurationChanged
 			return false;
 
 		RunsafeCreatureSpawner spawner = (RunsafeCreatureSpawner) state;
-		spawner.SetCreature(entityType);
+		spawner.setCreature(entityType);
 		spawner.update(true);
 		return true;
 	}
