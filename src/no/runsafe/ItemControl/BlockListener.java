@@ -4,6 +4,7 @@ import no.runsafe.framework.api.IOutput;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.event.block.IBlockBreakEvent;
 import no.runsafe.framework.api.event.block.IBlockDispense;
+import no.runsafe.framework.api.event.block.IItemDispensed;
 import no.runsafe.framework.api.minecraft.RunsafeEntityType;
 import no.runsafe.framework.minecraft.Enchant;
 import no.runsafe.framework.minecraft.Item;
@@ -18,7 +19,7 @@ import no.runsafe.framework.minecraft.player.RunsafePlayer;
 
 import java.util.logging.Level;
 
-public class BlockListener implements IBlockBreakEvent, IBlockDispense
+public class BlockListener implements IBlockBreakEvent, IItemDispensed
 {
 	public BlockListener(Globals globals, IScheduler scheduler, IOutput output)
 	{
