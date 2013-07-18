@@ -31,7 +31,7 @@ public class BlockListener implements IBlockBreakEvent, IItemDispensed
 	@Override
 	public void OnBlockBreakEvent(RunsafeBlockBreakEvent event)
 	{
-		if (event.getCancelled())
+		if (event.isCancelled())
 			return;
 
 		final RunsafeBlockBreakEvent blockBreakEvent = event;
@@ -64,7 +64,7 @@ public class BlockListener implements IBlockBreakEvent, IItemDispensed
 						@Override
 						public void run()
 						{
-							if (blockBreakEvent.getCancelled())
+							if (blockBreakEvent.isCancelled())
 								return;
 							Item.Miscellaneous.MonsterEgg.Get(creature).Drop(theBlock.getLocation(), 1);
 						}

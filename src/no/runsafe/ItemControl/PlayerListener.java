@@ -45,7 +45,7 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 			if (globals.blockedItemShouldBeRemoved())
 				player.removeItem(usingItem.getItemType());
 
-			event.setCancelled(true);
+			event.cancel();
 		}
 
 		RunsafeBlock targetBlock = event.getBlock();
@@ -64,7 +64,7 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 			if (this.globals.createSpawner(player, event.getTargetBlock(), usingItem))
 				player.removeItem(usingItem.getItemType(), 1);
 
-			event.setCancelled(true);
+			event.cancel();
 		}
 	}
 
