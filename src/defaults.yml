@@ -1,6 +1,6 @@
 # default config.yml
 
-disabledItems.*: [384]
+disabledItems.*: [137]
 disabledItems.Creative: [385]
 remove.disabledItems: true
 blockDrops.world: [52]
