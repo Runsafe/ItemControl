@@ -1,7 +1,7 @@
 package no.runsafe.ItemControl;
 
 import no.runsafe.framework.api.IConfiguration;
-import no.runsafe.framework.api.IOutput;
+import no.runsafe.framework.api.IDebug;
 import no.runsafe.framework.api.event.player.IPlayerDeathEvent;
 import no.runsafe.framework.api.event.player.IPlayerInteractEvent;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
@@ -20,11 +20,11 @@ import java.util.List;
 
 public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, IConfigurationChanged
 {
-	public PlayerListener(WorldGuardInterface worldGuardInterface, Globals globals, IOutput output)
+	public PlayerListener(WorldGuardInterface worldGuardInterface, Globals globals, IDebug debugger)
 	{
 		this.worldGuardInterface = worldGuardInterface;
 		this.globals = globals;
-		this.output = output;
+		this.debugger = debugger;
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 
 		if (globals.itemIsDisabled(world, usingItem.getItemId()))
 		{
-			this.output.fine(String.format("%s tried to use disabled item %s", playerName, usingItem.getItemId()));
+			this.debugger.debugFine("%s tried to use disabled item %s", playerName, usingItem.getItemId());
 			if (globals.blockedItemShouldBeRemoved())
 				player.removeItem(usingItem.getItemType());
 
@@ -55,7 +55,7 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 		if (usingItem.is(Item.Miscellaneous.MonsterEgg.Any)
 			&& this.globals.blockShouldDrop(world, Item.Unavailable.MobSpawner.getTypeID()))
 		{
-			this.output.fine("Monster Egg placement detected by " + playerName);
+			this.debugger.debugFine("Monster Egg placement detected by " + playerName);
 
 			// If the block has an interface or is interact block, don't let them place a spawner
 			if (targetBlock.hasInterface() || targetBlock.isInteractBlock())
@@ -127,5 +127,5 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 	private WorldGuardInterface worldGuardInterface;
 
 	private final Globals globals;
-	private IOutput output;
+	private IDebug debugger;
 }

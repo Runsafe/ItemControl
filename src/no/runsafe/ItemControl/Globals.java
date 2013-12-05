@@ -1,7 +1,7 @@
 package no.runsafe.ItemControl;
 
 import no.runsafe.framework.api.IConfiguration;
-import no.runsafe.framework.api.IOutput;
+import no.runsafe.framework.api.IConsole;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.minecraft.RunsafeEntityType;
 import no.runsafe.framework.minecraft.Item;
@@ -13,7 +13,6 @@ import no.runsafe.framework.minecraft.block.RunsafeCreatureSpawner;
 import no.runsafe.framework.minecraft.entity.EntityType;
 import no.runsafe.framework.minecraft.item.RunsafeItemStack;
 import no.runsafe.framework.minecraft.player.RunsafePlayer;
-import no.runsafe.framework.text.ChatColour;
 import no.runsafe.framework.text.ConsoleColour;
 
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ import java.util.List;
 
 public class Globals implements IConfigurationChanged
 {
-	public Globals(IOutput output)
+	public Globals(IConsole output)
 	{
 		console = output;
 	}
@@ -75,17 +74,13 @@ public class Globals implements IConfigurationChanged
 	{
 		if (entityType == null && actor != null)
 		{
-			console.write(
-				ChatColour.ToConsole(
-					String.format(
-						"SPAWNER WARNING: %s tried to create/break a NULL spawner [%s,%d,%d,%d]!",
-						ConsoleColour.FromMinecraft(actor.getPrettyName()),
-						actor.getWorld().getName(),
-						actor.getLocation().getBlockX(),
-						actor.getLocation().getBlockY(),
-						actor.getLocation().getBlockZ()
-					)
-				)
+			console.logInformation(
+				"SPAWNER WARNING: %s tried to create/break a NULL spawner [%s,%d,%d,%d]!",
+				ConsoleColour.FromMinecraft(actor.getPrettyName()),
+				actor.getWorld().getName(),
+				actor.getLocation().getBlockX(),
+				actor.getLocation().getBlockY(),
+				actor.getLocation().getBlockZ()
 			);
 			return false;
 		}
@@ -93,18 +88,14 @@ public class Globals implements IConfigurationChanged
 		if (entityType == null || !validSpawners.contains(entityType.getName().toLowerCase()))
 		{
 			if (actor != null)
-				console.write(
-					ChatColour.ToConsole(
-						String.format(
-							"SPAWNER WARNING: %s tried to create/break an invalid %s spawner [%s,%d,%d,%d]!",
-							ConsoleColour.FromMinecraft(actor.getPrettyName()),
-							entityType,
-							actor.getWorld().getName(),
-							actor.getLocation().getBlockX(),
-							actor.getLocation().getBlockY(),
-							actor.getLocation().getBlockZ()
-						)
-					)
+				console.logInformation(
+					"SPAWNER WARNING: %s tried to create/break an invalid %s spawner [%s,%d,%d,%d]!",
+					ConsoleColour.FromMinecraft(actor.getPrettyName()),
+					entityType,
+					actor.getWorld().getName(),
+					actor.getLocation().getBlockX(),
+					actor.getLocation().getBlockY(),
+					actor.getLocation().getBlockZ()
 				);
 			return false;
 		}
@@ -134,6 +125,6 @@ public class Globals implements IConfigurationChanged
 	private final HashMap<String, List<Integer>> worldBlockDrops = new HashMap<String, List<Integer>>();
 	private final HashMap<String, List<Integer>> disabledItems = new HashMap<String, List<Integer>>();
 	private final List<String> validSpawners = new ArrayList<String>();
-	private final IOutput console;
+	private final IConsole console;
 	private boolean removeBlocked;
 }

@@ -18,7 +18,7 @@ public class EntityListener implements IMobSpawnerPulsed
 	{
 		if (!globals.spawnerTypeValid(entity.getEntityType(), null))
 		{
-			console.writeColoured(
+			console.logInformation(
 				"SPAWNER WARNING: &cBlocked invalid spawner of &e%s&c at (%s,%d,%d,%d)",
 				entity.getRaw().getType().name(),
 				location.getWorld().getName(),
