@@ -6,16 +6,15 @@ import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.block.IBlockBreakEvent;
 import no.runsafe.framework.api.event.block.IItemDispensed;
 import no.runsafe.framework.api.minecraft.RunsafeEntityType;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Enchant;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.RunsafeWorld;
-import no.runsafe.framework.minecraft.block.RunsafeBlock;
 import no.runsafe.framework.minecraft.block.RunsafeSpawner;
 import no.runsafe.framework.minecraft.event.block.RunsafeBlockBreakEvent;
 import no.runsafe.framework.minecraft.item.RunsafeItemStack;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
-import no.runsafe.framework.minecraft.player.RunsafePlayer;
 
 import java.util.logging.Level;
 
@@ -36,7 +35,7 @@ public class BlockListener implements IBlockBreakEvent, IItemDispensed
 
 		final RunsafeBlockBreakEvent blockBreakEvent = event;
 
-		RunsafePlayer thePlayer = event.getPlayer();
+		IPlayer thePlayer = event.getPlayer();
 		RunsafeItemStack heldItem = thePlayer.getItemInHand();
 		final IBlock theBlock = event.getBlock();
 

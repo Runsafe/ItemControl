@@ -6,12 +6,12 @@ import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.player.IPlayerDeathEvent;
 import no.runsafe.framework.api.event.player.IPlayerInteractEvent;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.RunsafeWorld;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerDeathEvent;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerInteractEvent;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
-import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.worldguardbridge.WorldGuardInterface;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 		if (!event.isRightClick())
 			return;
 
-		RunsafePlayer player = event.getPlayer();
+		IPlayer player = event.getPlayer();
 		RunsafeWorld world = player.getWorld();
 		RunsafeMeta usingItem = player.getItemInHand();
 
@@ -71,8 +71,8 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 	@Override
 	public void OnPlayerDeathEvent(RunsafePlayerDeathEvent event)
 	{
-		RunsafePlayer player = event.getEntity();
-		String currentWorld = player.getWorld().getName();
+		IPlayer player = event.getEntity();
+		String currentWorld = player.getWorldName();
 		boolean stopItems = false;
 
 		if (!this.noDeathItemsWorlds.contains(currentWorld))

@@ -3,16 +3,16 @@ package no.runsafe.ItemControl;
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IConsole;
 import no.runsafe.framework.api.block.IBlock;
+import no.runsafe.framework.api.block.IBlockState;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.minecraft.RunsafeEntityType;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.RunsafeWorld;
-import no.runsafe.framework.minecraft.block.RunsafeBlockState;
 import no.runsafe.framework.minecraft.block.RunsafeCreatureSpawner;
 import no.runsafe.framework.minecraft.entity.EntityType;
 import no.runsafe.framework.minecraft.item.RunsafeItemStack;
-import no.runsafe.framework.minecraft.player.RunsafePlayer;
 import no.runsafe.framework.text.ConsoleColour;
 
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class Globals implements IConfigurationChanged
 			|| (this.worldBlockDrops.containsKey(world.getName()) && this.worldBlockDrops.get(world.getName()).contains(blockId));
 	}
 
-	public boolean createSpawner(RunsafePlayer actor, RunsafeLocation location, RunsafeItemStack itemInHand)
+	public boolean createSpawner(IPlayer actor, RunsafeLocation location, RunsafeItemStack itemInHand)
 	{
 		IBlock target = location.getBlock();
 		Item inHand = itemInHand.getItemType();
@@ -65,12 +65,12 @@ public class Globals implements IConfigurationChanged
 		return false;
 	}
 
-	private boolean spawnerTypeValid(byte data, RunsafePlayer actor)
+	private boolean spawnerTypeValid(byte data, IPlayer actor)
 	{
 		return spawnerTypeValid(EntityType.Get(data), actor);
 	}
 
-	public boolean spawnerTypeValid(RunsafeEntityType entityType, RunsafePlayer actor)
+	public boolean spawnerTypeValid(RunsafeEntityType entityType, IPlayer actor)
 	{
 		if (entityType == null && actor != null)
 		{
@@ -112,7 +112,7 @@ public class Globals implements IConfigurationChanged
 		if (block == null || block.isAir())
 			return false;
 
-		RunsafeBlockState state = block.getBlockState();
+		IBlockState state = block.getBlockState();
 		if (!(state instanceof RunsafeCreatureSpawner))
 			return false;
 
