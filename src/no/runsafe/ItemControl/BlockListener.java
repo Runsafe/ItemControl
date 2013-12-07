@@ -2,6 +2,7 @@ package no.runsafe.ItemControl;
 
 import no.runsafe.framework.api.IOutput;
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.block.IBlockBreakEvent;
 import no.runsafe.framework.api.event.block.IItemDispensed;
@@ -10,7 +11,6 @@ import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Enchant;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.RunsafeLocation;
-import no.runsafe.framework.minecraft.RunsafeWorld;
 import no.runsafe.framework.minecraft.block.RunsafeSpawner;
 import no.runsafe.framework.minecraft.event.block.RunsafeBlockBreakEvent;
 import no.runsafe.framework.minecraft.item.RunsafeItemStack;
@@ -82,7 +82,7 @@ public class BlockListener implements IBlockBreakEvent, IItemDispensed
 	@Override
 	public boolean OnBlockDispense(IBlock block, RunsafeMeta itemStack)
 	{
-		RunsafeWorld blockWorld = block.getWorld();
+		IWorld blockWorld = block.getWorld();
 		RunsafeLocation blockLocation = block.getLocation();
 		if (this.globals.itemIsDisabled(block.getWorld(), itemStack.getItemId()))
 		{

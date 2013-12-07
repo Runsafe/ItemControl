@@ -2,6 +2,7 @@ package no.runsafe.ItemControl;
 
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IConsole;
+import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.block.IBlockState;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
@@ -9,7 +10,6 @@ import no.runsafe.framework.api.minecraft.RunsafeEntityType;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.RunsafeLocation;
-import no.runsafe.framework.minecraft.RunsafeWorld;
 import no.runsafe.framework.minecraft.block.RunsafeCreatureSpawner;
 import no.runsafe.framework.minecraft.entity.EntityType;
 import no.runsafe.framework.minecraft.item.RunsafeItemStack;
@@ -38,13 +38,13 @@ public class Globals implements IConfigurationChanged
 		this.removeBlocked = config.getConfigValueAsBoolean("remove.disabledItems");
 	}
 
-	public Boolean itemIsDisabled(RunsafeWorld world, int itemID)
+	public Boolean itemIsDisabled(IWorld world, int itemID)
 	{
 		return (this.disabledItems.containsKey("*") && this.disabledItems.get("*").contains(itemID))
 			|| (this.disabledItems.containsKey(world.getName()) && this.disabledItems.get(world.getName()).contains(itemID));
 	}
 
-	public Boolean blockShouldDrop(RunsafeWorld world, Integer blockId)
+	public Boolean blockShouldDrop(IWorld world, Integer blockId)
 	{
 		return (this.worldBlockDrops.containsKey("*") && this.worldBlockDrops.get("*").contains(blockId))
 			|| (this.worldBlockDrops.containsKey(world.getName()) && this.worldBlockDrops.get(world.getName()).contains(blockId));
