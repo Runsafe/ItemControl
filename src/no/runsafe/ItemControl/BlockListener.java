@@ -2,8 +2,8 @@ package no.runsafe.ItemControl;
 
 import no.runsafe.framework.api.IOutput;
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.block.IBlockBreakEvent;
-import no.runsafe.framework.api.event.block.IBlockDispense;
 import no.runsafe.framework.api.event.block.IItemDispensed;
 import no.runsafe.framework.api.minecraft.RunsafeEntityType;
 import no.runsafe.framework.minecraft.Enchant;
@@ -38,9 +38,9 @@ public class BlockListener implements IBlockBreakEvent, IItemDispensed
 
 		RunsafePlayer thePlayer = event.getPlayer();
 		RunsafeItemStack heldItem = thePlayer.getItemInHand();
-		final RunsafeBlock theBlock = event.getBlock();
+		final IBlock theBlock = event.getBlock();
 
-		if (this.globals.blockShouldDrop(thePlayer.getWorld(), theBlock.getTypeId()) && heldItem.enchanted(Enchant.SilkTouch))
+		if (this.globals.blockShouldDrop(thePlayer.getWorld(), theBlock.getMaterial().getTypeID()) && heldItem.enchanted(Enchant.SilkTouch))
 		{
 			try
 			{
@@ -81,7 +81,7 @@ public class BlockListener implements IBlockBreakEvent, IItemDispensed
 	}
 
 	@Override
-	public boolean OnBlockDispense(RunsafeBlock block, RunsafeMeta itemStack)
+	public boolean OnBlockDispense(IBlock block, RunsafeMeta itemStack)
 	{
 		RunsafeWorld blockWorld = block.getWorld();
 		RunsafeLocation blockLocation = block.getLocation();

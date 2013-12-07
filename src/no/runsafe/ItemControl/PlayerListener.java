@@ -2,12 +2,12 @@ package no.runsafe.ItemControl;
 
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IDebug;
+import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.player.IPlayerDeathEvent;
 import no.runsafe.framework.api.event.player.IPlayerInteractEvent;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.RunsafeWorld;
-import no.runsafe.framework.minecraft.block.RunsafeBlock;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerDeathEvent;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerInteractEvent;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
@@ -48,7 +48,7 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 			event.cancel();
 		}
 
-		RunsafeBlock targetBlock = event.getBlock();
+		IBlock targetBlock = event.getBlock();
 		if (!player.canBuildNow() || targetBlock == null)
 			return;
 

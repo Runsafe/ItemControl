@@ -2,12 +2,12 @@ package no.runsafe.ItemControl;
 
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IConsole;
+import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.minecraft.RunsafeEntityType;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.RunsafeWorld;
-import no.runsafe.framework.minecraft.block.RunsafeBlock;
 import no.runsafe.framework.minecraft.block.RunsafeBlockState;
 import no.runsafe.framework.minecraft.block.RunsafeCreatureSpawner;
 import no.runsafe.framework.minecraft.entity.EntityType;
@@ -52,7 +52,7 @@ public class Globals implements IConfigurationChanged
 
 	public boolean createSpawner(RunsafePlayer actor, RunsafeLocation location, RunsafeItemStack itemInHand)
 	{
-		RunsafeBlock target = location.getBlock();
+		IBlock target = location.getBlock();
 		Item inHand = itemInHand.getItemType();
 		RunsafeEntityType spawnerType = EntityType.Get(inHand);
 		if (target.isAir() && spawnerTypeValid(inHand.getData(), actor))
@@ -107,7 +107,7 @@ public class Globals implements IConfigurationChanged
 		return removeBlocked;
 	}
 
-	private boolean setSpawnerEntityID(RunsafeBlock block, RunsafeEntityType entityType)
+	private boolean setSpawnerEntityID(IBlock block, RunsafeEntityType entityType)
 	{
 		if (block == null || block.isAir())
 			return false;
