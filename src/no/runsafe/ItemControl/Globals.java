@@ -2,6 +2,7 @@ package no.runsafe.ItemControl;
 
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IConsole;
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.block.IBlockState;
@@ -9,7 +10,6 @@ import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.minecraft.RunsafeEntityType;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
-import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.block.RunsafeCreatureSpawner;
 import no.runsafe.framework.minecraft.entity.EntityType;
 import no.runsafe.framework.minecraft.item.RunsafeItemStack;
@@ -50,7 +50,7 @@ public class Globals implements IConfigurationChanged
 			|| (this.worldBlockDrops.containsKey(world.getName()) && this.worldBlockDrops.get(world.getName()).contains(blockId));
 	}
 
-	public boolean createSpawner(IPlayer actor, RunsafeLocation location, RunsafeItemStack itemInHand)
+	public boolean createSpawner(IPlayer actor, ILocation location, RunsafeItemStack itemInHand)
 	{
 		IBlock target = location.getBlock();
 		Item inHand = itemInHand.getItemType();

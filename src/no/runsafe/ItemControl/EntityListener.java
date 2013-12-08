@@ -1,8 +1,8 @@
 package no.runsafe.ItemControl;
 
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IOutput;
 import no.runsafe.framework.api.event.entity.IMobSpawnerPulsed;
-import no.runsafe.framework.minecraft.RunsafeLocation;
 import no.runsafe.framework.minecraft.entity.RunsafeLivingEntity;
 
 public class EntityListener implements IMobSpawnerPulsed
@@ -14,7 +14,7 @@ public class EntityListener implements IMobSpawnerPulsed
 	}
 
 	@Override
-	public boolean OnMobSpawnerPulsed(RunsafeLivingEntity entity, RunsafeLocation location)
+	public boolean OnMobSpawnerPulsed(RunsafeLivingEntity entity, ILocation location)
 	{
 		if (!globals.spawnerTypeValid(entity.getEntityType(), null))
 		{
