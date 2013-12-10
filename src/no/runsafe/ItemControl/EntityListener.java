@@ -1,13 +1,13 @@
 package no.runsafe.ItemControl;
 
 import no.runsafe.framework.api.ILocation;
-import no.runsafe.framework.api.IOutput;
 import no.runsafe.framework.api.event.entity.IMobSpawnerPulsed;
+import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.minecraft.entity.RunsafeLivingEntity;
 
 public class EntityListener implements IMobSpawnerPulsed
 {
-	public EntityListener(Globals globals, IOutput console)
+	public EntityListener(Globals globals, IConsole console)
 	{
 		this.globals = globals;
 		this.console = console;
@@ -32,5 +32,5 @@ public class EntityListener implements IMobSpawnerPulsed
 	}
 
 	private Globals globals;
-	private IOutput console;
+	private IConsole console;
 }

@@ -1,12 +1,12 @@
 package no.runsafe.ItemControl;
 
 import no.runsafe.framework.api.ILocation;
-import no.runsafe.framework.api.IOutput;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.block.IBlockBreakEvent;
 import no.runsafe.framework.api.event.block.IItemDispensed;
+import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.minecraft.RunsafeEntityType;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Enchant;
@@ -20,9 +20,9 @@ import java.util.logging.Level;
 
 public class BlockListener implements IBlockBreakEvent, IItemDispensed
 {
-	public BlockListener(Globals globals, IScheduler scheduler, IOutput output)
+	public BlockListener(Globals globals, IScheduler scheduler, IConsole output)
 	{
-		this.output = output;
+		this.console = output;
 		this.globals = globals;
 		this.scheduler = scheduler;
 	}
@@ -47,7 +47,7 @@ public class BlockListener implements IBlockBreakEvent, IItemDispensed
 				final RunsafeEntityType creature = spawner.getCreature();
 				if (!globals.spawnerTypeValid(creature, thePlayer))
 				{
-					output.outputToConsole(
+					console.outputToConsole(
 						String.format(
 							"%s tried harvesting an invalid %s spawner!",
 							thePlayer.getName(),
@@ -74,7 +74,7 @@ public class BlockListener implements IBlockBreakEvent, IItemDispensed
 			}
 			catch (Exception e)
 			{
-				output.logException(e);
+				console.logException(e);
 			}
 		}
 	}
@@ -93,7 +93,7 @@ public class BlockListener implements IBlockBreakEvent, IItemDispensed
 		return true;
 	}
 
-	private final IOutput output;
+	private final IConsole console;
 	private final Globals globals;
 	private final IScheduler scheduler;
 }
