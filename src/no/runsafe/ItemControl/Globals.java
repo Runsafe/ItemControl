@@ -4,13 +4,12 @@ import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.block.IBlock;
-import no.runsafe.framework.api.block.IBlockState;
+import no.runsafe.framework.api.block.ICreatureSpawner;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.minecraft.RunsafeEntityType;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
-import no.runsafe.framework.minecraft.block.RunsafeCreatureSpawner;
 import no.runsafe.framework.minecraft.entity.EntityType;
 import no.runsafe.framework.minecraft.item.RunsafeItemStack;
 import no.runsafe.framework.text.ConsoleColour;
@@ -112,11 +111,10 @@ public class Globals implements IConfigurationChanged
 		if (block == null || block.isAir())
 			return false;
 
-		IBlockState state = block.getBlockState();
-		if (!(state instanceof RunsafeCreatureSpawner))
+		if (!(block instanceof ICreatureSpawner))
 			return false;
 
-		RunsafeCreatureSpawner spawner = (RunsafeCreatureSpawner) state;
+		ICreatureSpawner spawner = (ICreatureSpawner) block;
 		spawner.setCreature(entityType);
 		spawner.update(true);
 		return true;
