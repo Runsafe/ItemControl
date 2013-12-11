@@ -4,6 +4,7 @@ import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.block.IBlock;
+import no.runsafe.framework.api.block.ICreatureSpawner;
 import no.runsafe.framework.api.event.block.IBlockBreakEvent;
 import no.runsafe.framework.api.event.block.IItemDispensed;
 import no.runsafe.framework.api.log.IConsole;
@@ -11,7 +12,6 @@ import no.runsafe.framework.api.minecraft.RunsafeEntityType;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Enchant;
 import no.runsafe.framework.minecraft.Item;
-import no.runsafe.framework.minecraft.block.RunsafeSpawner;
 import no.runsafe.framework.minecraft.event.block.RunsafeBlockBreakEvent;
 import no.runsafe.framework.minecraft.item.RunsafeItemStack;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
@@ -43,7 +43,7 @@ public class BlockListener implements IBlockBreakEvent, IItemDispensed
 		{
 			try
 			{
-				RunsafeSpawner spawner = (RunsafeSpawner) theBlock;
+				ICreatureSpawner spawner = (ICreatureSpawner) theBlock;
 				final RunsafeEntityType creature = spawner.getCreature();
 				if (!globals.spawnerTypeValid(creature, thePlayer))
 				{
