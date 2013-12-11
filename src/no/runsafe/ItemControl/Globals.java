@@ -7,6 +7,7 @@ import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.block.ICreatureSpawner;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.log.IConsole;
+import no.runsafe.framework.api.log.IDebug;
 import no.runsafe.framework.api.minecraft.RunsafeEntityType;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
@@ -20,9 +21,10 @@ import java.util.List;
 
 public class Globals implements IConfigurationChanged
 {
-	public Globals(IConsole output)
+	public Globals(IConsole output, IDebug debugger)
 	{
 		console = output;
+		this.debugger = debugger;
 	}
 
 	@Override
@@ -54,13 +56,22 @@ public class Globals implements IConfigurationChanged
 		IBlock target = location.getBlock();
 		Item inHand = itemInHand.getItemType();
 		RunsafeEntityType spawnerType = EntityType.Get(inHand);
+		if (spawnerType == null)
+			debugger.debugFine("Null entity type");
+		else
+			debugger.debugFine("Going to check %s spawners for validity", spawnerType.getName());
 		if (target.isAir() && spawnerTypeValid(inHand.getData(), actor))
 		{
+			debugger.debugFine("Creating spawner");
 			Item.Unavailable.MobSpawner.Place(location);
 			if (setSpawnerEntityID(target, spawnerType))
 				return true;
 			Item.Unavailable.Air.Place(location);
 		}
+		else if(!target.isAir())
+			debugger.debugFine("Target block is not air.");
+		else
+			debugger.debugFine("Spawner type is invalid.");
 		return false;
 	}
 
@@ -124,5 +135,6 @@ public class Globals implements IConfigurationChanged
 	private final HashMap<String, List<Integer>> disabledItems = new HashMap<String, List<Integer>>();
 	private final List<String> validSpawners = new ArrayList<String>();
 	private final IConsole console;
+	private final IDebug debugger;
 	private boolean removeBlocked;
 }
