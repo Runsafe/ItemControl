@@ -64,8 +64,9 @@ public class Globals implements IConfigurationChanged
 		{
 			debugger.debugFine("Creating spawner");
 			Item.Unavailable.MobSpawner.Place(location);
-			if (setSpawnerEntityID(target, spawnerType))
+			if (setSpawnerEntityID(location.getBlock(), spawnerType))
 				return true;
+			debugger.debugFine("Failed creating spawner");
 			Item.Unavailable.Air.Place(location);
 		}
 		else if(!target.isAir())
