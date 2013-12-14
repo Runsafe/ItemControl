@@ -52,8 +52,7 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 		if (!player.canBuildNow() || targetBlock == null)
 			return;
 
-		if (usingItem.is(Item.Miscellaneous.MonsterEgg.Any)
-			&& this.globals.blockShouldDrop(world, Item.Unavailable.MobSpawner.getTypeID()))
+		if (usingItem.is(Item.Miscellaneous.MonsterEgg.Any) && this.globals.spawnerIsHarvestable(world))
 		{
 			this.debugger.debugFine("Monster Egg placement detected by " + playerName);
 

@@ -18,6 +18,7 @@ import no.runsafe.framework.text.ConsoleColour;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Globals implements IConfigurationChanged
 {
@@ -31,10 +32,10 @@ public class Globals implements IConfigurationChanged
 	public void OnConfigurationChanged(IConfiguration config)
 	{
 		this.disabledItems.clear();
-		this.worldBlockDrops.clear();
+		this.spawnerHarvestWorlds.clear();
 		this.validSpawners.clear();
 		this.disabledItems.putAll(config.getConfigSectionsAsIntegerList("disabledItems"));
-		this.worldBlockDrops.putAll(config.getConfigSectionsAsIntegerList("blockDrops"));
+		this.spawnerHarvestWorlds.addAll(config.getConfigValueAsList("spawnerDrop"));
 		this.validSpawners.addAll(config.getConfigValueAsList("spawner.allow"));
 		this.removeBlocked = config.getConfigValueAsBoolean("remove.disabledItems");
 	}
@@ -45,10 +46,9 @@ public class Globals implements IConfigurationChanged
 			|| (this.disabledItems.containsKey(world.getName()) && this.disabledItems.get(world.getName()).contains(itemID));
 	}
 
-	public Boolean blockShouldDrop(IWorld world, Integer blockId)
+	public boolean spawnerIsHarvestable(IWorld world)
 	{
-		return (this.worldBlockDrops.containsKey("*") && this.worldBlockDrops.get("*").contains(blockId))
-			|| (this.worldBlockDrops.containsKey(world.getName()) && this.worldBlockDrops.get(world.getName()).contains(blockId));
+		return this.spawnerHarvestWorlds.contains("*") || this.spawnerHarvestWorlds.contains(world.getName());
 	}
 
 	public boolean createSpawner(IPlayer actor, ILocation location, RunsafeItemStack itemInHand)
@@ -69,7 +69,7 @@ public class Globals implements IConfigurationChanged
 			debugger.debugFine("Failed creating spawner");
 			Item.Unavailable.Air.Place(location);
 		}
-		else if(!target.isAir())
+		else if (!target.isAir())
 			debugger.debugFine("Target block is not air.");
 		else
 			debugger.debugFine("Spawner type is invalid.");
@@ -132,8 +132,8 @@ public class Globals implements IConfigurationChanged
 		return true;
 	}
 
-	private final HashMap<String, List<Integer>> worldBlockDrops = new HashMap<String, List<Integer>>();
-	private final HashMap<String, List<Integer>> disabledItems = new HashMap<String, List<Integer>>();
+	private final List<String> spawnerHarvestWorlds = new ArrayList<String>();
+	private final Map<String, List<Integer>> disabledItems = new HashMap<String, List<Integer>>();
 	private final List<String> validSpawners = new ArrayList<String>();
 	private final IConsole console;
 	private final IDebug debugger;

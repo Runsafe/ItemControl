@@ -3,9 +3,10 @@
 disabledItems.*: [137]
 disabledItems.Creative: [385]
 remove.disabledItems: true
-blockDrops.world: [52]
-blockDrops.world_the_end: [52]
-blockDrops.world_nether: [52]
+spawnerDrop:
+  - world
+  - world_the_end
+  - world_nether]
 spawner.allow:
   - skeleton
   - spider
