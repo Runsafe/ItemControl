@@ -12,7 +12,7 @@ import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerDeathEvent;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerInteractEvent;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
-import no.runsafe.worldguardbridge.WorldGuardInterface;
+import no.runsafe.worldguardbridge.IRegionControl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ import java.util.List;
 
 public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, IConfigurationChanged
 {
-	public PlayerListener(WorldGuardInterface worldGuardInterface, Globals globals, IDebug debugger)
+	public PlayerListener(IRegionControl worldGuardInterface, Globals globals, IDebug debugger)
 	{
 		this.worldGuardInterface = worldGuardInterface;
 		this.globals = globals;
@@ -123,7 +123,7 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 
 	private HashMap<String, List<String>> noDeathItemsRegions = new HashMap<String, List<String>>();
 	private List<String> noDeathItemsWorlds = new ArrayList<String>();
-	private WorldGuardInterface worldGuardInterface;
+	private IRegionControl worldGuardInterface;
 
 	private final Globals globals;
 	private IDebug debugger;
