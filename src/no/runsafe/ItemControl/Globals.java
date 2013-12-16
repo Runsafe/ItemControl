@@ -13,7 +13,6 @@ import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.entity.EntityType;
 import no.runsafe.framework.minecraft.item.RunsafeItemStack;
-import no.runsafe.framework.text.ConsoleColour;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,7 +86,7 @@ public class Globals implements IConfigurationChanged
 		{
 			console.logInformation(
 				"SPAWNER WARNING: %s tried to create/break a NULL spawner [%s,%d,%d,%d]!",
-				ConsoleColour.FromMinecraft(actor.getPrettyName()),
+				actor.getPrettyName(),
 				actor.getWorld().getName(),
 				actor.getLocation().getBlockX(),
 				actor.getLocation().getBlockY(),
@@ -101,7 +100,7 @@ public class Globals implements IConfigurationChanged
 			if (actor != null)
 				console.logInformation(
 					"SPAWNER WARNING: %s tried to create/break an invalid %s spawner [%s,%d,%d,%d]!",
-					ConsoleColour.FromMinecraft(actor.getPrettyName()),
+					actor.getPrettyName(),
 					entityType,
 					actor.getWorld().getName(),
 					actor.getLocation().getBlockX(),
