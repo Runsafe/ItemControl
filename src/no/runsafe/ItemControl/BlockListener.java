@@ -30,7 +30,7 @@ public class BlockListener implements IBlockBreakEvent, IItemDispensed
 	@Override
 	public void OnBlockBreakEvent(RunsafeBlockBreakEvent event)
 	{
-		if (event.isCancelled())
+		if (event.isCancelled() || !(event.getBlock() instanceof ICreatureSpawner))
 			return;
 
 		final RunsafeBlockBreakEvent blockBreakEvent = event;
