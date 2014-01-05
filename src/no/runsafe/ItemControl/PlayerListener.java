@@ -91,8 +91,8 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 		if (stopItems)
 		{
 			event.setDrops(new ArrayList<RunsafeMeta>());
-			event.setNewExp(0);
-			event.setNewLevel(0);
+			event.setDroppedXP(0);
+			event.setNewLevelAmount(0);
 		}
 	}
 
