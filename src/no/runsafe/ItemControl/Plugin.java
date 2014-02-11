@@ -9,10 +9,10 @@ public class Plugin extends RunsafeConfigurablePlugin
 	protected void pluginSetup()
 	{
 		addComponent(Events.class);
-		this.addComponent(Globals.class);
-		this.addComponent(PlayerListener.class);
-		this.addComponent(BlockListener.class);
-		this.addComponent(EntityListener.class);
-		this.addComponent(CustomRecipeHandler.class);
+		addComponent(Globals.class);
+		addComponent(PlayerListener.class);
+		addComponent(BlockListener.class);
+		addComponent(EntityListener.class);
+		addComponent(CustomRecipeHandler.class);
 	}
 }
