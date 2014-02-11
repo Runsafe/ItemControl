@@ -78,12 +78,18 @@ public class CustomRecipeHandler implements IServerReady, IPrepareCraftItem
 		if (displayName == null)
 		{
 			if (checkName != null)
+			{
+				console.logInformation("Name mis-match");
 				return false;
+			}
 		}
 		else
 		{
 			if (checkName == null || !displayName.equals(checkName))
+			{
+				console.logInformation("Name mis-match 2");
 				return false;
+			}
 		}
 
 		List<String> lore = item.getLore();
@@ -92,21 +98,33 @@ public class CustomRecipeHandler implements IServerReady, IPrepareCraftItem
 		if (lore == null || lore.isEmpty())
 		{
 			if (checkLore != null && !checkLore.isEmpty())
+			{
+				console.logInformation("Lore mis-match.");
 				return false;
+			}
 		}
 		else
 		{
 			if (checkLore == null || checkLore.isEmpty())
+			{
+				console.logInformation("Lore mis-match 2");
 				return false;
+			}
 
 			if (checkLore.size() != lore.size())
+			{
+				console.logInformation("Lore size mis-match");
 				return false;
+			}
 
 			int index = 0;
 			for (String loreString : lore)
 			{
 				if (!checkLore.get(index).equals(loreString))
+				{
+					console.logInformation("Lore mis-match: %s / %s", loreString, checkLore.get(index));
 					return false;
+				}
 
 				index++;
 			}
