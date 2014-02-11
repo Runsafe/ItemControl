@@ -70,7 +70,10 @@ public class CustomRecipeHandler implements IServerReady, IPrepareCraftItem
 	private boolean matches(RunsafeMeta item, RunsafeMeta check)
 	{
 		if (!item.is(check.getItemType()))
+		{
+			console.logInformation("Mis-matched item?");
 			return false;
+		}
 
 		String displayName = item.getDisplayName();
 		String checkName = check.getDisplayName();
