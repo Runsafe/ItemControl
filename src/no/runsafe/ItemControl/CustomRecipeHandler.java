@@ -54,7 +54,7 @@ public class CustomRecipeHandler implements IServerReady, IPrepareCraftItem
 					{
 						if (recipeDesign.containsKey(slot))
 						{
-							console.logInformation("Mis-match in slot %s. Expected %s got %s.", slot, recipeDesign.get(slot).getNormalName(), item == null ? "Null" : item.getNormalName());
+							console.logInformation("Mis-match in slot %s. Expected %s got %s.", slot, recipeDesign.get(slot).getNormalName(), item.getNormalName());
 						}
 						else
 						{
