@@ -62,6 +62,7 @@ public class CustomRecipeHandler implements IServerReady, IInventoryClick
 				RunsafeMeta workbenchItem = workbench.get(node.getKey());
 				if (workbenchItem == null || !workbenchItem.equals(node.getValue()))
 				{
+					console.logInformation("Invalid match in slot %s. Expected %s got %s", node.getKey(), node.getValue().getNormalName(), workbenchItem == null ? "Null" : workbenchItem.getNormalName());
 					failed = true;
 					break;
 				}
