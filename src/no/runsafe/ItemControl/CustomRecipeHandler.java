@@ -42,7 +42,7 @@ public class CustomRecipeHandler implements IServerReady, IPrepareCraftItem
 				int slot = 1;
 				for (RunsafeMeta item : items)
 				{
-					if (item.is(Item.Unavailable.Air) && !recipeDesign.containsKey(slot))
+					if ((item == null || item.is(Item.Unavailable.Air)) && !recipeDesign.containsKey(slot))
 						continue;
 
 					if (recipeDesign.containsKey(slot) && matches(recipeDesign.get(slot), item))
