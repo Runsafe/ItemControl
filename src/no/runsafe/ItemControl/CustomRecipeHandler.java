@@ -55,12 +55,19 @@ public class CustomRecipeHandler implements IServerReady, IInventoryClick
 	{
 		for (ICustomRecipe recipe : recipes)
 		{
+			boolean failed = false;
 			for (Map.Entry<Integer, RunsafeMeta> node : recipe.getRecipe().entrySet())
 			{
 				RunsafeMeta workbenchItem = workbench.get(node.getKey());
 				if (workbenchItem == null || !workbenchItem.equals(node.getValue()))
-					continue;
+				{
+					failed = true;
+					break;
+				}
+			}
 
+			if (!failed)
+			{
 				inventory.setItemInSlot(recipe.getResult(), 0);
 				break;
 			}
