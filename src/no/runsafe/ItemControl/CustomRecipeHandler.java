@@ -49,6 +49,7 @@ public class CustomRecipeHandler implements IServerReady, IInventoryClick
 				items.put(event.getSlot(), cursorItem);
 
 			checkRecipes(items, inventory);
+			event.getWhoClicked().updateInventory();
 		}
 	}
 
