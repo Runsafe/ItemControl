@@ -5,6 +5,7 @@ import no.runsafe.framework.api.event.IServerReady;
 import no.runsafe.framework.api.event.inventory.IPrepareCraftItem;
 import no.runsafe.framework.api.item.ICustomRecipe;
 import no.runsafe.framework.api.log.IConsole;
+import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.event.inventory.RunsafePrepareItemCraftEvent;
 import no.runsafe.framework.minecraft.inventory.RunsafeCraftingInventory;
 import no.runsafe.framework.minecraft.inventory.RunsafeInventoryType;
@@ -41,7 +42,10 @@ public class CustomRecipeHandler implements IServerReady, IPrepareCraftItem
 				int slot = 1;
 				for (RunsafeMeta item : items)
 				{
-					if (item != null && recipeDesign.containsKey(slot) && matches(recipeDesign.get(slot), item))
+					if (item.is(Item.Unavailable.Air) && !recipeDesign.containsKey(slot))
+						continue;
+
+					if (recipeDesign.containsKey(slot) && matches(recipeDesign.get(slot), item))
 					{
 						inventory.setResult(recipe.getResult());
 						break;
