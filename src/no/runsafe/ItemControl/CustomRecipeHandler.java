@@ -46,6 +46,17 @@ public class CustomRecipeHandler implements IServerReady, IPrepareCraftItem
 						inventory.setResult(recipe.getResult());
 						break;
 					}
+					else
+					{
+						if (recipeDesign.containsKey(slot))
+						{
+							console.logInformation("Mis-match in slot %s. Expected %s got %s.", slot, recipeDesign.get(slot).getNormalName(), item == null ? "Null" : item.getNormalName());
+						}
+						else
+						{
+							console.logInformation("Mis-match in slot %s. Nothing in recipe slot.", slot);
+						}
+					}
 					slot++;
 				}
 			}
