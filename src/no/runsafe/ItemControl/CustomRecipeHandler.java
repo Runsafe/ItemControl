@@ -60,7 +60,7 @@ public class CustomRecipeHandler implements IServerReady, IInventoryClick
 			for (Map.Entry<Integer, RunsafeMeta> node : recipe.getRecipe().entrySet())
 			{
 				RunsafeMeta workbenchItem = workbench.get(node.getKey());
-				if (workbenchItem == null || !workbenchItem.equals(node.getValue()))
+				if (workbenchItem == null || !matches(workbenchItem, node.getValue()))
 				{
 					console.logInformation("Invalid match in slot %s. Expected %s got %s", node.getKey(), node.getValue().getNormalName(), workbenchItem == null ? "Null" : workbenchItem.getNormalName());
 					failed = true;
@@ -74,6 +74,53 @@ public class CustomRecipeHandler implements IServerReady, IInventoryClick
 				break;
 			}
 		}
+	}
+
+	private boolean matches(RunsafeMeta item, RunsafeMeta check)
+	{
+		if (!item.is(check.getItemType()))
+			return false;
+
+		String displayName = item.getDisplayName();
+		String checkName = check.getDisplayName();
+
+		if (displayName == null)
+		{
+			if (checkName != null)
+				return false;
+		}
+		else
+		{
+			if (checkName == null || !displayName.equals(checkName))
+				return false;
+		}
+
+		List<String> lore = item.getLore();
+		List<String> checkLore = check.getLore();
+
+		if (lore == null || lore.isEmpty())
+		{
+			if (checkLore != null && !checkLore.isEmpty())
+				return false;
+		}
+		else
+		{
+			if (checkLore == null || checkLore.isEmpty())
+				return false;
+
+			if (checkLore.size() != lore.size())
+				return false;
+
+			int index = 0;
+			for (String loreString : lore)
+			{
+				if (!checkLore.get(index).equals(loreString))
+					return false;
+
+				index++;
+			}
+		}
+		return true;
 	}
 
 	private final IConsole console;
