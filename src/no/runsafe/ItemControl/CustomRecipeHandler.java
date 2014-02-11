@@ -2,23 +2,19 @@ package no.runsafe.ItemControl;
 
 import no.runsafe.framework.RunsafePlugin;
 import no.runsafe.framework.api.event.IServerReady;
-import no.runsafe.framework.api.event.inventory.IInventoryClick;
+import no.runsafe.framework.api.event.inventory.IPrepareCraftItem;
 import no.runsafe.framework.api.item.ICustomRecipe;
 import no.runsafe.framework.api.log.IConsole;
-import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.minecraft.Item;
-import no.runsafe.framework.minecraft.event.inventory.RunsafeInventoryClickEvent;
+import no.runsafe.framework.minecraft.event.inventory.RunsafePrepareItemCraftEvent;
 import no.runsafe.framework.minecraft.inventory.RunsafeCraftingInventory;
-import no.runsafe.framework.minecraft.inventory.RunsafeInventory;
 import no.runsafe.framework.minecraft.inventory.RunsafeInventoryType;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CustomRecipeHandler implements IServerReady, IInventoryClick
+public class CustomRecipeHandler implements IServerReady, IPrepareCraftItem
 {
 	public CustomRecipeHandler(IConsole console)
 	{
@@ -33,49 +29,25 @@ public class CustomRecipeHandler implements IServerReady, IInventoryClick
 	}
 
 	@Override
-	public void OnInventoryClickEvent(RunsafeInventoryClickEvent event)
+	public void OnPrepareCraftItem(RunsafePrepareItemCraftEvent event)
 	{
-		RunsafeInventory inventory = event.getInventory();
+		RunsafeCraftingInventory inventory = event.getInventory();
 		if (inventory.getType() == RunsafeInventoryType.WORKBENCH)
 		{
-			HashMap<Integer, RunsafeMeta> items = new HashMap<Integer, RunsafeMeta>(0);
-			for (int i = 1; i < inventory.getSize(); i++)
+			List<RunsafeMeta> items = inventory.getMatrix();
+			for (ICustomRecipe recipe : recipes)
 			{
-				RunsafeMeta slotItem = inventory.getItemInSlot(i);
-				if (slotItem != null)
-					items.put(i, slotItem);
-			}
-
-			RunsafeMeta cursorItem = event.getCurrentItem();
-			if (cursorItem != null && !cursorItem.is(Item.Unavailable.Air))
-				items.put(event.getSlot(), cursorItem);
-
-			checkRecipes(items, (RunsafeCraftingInventory) inventory, event.getWhoClicked());
-		}
-	}
-
-	private void checkRecipes(HashMap<Integer, RunsafeMeta> workbench, RunsafeCraftingInventory inventory, IPlayer player)
-	{
-		for (ICustomRecipe recipe : recipes)
-		{
-			boolean failed = false;
-			for (Map.Entry<Integer, RunsafeMeta> node : recipe.getRecipe().entrySet())
-			{
-				RunsafeMeta workbenchItem = workbench.get(node.getKey());
-				if (workbenchItem == null || !matches(workbenchItem, node.getValue()))
+				Map<Integer, RunsafeMeta> recipeDesign = recipe.getRecipe();
+				int slot = 1;
+				for (RunsafeMeta item : items)
 				{
-					console.logInformation("Invalid match in slot %s. Expected %s got %s", node.getKey(), node.getValue().getNormalName(), workbenchItem == null ? "Null" : workbenchItem.getNormalName());
-					failed = true;
-					break;
+					if (item != null && recipeDesign.containsKey(slot) && matches(recipeDesign.get(slot), item))
+					{
+						inventory.setResult(recipe.getResult());
+						break;
+					}
+					slot++;
 				}
-			}
-
-			if (!failed)
-			{
-				player.updateInventory();
-				inventory.setResult(recipe.getResult());
-
-				break;
 			}
 		}
 	}
