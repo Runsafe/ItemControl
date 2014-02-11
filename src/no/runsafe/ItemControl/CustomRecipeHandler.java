@@ -12,6 +12,7 @@ import no.runsafe.framework.minecraft.inventory.RunsafeInventoryType;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,23 +36,23 @@ public class CustomRecipeHandler implements IServerReady, IInventoryClick
 		RunsafeInventory inventory = event.getInventory();
 		if (inventory.getType() == RunsafeInventoryType.WORKBENCH)
 		{
-			List<RunsafeMeta> items = new ArrayList<RunsafeMeta>(0);
+			HashMap<Integer, RunsafeMeta> items = new HashMap<Integer, RunsafeMeta>(0);
 			for (int i = 1; i < inventory.getSize(); i++)
 			{
 				RunsafeMeta slotItem = inventory.getItemInSlot(i);
 				if (slotItem != null)
-					items.add(i, slotItem);
+					items.put(i, slotItem);
 			}
 
 			RunsafeMeta cursorItem = event.getCurrentItem();
 			if (cursorItem != null && !cursorItem.is(Item.Unavailable.Air))
-				items.add(event.getSlot(), cursorItem);
+				items.put(event.getSlot(), cursorItem);
 
 			checkRecipes(items, inventory);
 		}
 	}
 
-	private void checkRecipes(List<RunsafeMeta> workbench, RunsafeInventory inventory)
+	private void checkRecipes(HashMap<Integer, RunsafeMeta> workbench, RunsafeInventory inventory)
 	{
 		for (ICustomRecipe recipe : recipes)
 		{
