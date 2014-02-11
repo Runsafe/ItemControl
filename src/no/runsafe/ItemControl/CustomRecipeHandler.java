@@ -1,25 +1,27 @@
 package no.runsafe.ItemControl;
 
-import no.runsafe.framework.api.event.player.IPlayerJoinEvent;
+import no.runsafe.framework.RunsafePlugin;
+import no.runsafe.framework.api.event.IServerReady;
 import no.runsafe.framework.api.item.ICustomRecipe;
 import no.runsafe.framework.api.log.IConsole;
-import no.runsafe.framework.minecraft.event.player.RunsafePlayerJoinEvent;
 
-public class CustomRecipeHandler implements IPlayerJoinEvent
+import java.util.ArrayList;
+import java.util.List;
+
+public class CustomRecipeHandler implements IServerReady
 {
-	public CustomRecipeHandler(ICustomRecipe[] recipes, IConsole console)
+	public CustomRecipeHandler(IConsole console)
 	{
-		this.recipes = recipes;
 		this.console = console;
 	}
 
 	@Override
-	public void OnPlayerJoinEvent(RunsafePlayerJoinEvent event)
+	public void OnServerReady()
 	{
-		for (ICustomRecipe recipe : recipes)
-			console.logInformation(recipe.getResult().getNormalName());
+		recipes.addAll(RunsafePlugin.getPluginAPI(ICustomRecipe.class));
+		console.logInformation("Loaded " + recipes.size() + " custom recipes");
 	}
 
 	private final IConsole console;
-	private final ICustomRecipe[] recipes;
+	private final List<ICustomRecipe> recipes = new ArrayList<ICustomRecipe>(0);
 }
