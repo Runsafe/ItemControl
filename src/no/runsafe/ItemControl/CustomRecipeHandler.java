@@ -5,6 +5,7 @@ import no.runsafe.framework.api.event.IServerReady;
 import no.runsafe.framework.api.event.inventory.IInventoryClick;
 import no.runsafe.framework.api.item.ICustomRecipe;
 import no.runsafe.framework.api.log.IConsole;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.event.inventory.RunsafeInventoryClickEvent;
 import no.runsafe.framework.minecraft.inventory.RunsafeInventory;
@@ -48,12 +49,11 @@ public class CustomRecipeHandler implements IServerReady, IInventoryClick
 			if (cursorItem != null && !cursorItem.is(Item.Unavailable.Air))
 				items.put(event.getSlot(), cursorItem);
 
-			checkRecipes(items, inventory);
-			event.getWhoClicked().updateInventory();
+			checkRecipes(items, inventory, event.getWhoClicked());
 		}
 	}
 
-	private void checkRecipes(HashMap<Integer, RunsafeMeta> workbench, RunsafeInventory inventory)
+	private void checkRecipes(HashMap<Integer, RunsafeMeta> workbench, RunsafeInventory inventory, IPlayer player)
 	{
 		for (ICustomRecipe recipe : recipes)
 		{
@@ -72,6 +72,7 @@ public class CustomRecipeHandler implements IServerReady, IInventoryClick
 			if (!failed)
 			{
 				inventory.setItemInSlot(recipe.getResult(), 0);
+				player.updateInventory();
 				break;
 			}
 		}
