@@ -13,5 +13,6 @@ public class Plugin extends RunsafeConfigurablePlugin
 		this.addComponent(PlayerListener.class);
 		this.addComponent(BlockListener.class);
 		this.addComponent(EntityListener.class);
+		this.addComponent(CustomRecipeHandler.class);
 	}
 }
