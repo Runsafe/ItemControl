@@ -38,6 +38,7 @@ public class CustomRecipeHandler implements IServerReady, IPrepareCraftItem
 			List<RunsafeMeta> items = inventory.getMatrix();
 			for (ICustomRecipe recipe : recipes)
 			{
+				boolean failed = false;
 				Map<Integer, RunsafeMeta> recipeDesign = recipe.getRecipe();
 				int slot = 1;
 				for (RunsafeMeta item : items)
@@ -45,24 +46,16 @@ public class CustomRecipeHandler implements IServerReady, IPrepareCraftItem
 					if ((item == null || item.is(Item.Unavailable.Air)) && !recipeDesign.containsKey(slot))
 						continue;
 
-					if (recipeDesign.containsKey(slot) && matches(recipeDesign.get(slot), item))
+					if (!recipeDesign.containsKey(slot) || !matches(recipeDesign.get(slot), item))
 					{
-						inventory.setResult(recipe.getResult());
+						failed = true;
 						break;
-					}
-					else
-					{
-						if (recipeDesign.containsKey(slot))
-						{
-							console.logInformation("Mis-match in slot %s. Expected %s got %s.", slot, recipeDesign.get(slot).getNormalName(), item == null ? "Null" : item.getNormalName());
-						}
-						else
-						{
-							console.logInformation("Mis-match in slot %s. Nothing in recipe slot.", slot);
-						}
 					}
 					slot++;
 				}
+
+				if (!failed)
+					inventory.setResult(recipe.getResult());
 			}
 		}
 	}
