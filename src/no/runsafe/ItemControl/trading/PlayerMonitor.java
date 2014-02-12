@@ -22,6 +22,9 @@ public class PlayerMonitor implements IPlayerInteractEntityEvent
 		if (entity.getEntityType() == LivingEntity.Villager && handler.isTrader(entity))
 		{
 			RunsafeInventory inventory = handler.getTraderInventory(entity);
+			VillagerController controller = new VillagerController(entity);
+			controller.clearTrades();
+
 			for (int col = 0; col < 10; col++)
 			{
 				RunsafeMeta firstItem = inventory.getItemInSlot(col);
@@ -32,16 +35,11 @@ public class PlayerMonitor implements IPlayerInteractEntityEvent
 				if (result == null)
 					return;
 
-				VillagerController controller = new VillagerController(entity);
-				controller.clearTrades();
-
 				RunsafeMeta secondItem = inventory.getItemInSlot(col + 9);
 				if (secondItem != null)
 					controller.addTrade(firstItem, secondItem, result);
 				else
 					controller.addTrade(firstItem, result);
-
-				controller.setOpenTrades(0.9F);
 			}
 		}
 	}
