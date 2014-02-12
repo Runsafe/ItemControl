@@ -18,6 +18,7 @@ public class PlayerMonitor implements IPlayerInteractEntityEvent
 	public void OnPlayerInteractEntityEvent(RunsafePlayerInteractEntityEvent event)
 	{
 		RunsafeEntity entity = event.getRightClicked();
+
 		if (entity.getEntityType() == LivingEntity.Villager && handler.isTrader(entity))
 		{
 			RunsafeInventory inventory = handler.getTraderInventory(entity);
@@ -40,7 +41,7 @@ public class PlayerMonitor implements IPlayerInteractEntityEvent
 				else
 					controller.addTrade(firstItem, result);
 
-				controller.setOpenTrades(0.3F);
+				controller.setOpenTrades(0.9F);
 			}
 		}
 	}
