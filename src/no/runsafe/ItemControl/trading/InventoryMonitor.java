@@ -80,10 +80,16 @@ public class InventoryMonitor implements IInventoryClick
 			return false;
 		}
 
-		String firstName = first.getDisplayName();
-		String secondName = second.getDisplayName();
+		String firstName = first.getDisplayName(); // null
+		String secondName = second.getDisplayName(); // null
 
-		if ((firstName == null && secondName != null) || (secondName == null || !firstName.equals(secondName)))
+		if (firstName == null)
+			firstName = "";
+
+		if (secondName == null)
+			secondName = "";
+
+		if (!firstName.equals(secondName))
 		{
 			console.logError("Invalid item name.");
 			return false;
