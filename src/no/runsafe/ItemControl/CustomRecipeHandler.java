@@ -62,7 +62,7 @@ public class CustomRecipeHandler implements IServerReady, IInventoryClick
 
 	private boolean matches(RunsafeMeta item, RunsafeMeta check)
 	{
-		if (item.getItemType().equals(check.getItemType()))
+		if (!item.getItemType().equals(check.getItemType()))
 		{
 			console.logInformation("Mis-matched item?");
 			return false;
