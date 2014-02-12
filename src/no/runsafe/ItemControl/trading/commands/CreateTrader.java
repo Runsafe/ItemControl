@@ -57,6 +57,7 @@ public class CreateTrader extends PlayerCommand implements IPlayerInteractEntity
 				player.sendColouredMessage("&cThat is not a villager.");
 			}
 			interactTrack.remove(playerName);
+			event.cancel();
 		}
 	}
 

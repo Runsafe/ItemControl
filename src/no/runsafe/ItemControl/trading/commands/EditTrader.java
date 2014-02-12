@@ -51,6 +51,7 @@ public class EditTrader extends PlayerCommand implements IPlayerInteractEntityEv
 				player.sendColouredMessage("&cThat is not a villager.");
 			}
 			interactTrack.remove(playerName);
+			event.cancel();
 		}
 	}
 
