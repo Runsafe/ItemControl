@@ -65,8 +65,8 @@ public class CustomRecipeHandler implements IServerReady, IInventoryClick
 	{
 		if (!item.is(check.getItemType()))
 		{
-			console.logInformation(item.getItemType().toString());
-			console.logInformation(check.getItemType().toString());
+			console.logInformation("" + item.getItemType().getItemID());
+			console.logInformation("" + check.getItemType().getItemID());
 			console.logInformation("Mis-matched item?");
 			return false;
 		}
