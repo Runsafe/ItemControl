@@ -1,6 +1,7 @@
 package no.runsafe.ItemControl;
 
 import no.runsafe.framework.RunsafePlugin;
+import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.event.IServerReady;
 import no.runsafe.framework.api.event.inventory.IPrepareCraftItem;
 import no.runsafe.framework.api.item.ICustomRecipe;
@@ -10,22 +11,54 @@ import no.runsafe.framework.minecraft.event.inventory.RunsafePrepareItemCraftEve
 import no.runsafe.framework.minecraft.inventory.RunsafeCraftingInventory;
 import no.runsafe.framework.minecraft.inventory.RunsafeInventoryType;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
+import org.bukkit.inventory.ShapedRecipe;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CustomRecipeHandler implements IServerReady, IPrepareCraftItem
 {
-	public CustomRecipeHandler(IConsole console)
+	public CustomRecipeHandler(IConsole console, IServer server)
 	{
 		this.console = console;
+		this.server = server;
+
+		Character[] chars = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'};
+		keys = Arrays.asList(chars);
 	}
 
 	@Override
 	public void OnServerReady()
 	{
 		recipes.addAll(RunsafePlugin.getPluginAPI(ICustomRecipe.class));
+
+		for (ICustomRecipe recipe : recipes)
+		{
+			ShapedRecipe bukkitRecipe = new ShapedRecipe(Item.Unavailable.Air.getItem().getRaw());
+			HashMap<Item, Character> itemKey = new HashMap<Item, Character>(0);
+			Iterator<Character> keyList = keys.iterator();
+			Map<Integer, RunsafeMeta> recipeMap = recipe.getRecipe();
+			StringBuilder recipeString = new StringBuilder();
+
+			for (int slotID = 1; slotID < 10; slotID++)
+			{
+				Item type = Item.Unavailable.Air;
+				if (recipeMap.containsKey(slotID))
+					type = recipeMap.get(slotID).getItemType();
+
+				if (!itemKey.containsKey(type))
+					itemKey.put(type, keyList.next());
+
+				recipeString.append(itemKey.get(type));
+			}
+
+			bukkitRecipe.shape(recipeString.toString().split("(?<=\\G...)"));
+
+			for (Map.Entry<Item, Character> node : itemKey.entrySet())
+				bukkitRecipe.setIngredient(node.getValue(), node.getKey().getType());
+
+			server.addRecipe(bukkitRecipe);
+		}
+
 		console.logInformation("Loaded " + recipes.size() + " custom recipes");
 	}
 
@@ -129,5 +162,7 @@ public class CustomRecipeHandler implements IServerReady, IPrepareCraftItem
 	}
 
 	private final IConsole console;
+	private final IServer server;
+	private final List<Character> keys;
 	private final List<ICustomRecipe> recipes = new ArrayList<ICustomRecipe>(0);
 }
