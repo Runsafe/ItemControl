@@ -6,5 +6,5 @@ authors: [mortenn]
 depend: [RunsafeWorldGuardBridge]
 description: Item control for Minecraft (CraftBukkit)
 commands:
-  createtrader:
-    description: Turn a villager into a custom trader!
+  traders:
+    description: Trader related commands

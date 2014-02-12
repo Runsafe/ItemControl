@@ -12,11 +12,11 @@ import no.runsafe.framework.minecraft.event.player.RunsafePlayerInteractEntityEv
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateTrader extends PlayerCommand implements IPlayerInteractEntityEvent
+public class EditTrader extends PlayerCommand implements IPlayerInteractEntityEvent
 {
-	public CreateTrader(TradingHandler handler)
+	public EditTrader(TradingHandler handler)
 	{
-		super("create", "Create a trader", "runsafe.traders.create");
+		super("edit", "Edit a trader", "runsafe.traders.edit");
 		this.handler = handler;
 	}
 
@@ -27,7 +27,7 @@ public class CreateTrader extends PlayerCommand implements IPlayerInteractEntity
 		if (!interactTrack.contains(playerName))
 			interactTrack.add(playerName);
 
-		return "&eRight-click on a villager to make it a trader!";
+		return "&eRight-click on a trader to edit it.";
 	}
 
 	@Override
@@ -41,16 +41,10 @@ public class CreateTrader extends PlayerCommand implements IPlayerInteractEntity
 			RunsafeEntity entity = event.getRightClicked();
 			if (entity.getEntityType() == LivingEntity.Villager)
 			{
-				if (!handler.isTrader(entity))
-				{
-					handler.makeTrader(entity);
-					player.sendColouredMessage("&eTrader set-up!");
+				if (handler.isTrader(entity))
 					handler.openTraderEditor(player, entity);
-				}
 				else
-				{
-					player.sendColouredMessage("&cThat villager is already a trader.");
-				}
+					player.sendColouredMessage("&cThat is not a trader.");
 			}
 			else
 			{
@@ -60,6 +54,6 @@ public class CreateTrader extends PlayerCommand implements IPlayerInteractEntity
 		}
 	}
 
-	private final List<String> interactTrack = new ArrayList<String>(0);
+	private List<String> interactTrack = new ArrayList<String>(0);
 	private final TradingHandler handler;
 }
