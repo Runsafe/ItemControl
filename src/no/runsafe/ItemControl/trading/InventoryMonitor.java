@@ -12,6 +12,7 @@ import no.runsafe.framework.minecraft.inventory.RunsafeInventoryType;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 import no.runsafe.framework.tools.reflection.ReflectionHelper;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
+import no.runsafe.framework.minecraft.Item;
 
 import java.util.Collections;
 import java.util.List;
@@ -49,11 +50,13 @@ public class InventoryMonitor implements IInventoryClick
 					RunsafeMeta firstItem = convertFromMinecraft(recipe.getBuyItem1());
 					RunsafeMeta secondItem = convertFromMinecraft(recipe.getBuyItem2());
 
-					if (firstSlot != null && firstItem != null && !strictMatch(firstSlot, firstItem))
-						cancel = true;
+					if (firstSlot != null && firstItem != null)
+						if (firstItem.is(Item.Special.Crafted.WrittenBook) || !strictMatch(firstSlot, firstItem))
+							cancel = true;
 
-					if (secondSlot != null && secondItem != null && !strictMatch(secondSlot, secondItem))
-						cancel = true;
+					if (secondSlot != null && secondItem != null)
+						if (secondItem.is(Item.Special.Crafted.WrittenBook) || !strictMatch(secondSlot, secondItem))
+							cancel = true;
 				}
 
 				if (cancel)
