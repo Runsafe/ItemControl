@@ -50,6 +50,11 @@ public class CreateTrader extends PlayerCommand implements IPlayerInteractEntity
 
 				nms.getOffers(null).clear();
 			}
+			else
+			{
+				player.sendColouredMessage("&cThat is not a villager.");
+			}
+			interactTrack.remove(playerName);
 		}
 	}
 
