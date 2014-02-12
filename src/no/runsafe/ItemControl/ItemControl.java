@@ -7,6 +7,7 @@ import no.runsafe.ItemControl.trading.commands.EditTrader;
 import no.runsafe.framework.RunsafeConfigurablePlugin;
 import no.runsafe.framework.api.command.Command;
 import no.runsafe.framework.features.Commands;
+import no.runsafe.framework.features.Database;
 import no.runsafe.framework.features.Events;
 
 public class ItemControl extends RunsafeConfigurablePlugin
@@ -17,6 +18,7 @@ public class ItemControl extends RunsafeConfigurablePlugin
 		addComponent(Events.class);
 		addComponent(Globals.class);
 		addComponent(Commands.class);
+		addComponent(Database.class);
 		addComponent(PlayerListener.class);
 		addComponent(BlockListener.class);
 		addComponent(EntityListener.class);
