@@ -35,9 +35,15 @@ public class TradingHandler implements IServerReady, IPluginDisabled
 
 	public void openTraderEditor(IPlayer viewer, RunsafeEntity trader)
 	{
+		RunsafeInventory inventory = getTraderInventory(trader);
+		if (inventory != null)
+			viewer.openInventory(inventory);
+	}
+
+	public RunsafeInventory getTraderInventory(RunsafeEntity trader)
+	{
 		String traderID = trader.getUniqueId().toString();
-		if (traders.containsKey(traderID))
-			viewer.openInventory(traders.get(traderID));
+		return traders.containsKey(traderID) ? traders.get(traderID) : null;
 	}
 
 	@Override
