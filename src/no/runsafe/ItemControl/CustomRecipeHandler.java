@@ -33,7 +33,7 @@ public class CustomRecipeHandler implements IServerReady, IPrepareCraftItem
 
 		for (ICustomRecipe recipe : recipes)
 		{
-			ShapedRecipe bukkitRecipe = new ShapedRecipe(Item.Unavailable.Air.getItem().getRaw());
+			ShapedRecipe bukkitRecipe = new ShapedRecipe(Item.Unavailable.Cauldron.getItem().getRaw());
 			HashMap<Item, Character> itemKey = new HashMap<Item, Character>(0);
 			Iterator<Character> keyList = keys.iterator();
 			Map<Integer, RunsafeMeta> recipeMap = recipe.getRecipe();
