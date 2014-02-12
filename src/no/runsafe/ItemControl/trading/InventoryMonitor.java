@@ -3,6 +3,7 @@ package no.runsafe.ItemControl.trading;
 import net.minecraft.server.v1_7_R1.*;
 import net.minecraft.server.v1_7_R1.ItemStack;
 import no.runsafe.framework.api.event.inventory.IInventoryClick;
+import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.enchantment.RunsafeEnchantment;
 import no.runsafe.framework.minecraft.event.inventory.RunsafeInventoryClickEvent;
@@ -18,6 +19,11 @@ import java.util.Map;
 
 public class InventoryMonitor implements IInventoryClick
 {
+	public InventoryMonitor(IConsole console)
+	{
+		this.console = console;
+	}
+
 	@Override
 	public void OnInventoryClickEvent(RunsafeInventoryClickEvent event)
 	{
@@ -69,13 +75,19 @@ public class InventoryMonitor implements IInventoryClick
 	private boolean strictMatch(RunsafeMeta first, RunsafeMeta second)
 	{
 		if (!first.is(second.getItemType()))
+		{
+			console.logError("Invalid item type.");
 			return false;
+		}
 
 		String firstName = first.getDisplayName();
 		String secondName = second.getDisplayName();
 
 		if ((firstName == null && secondName != null) || (secondName == null || !firstName.equals(secondName)))
+		{
+			console.logError("Invalid item name.");
 			return false;
+		}
 
 		List<String> firstLore = first.getLore();
 		List<String> secondLore = second.getLore();
@@ -87,13 +99,19 @@ public class InventoryMonitor implements IInventoryClick
 			secondLore = Collections.emptyList();
 
 		if (firstLore.size() != secondLore.size())
+		{
+			console.logError("Lore size mis-match");
 			return false;
+		}
 
 		int index = 0;
 		for (String firstLoreString : firstLore)
 		{
 			if (!firstLoreString.equals(secondLore.get(index)))
+			{
+				console.logError("Lore mis-match: " + index);
 				return false;
+			}
 
 			index++;
 		}
@@ -102,18 +120,29 @@ public class InventoryMonitor implements IInventoryClick
 		Map<RunsafeEnchantment, Integer> secondEnchants = second.getEnchantments();
 
 		if (firstEnchants.size() != secondEnchants.size())
+		{
+			console.logError("Enchantment size mis-match");
 			return false;
+		}
 
 		for (Map.Entry<RunsafeEnchantment, Integer> firstEnchant : firstEnchants.entrySet())
 		{
 			RunsafeEnchantment enchantment = firstEnchant.getKey();
 			if (!secondEnchants.containsKey(enchantment))
+			{
+				console.logError("Missing enchant: " + enchantment.getName());
 				return false;
+			}
 
 			if (!secondEnchants.get(enchantment).equals(firstEnchant.getValue()))
+			{
+				console.logError("Invalid enchant: " + enchantment.getName());
 				return false;
+			}
 		}
 
 		return true;
 	}
+
+	private final IConsole console;
 }
