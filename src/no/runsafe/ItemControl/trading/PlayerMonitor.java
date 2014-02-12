@@ -35,7 +35,7 @@ public class PlayerMonitor implements IPlayerInteractEntityEvent
 					return;
 				}
 
-				RunsafeMeta result = inventory.getItemInSlot(col + 9);
+				RunsafeMeta result = inventory.getItemInSlot(col + 18);
 				if (result == null)
 				{
 					player.sendColouredMessage("Result is null");
@@ -45,7 +45,7 @@ public class PlayerMonitor implements IPlayerInteractEntityEvent
 				VillagerController controller = new VillagerController(entity);
 				controller.clearTrades();
 
-				RunsafeMeta secondItem = inventory.getItemInSlot(col + 18);
+				RunsafeMeta secondItem = inventory.getItemInSlot(col + 9);
 				if (secondItem != null)
 					controller.addTrade(firstItem, secondItem, result);
 				else
