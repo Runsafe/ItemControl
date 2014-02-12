@@ -39,6 +39,8 @@ public class PlayerMonitor implements IPlayerInteractEntityEvent
 					controller.addTrade(firstItem, secondItem, result);
 				else
 					controller.addTrade(firstItem, result);
+
+				controller.setOpenTrades(40F);
 			}
 		}
 	}

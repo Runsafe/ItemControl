@@ -7,7 +7,10 @@ import net.minecraft.server.v1_7_R1.MerchantRecipeList;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 import no.runsafe.framework.minecraft.entity.RunsafeEntity;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
+import no.runsafe.framework.tools.reflection.ReflectionHelper;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftVillager;
+
+import java.lang.reflect.Field;
 
 public class VillagerController
 {
@@ -42,6 +45,11 @@ public class VillagerController
 	{
 		recipe.a(999999999); // make it so the trade "never" runs out of uses
 		getList().add(recipe);
+	}
+
+	public void setOpenTrades(float number)
+	{
+		ReflectionHelper.setField(villager, "bA", number);
 	}
 
 	private ItemStack toMinecraft(RunsafeMeta item)
