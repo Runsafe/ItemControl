@@ -1,7 +1,10 @@
 name: ItemControl
-main: no.runsafe.ItemControl.Plugin
+main: no.runsafe.ItemControl.ItemControl
 version: 1.0.@BUILD@
 author: Kruithne
 authors: [mortenn]
 depend: [RunsafeWorldGuardBridge]
 description: Item control for Minecraft (CraftBukkit)
+commands:
+  createtrader:
+    description: Turn a villager into a custom trader!
