@@ -56,7 +56,7 @@ public class CustomRecipeHandler implements IServerReady, IInventoryClick
 				}
 
 				if (!failed)
-					event.getView().setItem(0, recipe.getResult());
+					inventory.setResult(recipe.getResult());
 			}
 		}
 	}
