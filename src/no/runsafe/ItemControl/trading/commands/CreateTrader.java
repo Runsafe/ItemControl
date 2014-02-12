@@ -1,16 +1,15 @@
 package no.runsafe.ItemControl.trading.commands;
 
-import net.minecraft.server.v1_7_R1.EntityVillager;
 import no.runsafe.ItemControl.trading.TradingHandler;
+import no.runsafe.ItemControl.trading.VillagerController;
 import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.player.PlayerCommand;
 import no.runsafe.framework.api.event.player.IPlayerInteractEntityEvent;
 import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.entity.LivingEntity;
 import no.runsafe.framework.minecraft.entity.RunsafeEntity;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerInteractEntityEvent;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftVillager;
-import org.bukkit.entity.Villager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,11 +43,9 @@ public class CreateTrader extends PlayerCommand implements IPlayerInteractEntity
 			RunsafeEntity entity = event.getRightClicked();
 			if (entity.getEntityType() == LivingEntity.Villager)
 			{
-				Villager bukkit = (Villager) entity.getRaw();
-				CraftVillager craft = (CraftVillager) bukkit;
-				EntityVillager nms = craft.getHandle();
-
-				nms.getOffers(null).clear();
+				VillagerController controller = new VillagerController(entity);
+				controller.clearTrades();
+				controller.addTrade(Item.BuildingBlock.Dirt.getItem(), Item.BuildingBlock.Emerald.getItem());
 			}
 			else
 			{
