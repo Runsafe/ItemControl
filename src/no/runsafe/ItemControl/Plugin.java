@@ -13,6 +13,5 @@ public class Plugin extends RunsafeConfigurablePlugin
 		addComponent(PlayerListener.class);
 		addComponent(BlockListener.class);
 		addComponent(EntityListener.class);
-		addComponent(CustomRecipeHandler.class);
 	}
 }
