@@ -22,7 +22,7 @@ public class InventoryMonitor implements IInventoryClick
 	public void OnInventoryClickEvent(RunsafeInventoryClickEvent event)
 	{
 		RunsafeInventory inventory = event.getInventory();
-		if (inventory.getType() == RunsafeInventoryType.MERCHANT)
+		if (inventory.getType() == RunsafeInventoryType.MERCHANT && event.getSlot() == 2)
 		{
 			RunsafeInventory top = event.getView().getTopInventory();
 			InventoryMerchant raw = (InventoryMerchant) ReflectionHelper.getObjectField(top.getRaw(), "inventory");
