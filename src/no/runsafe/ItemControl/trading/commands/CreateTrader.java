@@ -36,6 +36,7 @@ public class CreateTrader extends PlayerCommand implements IPlayerInteractEntity
 		IPlayer player = event.getPlayer();
 		String playerName = player.getName();
 
+		player.sendColouredMessage("Event detected.");
 		if (interactTrack.contains(playerName))
 		{
 			RunsafeEntity entity = event.getRightClicked();
