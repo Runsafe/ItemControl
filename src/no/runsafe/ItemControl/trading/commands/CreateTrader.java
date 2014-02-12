@@ -46,6 +46,7 @@ public class CreateTrader extends PlayerCommand implements IPlayerInteractEntity
 				VillagerController controller = new VillagerController(entity);
 				controller.clearTrades();
 				controller.addTrade(Item.BuildingBlock.Dirt.getItem(), Item.BuildingBlock.Emerald.getItem());
+				player.sendColouredMessage(entity.getUniqueId().toString());
 			}
 			else
 			{
