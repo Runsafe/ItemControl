@@ -41,7 +41,7 @@ public class VillagerController
 	private void addRecipe(MerchantRecipe recipe)
 	{
 		recipe.a(999999999); // make it so the trade "never" runs out of uses
-		getList().a(recipe);
+		getList().add(recipe);
 	}
 
 	private ItemStack toMinecraft(RunsafeMeta item)
