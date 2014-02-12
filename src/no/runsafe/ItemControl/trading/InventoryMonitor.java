@@ -134,13 +134,13 @@ public class InventoryMonitor implements IInventoryClick
 		for (Map.Entry<RunsafeEnchantment, Integer> firstEnchant : firstEnchants.entrySet())
 		{
 			RunsafeEnchantment enchantment = firstEnchant.getKey();
-			if (!secondEnchants.containsKey(enchantment))
+			if (!second.containsEnchantment(enchantment))
 			{
 				console.logError("Missing enchant: " + enchantment.getName());
 				return false;
 			}
 
-			if (!secondEnchants.get(enchantment).equals(firstEnchant.getValue()))
+			if (!firstEnchant.getValue().equals(second.getEnchantLevel(enchantment)))
 			{
 				console.logError("Invalid enchant: " + enchantment.getName());
 				return false;
