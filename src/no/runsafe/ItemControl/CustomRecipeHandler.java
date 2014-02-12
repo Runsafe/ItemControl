@@ -11,6 +11,7 @@ import no.runsafe.framework.minecraft.event.inventory.RunsafePrepareItemCraftEve
 import no.runsafe.framework.minecraft.inventory.RunsafeCraftingInventory;
 import no.runsafe.framework.minecraft.inventory.RunsafeInventoryType;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.ShapedRecipe;
 
 import java.util.*;
@@ -63,7 +64,8 @@ public class CustomRecipeHandler implements IServerReady, IPrepareCraftItem
 				console.logInformation("Setting ing: %s -> %s", node.getValue(), node.getKey().getName());
 			}
 
-			server.addRecipe(bukkitRecipe);
+			//server.addRecipe(bukkitRecipe);
+			Bukkit.getServer().addRecipe(bukkitRecipe);
 		}
 
 		console.logInformation("Loaded " + recipes.size() + " custom recipes");
