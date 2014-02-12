@@ -2,7 +2,9 @@ package no.runsafe.ItemControl;
 
 import no.runsafe.ItemControl.trading.TradingHandler;
 import no.runsafe.ItemControl.trading.TradingRepository;
+import no.runsafe.ItemControl.trading.commands.CreateMonitor;
 import no.runsafe.ItemControl.trading.commands.CreateTrader;
+import no.runsafe.ItemControl.trading.commands.EditMonitor;
 import no.runsafe.ItemControl.trading.commands.EditTrader;
 import no.runsafe.framework.RunsafeConfigurablePlugin;
 import no.runsafe.framework.api.command.Command;
@@ -25,6 +27,9 @@ public class ItemControl extends RunsafeConfigurablePlugin
 
 		addComponent(TradingRepository.class);
 		addComponent(TradingHandler.class);
+
+		addComponent(CreateMonitor.class);
+		addComponent(EditMonitor.class);
 
 		Command traderCommand = new Command("traders", "Trader related commands", null);
 		addComponent(traderCommand);
