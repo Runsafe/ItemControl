@@ -27,14 +27,14 @@ public class PlayerMonitor implements IPlayerInteractEntityEvent
 				if (firstItem == null)
 					return;
 
-				RunsafeMeta result = inventory.getItemInSlot(col + 10);
+				RunsafeMeta result = inventory.getItemInSlot(col + 9);
 				if (result == null)
 					return;
 
 				VillagerController controller = new VillagerController(entity);
 				controller.clearTrades();
 
-				RunsafeMeta secondItem = inventory.getItemInSlot(col + 19);
+				RunsafeMeta secondItem = inventory.getItemInSlot(col + 18);
 				if (secondItem != null)
 					controller.addTrade(firstItem, secondItem, result);
 				else
