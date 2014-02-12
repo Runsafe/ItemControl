@@ -54,6 +54,9 @@ public class CustomRecipeHandler implements IServerReady, IPrepareCraftItem
 			console.logInformation("Shape: " + recipeString.toString());
 			bukkitRecipe.shape(recipeString.toString().split("(?<=\\G...)"));
 
+			for (String test : recipeString.toString().split("(?<=\\G...)"))
+				console.logInformation(test);
+
 			for (Map.Entry<Item, Character> node : itemKey.entrySet())
 			{
 				bukkitRecipe.setIngredient(node.getValue(), node.getKey().getType());
