@@ -43,6 +43,7 @@ public class CustomRecipeHandler implements IServerReady, IInventoryClick
 				int slot = 1;
 				for (RunsafeMeta item : items)
 				{
+					console.logInformation("Checking slot " + slot);
 					if ((item == null || item.is(Item.Unavailable.Air)) && !recipeDesign.containsKey(slot))
 						continue;
 
