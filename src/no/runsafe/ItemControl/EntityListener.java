@@ -1,16 +1,20 @@
 package no.runsafe.ItemControl;
 
+import no.runsafe.ItemControl.trading.TradingHandler;
 import no.runsafe.framework.api.ILocation;
+import no.runsafe.framework.api.event.entity.IEntityDamageByEntityEvent;
 import no.runsafe.framework.api.event.entity.IMobSpawnerPulsed;
 import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.minecraft.entity.RunsafeLivingEntity;
+import no.runsafe.framework.minecraft.event.entity.RunsafeEntityDamageByEntityEvent;
 
-public class EntityListener implements IMobSpawnerPulsed
+public class EntityListener implements IMobSpawnerPulsed, IEntityDamageByEntityEvent
 {
-	public EntityListener(Globals globals, IConsole console)
+	public EntityListener(Globals globals, IConsole console, TradingHandler handler)
 	{
 		this.globals = globals;
 		this.console = console;
+		this.handler = handler;
 	}
 
 	@Override
@@ -31,6 +35,14 @@ public class EntityListener implements IMobSpawnerPulsed
 		return true;
 	}
 
+	@Override
+	public void OnEntityDamageByEntity(RunsafeEntityDamageByEntityEvent event)
+	{
+		if (handler.isTrader(event.getEntity()))
+			event.cancel();
+	}
+
 	private Globals globals;
 	private IConsole console;
+	private TradingHandler handler;
 }
