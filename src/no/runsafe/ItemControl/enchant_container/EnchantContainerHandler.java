@@ -52,11 +52,13 @@ public class EnchantContainerHandler implements IPlayerRightClick
 					if (levelString != null)
 					{
 						String[] stringSplit = levelString.split(" ");
-						player.setLevel(Integer.parseInt(stringSplit[1]));
+						int levels = Integer.parseInt(stringSplit[1]);
+						player.setLevel(levels);
 						RunsafeInventory inventory = player.getInventory();
 						inventory.removeExact(usingItem, 1);
 						RunsafeMeta item = Item.Brewing.GlassBottle.getItem();
 						item.setAmount(1);
+						player.sendColouredMessage("&cGained " + levels + "!");
 						return false;
 					}
 				}
