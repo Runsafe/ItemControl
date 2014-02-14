@@ -33,6 +33,7 @@ public class EnchantContainerHandler implements IPlayerRightClick
 						item.addLore("§3Contains:§f " + playerLevel + " levels");
 						inventory.addItems(item);
 						player.updateInventory();
+						player.sendColouredMessage("&eYour levels have been stored in the bottle!");
 					}
 					else
 					{
