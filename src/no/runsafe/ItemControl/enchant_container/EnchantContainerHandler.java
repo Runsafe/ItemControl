@@ -14,9 +14,9 @@ public class EnchantContainerHandler implements IPlayerRightClick
 	@Override
 	public boolean OnPlayerRightClick(IPlayer player, RunsafeMeta usingItem, IBlock targetBlock)
 	{
-		if (usingItem != null && usingItem.is(Item.Brewing.GlassBottle))
+		if (usingItem != null)
 		{
-			if (targetBlock != null)
+			if (targetBlock != null && usingItem.is(Item.Brewing.GlassBottle))
 			{
 				if (targetBlock.is(Item.Decoration.EnchantmentTable))
 				{
@@ -46,7 +46,7 @@ public class EnchantContainerHandler implements IPlayerRightClick
 				{
 					String levelString = null;
 					for (String loreString : lore)
-						if (loreString.contains("Contains: "))
+						if (loreString.startsWith("§3Contains: ") && loreString.endsWith(" levels"))
 							levelString = loreString;
 
 					if (levelString != null)
