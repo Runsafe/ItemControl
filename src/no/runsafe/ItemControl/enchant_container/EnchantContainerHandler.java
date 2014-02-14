@@ -46,7 +46,7 @@ public class EnchantContainerHandler implements IPlayerRightClick
 				{
 					String levelString = null;
 					for (String loreString : lore)
-						if (loreString.startsWith("§3Contains: ") && loreString.endsWith(" levels"))
+						if (loreString.contains("Contains:"))
 							levelString = loreString;
 
 					if (levelString != null)
