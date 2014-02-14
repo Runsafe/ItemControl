@@ -1,9 +1,11 @@
 package no.runsafe.ItemControl.enchant_container;
 
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.player.IPlayerRightClick;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
+import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.inventory.RunsafeInventory;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 
@@ -59,6 +61,11 @@ public class EnchantContainerHandler implements IPlayerRightClick
 						RunsafeMeta item = Item.Brewing.GlassBottle.getItem();
 						item.setAmount(1);
 						player.sendColouredMessage("&cGained " + levels + "!");
+
+						ILocation playerLocation = player.getLocation();
+						if (playerLocation != null)
+							playerLocation.playSound(Sound.Player.LevelUp, 2, 1);
+
 						return false;
 					}
 				}
