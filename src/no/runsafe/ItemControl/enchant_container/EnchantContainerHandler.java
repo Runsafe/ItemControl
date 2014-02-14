@@ -61,6 +61,9 @@ public class EnchantContainerHandler implements IPlayerRightClick
 						inventory.removeExact(usingItem, 1);
 						RunsafeMeta item = Item.Brewing.GlassBottle.getItem();
 						item.setAmount(1);
+						inventory.addItems(item);
+						player.updateInventory();
+
 						player.sendColouredMessage("&aGained " + levels + " levels!");
 
 						ILocation playerLocation = player.getLocation();
