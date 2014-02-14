@@ -28,7 +28,7 @@ public class EnchantContainerHandler implements IPlayerRightClick
 						inventory.removeExact(usingItem, 1);
 						RunsafeMeta item = Item.Miscellaneous.ExperienceBottle.getItem();
 						item.setAmount(1);
-						item.addLore("§3Contains: §f" + playerLevel + " levels");
+						item.addLore("§3Contains:§f " + playerLevel + " levels");
 						inventory.addItems(item);
 						player.updateInventory();
 					}
@@ -46,7 +46,7 @@ public class EnchantContainerHandler implements IPlayerRightClick
 				{
 					String levelString = null;
 					for (String loreString : lore)
-						if (loreString.contains("Contains:"))
+						if (loreString.startsWith("§3Contains:§f ") && loreString.endsWith(" levels"))
 							levelString = loreString;
 
 					if (levelString != null)
