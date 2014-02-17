@@ -1,12 +1,12 @@
 package no.runsafe.ItemControl;
 
+import no.runsafe.ItemControl.spawners.SpawnerHandler;
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.player.IPlayerDeathEvent;
 import no.runsafe.framework.api.event.player.IPlayerInteractEvent;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
-import no.runsafe.framework.api.log.IDebug;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerDeathEvent;
@@ -20,11 +20,11 @@ import java.util.List;
 
 public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, IConfigurationChanged
 {
-	public PlayerListener(IRegionControl worldGuardInterface, Globals globals, IDebug debugger)
+	public PlayerListener(IRegionControl worldGuardInterface, Globals globals, SpawnerHandler spawnerHandler)
 	{
 		this.worldGuardInterface = worldGuardInterface;
 		this.globals = globals;
-		this.debugger = debugger;
+		this.spawnerHandler = spawnerHandler;
 	}
 
 	@Override
@@ -37,11 +37,11 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 		IWorld world = player.getWorld();
 		RunsafeMeta usingItem = player.getItemInHand();
 
-		String playerName = player.getName();
+		if (usingItem == null)
+			return;
 
 		if (globals.itemIsDisabled(world, usingItem.getItemId()))
 		{
-			this.debugger.debugFine("%s tried to use disabled item %s", playerName, usingItem.getItemId());
 			if (globals.blockedItemShouldBeRemoved())
 				player.removeItem(usingItem.getItemType());
 
@@ -52,15 +52,13 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 		if (!player.canBuildNow() || targetBlock == null)
 			return;
 
-		if (usingItem.is(Item.Miscellaneous.MonsterEgg.Any) && this.globals.spawnerIsHarvestable(world))
+		if (usingItem.is(Item.Miscellaneous.MonsterEgg.Any) && spawnerHandler.spawnerIsHarvestable(world))
 		{
-			this.debugger.debugFine("Monster Egg placement detected by " + playerName);
-
 			// If the block has an interface or is interact block, don't let them place a spawner
 			if (targetBlock.hasInterface() || targetBlock.isInteractBlock())
 				return;
 
-			if (this.globals.createSpawner(player, event.getTargetBlock(), usingItem))
+			if (spawnerHandler.createSpawner(player, event.getTargetBlock(), usingItem))
 				player.removeItem(usingItem.getItemType(), 1);
 
 			event.cancel();
@@ -74,13 +72,13 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 		String currentWorld = player.getWorldName();
 		boolean stopItems = false;
 
-		if (!this.noDeathItemsWorlds.contains(currentWorld))
+		if (!noDeathItemsWorlds.contains(currentWorld))
 		{
-			List<String> regions = this.worldGuardInterface.getApplicableRegions(player);
+			List<String> regions = worldGuardInterface.getApplicableRegions(player);
 
-			if (regions != null && this.noDeathItemsRegions.containsKey(currentWorld))
+			if (regions != null && noDeathItemsRegions.containsKey(currentWorld))
 				for (String region : regions)
-					if (this.noDeathItemsRegions.get(currentWorld).contains(region))
+					if (noDeathItemsRegions.get(currentWorld).contains(region))
 						stopItems = true;
 		}
 		else
@@ -99,8 +97,8 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 	@Override
 	public void OnConfigurationChanged(IConfiguration configuration)
 	{
-		this.noDeathItemsRegions.clear();
-		this.noDeathItemsWorlds.clear();
+		noDeathItemsRegions.clear();
+		noDeathItemsWorlds.clear();
 
 		List<String> nodes = configuration.getConfigValueAsList("preventDeathItemDrops");
 
@@ -109,14 +107,14 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 			if (node.contains("."))
 			{
 				String[] parts = node.split("\\.");
-				if (!this.noDeathItemsRegions.containsKey(parts[0]))
-					this.noDeathItemsRegions.put(parts[0], new ArrayList<String>());
+				if (!noDeathItemsRegions.containsKey(parts[0]))
+					noDeathItemsRegions.put(parts[0], new ArrayList<String>());
 
-				this.noDeathItemsRegions.get(parts[0]).add(parts[1]);
+				noDeathItemsRegions.get(parts[0]).add(parts[1]);
 			}
 			else
 			{
-				this.noDeathItemsWorlds.add(node);
+				noDeathItemsWorlds.add(node);
 			}
 		}
 	}
@@ -126,5 +124,5 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 	private IRegionControl worldGuardInterface;
 
 	private final Globals globals;
-	private IDebug debugger;
+	private final SpawnerHandler spawnerHandler;
 }

@@ -1,10 +1,9 @@
 package no.runsafe.ItemControl;
 
 import no.runsafe.ItemControl.enchant_container.EnchantContainerHandler;
-import no.runsafe.ItemControl.trading.InventoryMonitor;
-import no.runsafe.ItemControl.trading.PlayerMonitor;
-import no.runsafe.ItemControl.trading.TradingHandler;
-import no.runsafe.ItemControl.trading.TradingRepository;
+import no.runsafe.ItemControl.spawners.SpawnerHandler;
+import no.runsafe.ItemControl.spawners.SpawnerMonitor;
+import no.runsafe.ItemControl.trading.*;
 import no.runsafe.ItemControl.trading.commands.CreateMonitor;
 import no.runsafe.ItemControl.trading.commands.CreateTrader;
 import no.runsafe.ItemControl.trading.commands.EditMonitor;
@@ -21,13 +20,23 @@ public class ItemControl extends RunsafeConfigurablePlugin
 	protected void pluginSetup()
 	{
 		addComponent(Events.class);
-		addComponent(Globals.class);
 		addComponent(Commands.class);
 		addComponent(Database.class);
+
+		// Core functions
+		addComponent(Globals.class);
 		addComponent(PlayerListener.class);
 		addComponent(BlockListener.class);
 		addComponent(EntityListener.class);
 
+		// XP bottle handling
+		addComponent(EnchantContainerHandler.class);
+
+		// Mob spawners
+		addComponent(SpawnerHandler.class);
+		addComponent(SpawnerMonitor.class);
+
+		// Merchants
 		addComponent(TradingRepository.class);
 		addComponent(TradingHandler.class);
 
@@ -35,8 +44,6 @@ public class ItemControl extends RunsafeConfigurablePlugin
 		addComponent(EditMonitor.class);
 		addComponent(PlayerMonitor.class);
 		addComponent(InventoryMonitor.class);
-
-		addComponent(EnchantContainerHandler.class);
 
 		Command traderCommand = new Command("traders", "Trader related commands", null);
 		addComponent(traderCommand);
