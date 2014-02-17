@@ -6,7 +6,7 @@ remove.disabledItems: true
 spawnerDrop:
   - world
   - world_the_end
-  - world_nether]
+  - world_nether
 spawner.allow:
   - skeleton
   - spider
