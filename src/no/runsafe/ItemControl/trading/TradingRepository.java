@@ -51,14 +51,12 @@ public class TradingRepository extends Repository
 		ILocation location = data.getLocation();
 
 		database.execute(
-				"UPDATE `traders` SET `inventory` = ? WHERE `world` = ? AND `x` = ? AND `y` = ? AND `z` = ? AND `yaw` = ? AND `pitch` = ? AND `name` = ?",
+				"UPDATE `traders` SET `inventory` = ? WHERE `world` = ? AND ROUND(x) = ? AND ROUND(y) = ? AND ROUND(z) = ? AND `name` = ?",
 				data.getInventory().serialize(),
 				location.getWorld().getName(),
-				location.getX(),
-				location.getBlockY(),
-				location.getZ(),
-				location.getYaw(),
-				location.getPitch(),
+				Math.round(location.getBlockX()),
+				Math.round(location.getBlockY()),
+				Math.round(location.getBlockZ()),
 				data.getName()
 		);
 	}
