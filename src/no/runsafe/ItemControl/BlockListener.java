@@ -1,6 +1,5 @@
 package no.runsafe.ItemControl;
 
-import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.block.IItemDispensed;
@@ -17,10 +16,9 @@ public class BlockListener implements IItemDispensed
 	public boolean OnBlockDispense(IBlock block, RunsafeMeta itemStack)
 	{
 		IWorld blockWorld = block.getWorld();
-		ILocation blockLocation = block.getLocation();
-		if (globals.itemIsDisabled(block.getWorld(), itemStack.getItemId()))
+		if (globals.itemIsDisabled(blockWorld, itemStack.getItemId()))
 		{
-			blockWorld.createExplosion(blockLocation, 0, true);
+			blockWorld.createExplosion(block.getLocation(), 0, true);
 			block.breakNaturally();
 			return false;
 		}
