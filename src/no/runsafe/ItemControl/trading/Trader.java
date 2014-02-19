@@ -61,11 +61,11 @@ public class Trader extends EntityVillager
 				if (firstItem == null)
 					continue;
 
-				RunsafeMeta result = inventory.getItemInSlot(col + 10);
+				RunsafeMeta result = inventory.getItemInSlot(col + 18);
 				if (result == null)
 					continue;
 
-				RunsafeMeta secondItem = inventory.getItemInSlot(col + 19);
+				RunsafeMeta secondItem = inventory.getItemInSlot(col + 9);
 				if (secondItem != null)
 					addTrade(firstItem, secondItem, result);
 				else
