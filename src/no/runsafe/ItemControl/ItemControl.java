@@ -43,7 +43,7 @@ public class ItemControl extends RunsafeConfigurablePlugin
 		addComponent(TradingRepository.class);
 		addComponent(TradingHandler.class);
 
-		//addComponent(InventoryMonitor.class);
+		addComponent(InventoryMonitor.class);
 
 		Command traderCommand = new Command("traders", "Trader related commands", null);
 		addComponent(traderCommand);
