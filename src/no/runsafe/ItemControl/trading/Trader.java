@@ -1,7 +1,6 @@
 package no.runsafe.ItemControl.trading;
 
 import net.minecraft.server.v1_7_R1.*;
-import no.runsafe.ItemControl.ItemControl;
 import no.runsafe.ItemControl.trading.commands.EditTrader;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
@@ -54,7 +53,6 @@ public class Trader extends EntityVillager
 		}
 		else
 		{
-			ItemControl.Debugger.debugFine(human.getName() + " is opening trader");
 			getList().clear(); // Wipe all existing trades.
 
 			for (int col = 0; col < 10; col++)
@@ -74,7 +72,7 @@ public class Trader extends EntityVillager
 					addTrade(firstItem, result);
 			}
 
-			ItemControl.Debugger.debugFine("Opening trade window..");
+			a_(human);
 			human.openTrade(this, getCustomName());
 			return true;
 		}
