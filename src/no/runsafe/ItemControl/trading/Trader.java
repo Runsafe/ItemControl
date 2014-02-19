@@ -100,7 +100,7 @@ public class Trader extends EntityVillager
 
 	private void addRecipe(MerchantRecipe recipe)
 	{
-		recipe.a(99999999); // Prevent the trade from expiring.
+		recipe.a(9999999); // Prevent the trade from expiring.
 		getList().a(recipe); // Add the recipe to the merchant.
 	}
 
