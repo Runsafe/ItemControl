@@ -2,6 +2,7 @@ package no.runsafe.ItemControl.trading;
 
 import net.minecraft.server.v1_7_R1.*;
 import net.minecraft.server.v1_7_R1.ItemStack;
+import no.runsafe.ItemControl.ItemControl;
 import no.runsafe.framework.api.event.inventory.IInventoryClick;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.enchantment.RunsafeEnchantment;
@@ -72,7 +73,10 @@ public class InventoryMonitor implements IInventoryClick
 	private boolean strictMatch(RunsafeMeta first, RunsafeMeta second)
 	{
 		if (!first.is(second.getItemType()))
+		{
+			ItemControl.Debugger.debugFine("Item type mis-match");
 			return false;
+		}
 
 		String firstName = first.getDisplayName(); // null
 		String secondName = second.getDisplayName(); // null
@@ -84,7 +88,10 @@ public class InventoryMonitor implements IInventoryClick
 			secondName = "";
 
 		if (!firstName.equals(secondName))
+		{
+			ItemControl.Debugger.debugFine("Name mis-match");
 			return false;
+		}
 
 		List<String> firstLore = first.getLore();
 		List<String> secondLore = second.getLore();
@@ -96,13 +103,19 @@ public class InventoryMonitor implements IInventoryClick
 			secondLore = Collections.emptyList();
 
 		if (firstLore.size() != secondLore.size())
+		{
+			ItemControl.Debugger.debugFine("Lore size mis-match");
 			return false;
+		}
 
 		int index = 0;
 		for (String firstLoreString : firstLore)
 		{
 			if (!firstLoreString.equals(secondLore.get(index)))
+			{
+				ItemControl.Debugger.debugFine("Lore index mis-match: " + index);
 				return false;
+			}
 
 			index++;
 		}
@@ -111,16 +124,25 @@ public class InventoryMonitor implements IInventoryClick
 		Map<RunsafeEnchantment, Integer> secondEnchants = second.getEnchantments();
 
 		if (firstEnchants.size() != secondEnchants.size())
+		{
+			ItemControl.Debugger.debugFine("Enchant size mis-match");
 			return false;
+		}
 
 		for (Map.Entry<RunsafeEnchantment, Integer> firstEnchant : firstEnchants.entrySet())
 		{
 			RunsafeEnchantment enchantment = firstEnchant.getKey();
 			if (!second.containsEnchantment(enchantment))
+			{
+				ItemControl.Debugger.debugFine("Enchant type mis-match");
 				return false;
+			}
 
 			if (!firstEnchant.getValue().equals(second.getEnchantLevel(enchantment)))
+			{
+				ItemControl.Debugger.debugFine("Enchant value mis-match");
 				return false;
+			}
 		}
 
 		return true;
