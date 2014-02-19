@@ -26,32 +26,21 @@ public class TradingHandler implements IChunkLoad, IConfigurationChanged, IPlugi
 	public void OnChunkLoad(IChunk chunk)
 	{
 		String worldName = chunk.getWorld().getName();
-		ItemControl.Debugger.debugFine("Chunk load detected in world: " + worldName);
 
 		// Check if we have any merchants for this world.
 		if (data.containsKey(worldName))
 		{
-			ItemControl.Debugger.debugFine("Traders detected for this world, loading them!");
 			// Loop all merchants we have in this world.
 			for (TraderData node : data.get(worldName))
 			{
 				// Check the merchant should be spawned inside the chunk.
 				ILocation location = node.getLocation();
-				ItemControl.Debugger.debugFine("Trader to be loaded at: " + location.toString());
 				if (chunk.locationIsInChunk(location))
 				{
 					ItemControl.Debugger.debugFine("Trader is in this chunk, spawning!");
 					spawnTrader(node); // Spawn the merchant!
 				}
-				else
-				{
-					ItemControl.Debugger.debugFine("Trader is not in this chunk, stopping!");
-				}
 			}
-		}
-		else
-		{
-			ItemControl.Debugger.debugFine("No traders detected for this world, stopping.");
 		}
 	}
 
