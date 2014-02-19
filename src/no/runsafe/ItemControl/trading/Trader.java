@@ -120,6 +120,12 @@ public class Trader extends EntityVillager
 		// Do nothing.
 	}
 
+	@Override
+	public void move(double d0, double d1, double d2)
+	{
+		// Do nothing, we don't want this entity to move.
+	}
+
 	private final RunsafeInventory inventory;
 	private final ILocation location;
 	private final IScheduler scheduler;
