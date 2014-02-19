@@ -20,27 +20,28 @@ public class TradingRepository extends Repository
 	public List<TraderData> getTraders()
 	{
 		List<TraderData> data = new ArrayList<TraderData>(0);
-		for (IRow row : database.query("SELECT `inventory`, `world`, `x`, `y`, `z`, `yaw`, `pitch` FROM `traders`"))
+		for (IRow row : database.query("SELECT `inventory`, `world`, `x`, `y`, `z`, `yaw`, `pitch`, `name` FROM `traders`"))
 		{
 			RunsafeInventory inventory = server.createInventory(null, 36);
 			inventory.unserialize(row.String("inventory"));
-			data.add(new TraderData(row.Location(), inventory));
+			data.add(new TraderData(row.Location(), inventory, row.String("name")));
 		}
 
 		return data;
 	}
 
-	public void persistTrader(ILocation location, RunsafeInventory inventory)
+	public void persistTrader(ILocation location, RunsafeInventory inventory, String name)
 	{
 		database.execute(
-				"INSERT INTO `traders` (`inventory`, `world`, `x`, `y`, `z`, `yaw`, `pitch`) VALUES(?, ?, ?, ?, ?, ?)",
+				"INSERT INTO `traders` (`inventory`, `world`, `x`, `y`, `z`, `yaw`, `pitch`, `name`) VALUES(?, ?, ?, ?, ?, ?, ?)",
 				inventory.serialize(),
 				location.getWorld().getName(),
 				location.getX(),
 				location.getY(),
 				location.getZ(),
 				location.getYaw(),
-				location.getPitch()
+				location.getPitch(),
+				name
 		);
 	}
 
@@ -76,6 +77,8 @@ public class TradingRepository extends Repository
 					"ADD COLUMN `pitch` FLOAT NOT NULL AFTER `yaw`," +
 					"DROP COLUMN `ID`"
 		);
+
+		updates.addQueries("ADD COLUMN `name` VARCHAR(255) NULL DEFAULT NULL AFTER `inventory`");
 
 		return updates;
 	}

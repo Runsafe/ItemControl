@@ -36,19 +36,25 @@ public class TradingHandler implements IChunkLoad, IConfigurationChanged, IPlugi
 				// Check the merchant should be spawned inside the chunk.
 				ILocation location = node.getLocation();
 				if (chunk.locationIsInChunk(location))
-					spawnTrader(location, node.getInventory()); // Spawn the merchant!
+					spawnTrader(location, node.getInventory(), node.getName()); // Spawn the merchant!
 			}
 		}
 	}
 
-	public Trader spawnTrader(ILocation location)
+	private Trader spawnTrader(ILocation location, RunsafeInventory inventory, String name)
 	{
-		return spawnTrader(location, server.createInventory(null, 36));
+		Trader trader = new Trader(location, inventory);
+		if (name != null)
+			trader.setCustomName(name);
+
+		return trader;
 	}
 
-	public Trader spawnTrader(ILocation location, RunsafeInventory inventory)
+	public void createTrader(ILocation location, String name)
 	{
-		return new Trader(location, inventory);
+		RunsafeInventory inventory = server.createInventory(null, 36); // Make blank inventory.
+		spawnTrader(location, inventory, name); // Spawn the trader.
+		repository.persistTrader(location, inventory, name);
 	}
 
 	@Override

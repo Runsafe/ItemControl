@@ -17,7 +17,7 @@ public class CreateTrader extends PlayerCommand
 	public String OnExecute(IPlayer executor, IArgumentList parameters)
 	{
 		// Spawn a merchant at the players location.
-		handler.spawnTrader(executor.getLocation());
+		handler.createTrader(executor.getLocation(), null);
 		return "&eMerchant spawned!";
 	}
 

@@ -18,7 +18,7 @@ public class CreateNamedTrader extends PlayerCommand
 	public String OnExecute(IPlayer executor, IArgumentList parameters)
 	{
 		// Spawn a merchant at the players location with a name!
-		handler.spawnTrader(executor.getLocation()).setCustomName(parameters.get("name"));
+		handler.createTrader(executor.getLocation(), parameters.get("name"));
 		return "&eMerchant spawned!";
 	}
 
