@@ -46,24 +46,12 @@ public class InventoryMonitor implements IInventoryClick
 					RunsafeMeta secondItem = convertFromMinecraft(recipe.getBuyItem2());
 
 					if (firstItem != null)
-					{
-						ItemControl.Debugger.debugFine("firstItem is not null");
 						if (firstSlot == null || (!firstItem.is(Item.Special.Crafted.WrittenBook) && !strictMatch(firstSlot,  firstItem)))
-						{
-							ItemControl.Debugger.debugFine("Cancelling due to slot 1");
 							cancel = true;
-						}
-					}
 
 					if (secondItem != null)
-					{
-						ItemControl.Debugger.debugFine("secondItem is not null");
 						if (secondSlot == null || (!secondItem.is(Item.Special.Crafted.WrittenBook) && !strictMatch(secondSlot, secondItem)))
-						{
-							ItemControl.Debugger.debugFine("Cancelling due to slot 2");
 							cancel = true;
-						}
-					}
 				}
 
 				if (cancel)
