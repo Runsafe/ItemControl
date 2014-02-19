@@ -41,14 +41,14 @@ public class TradingHandler implements IChunkLoad, IConfigurationChanged, IPlugi
 		}
 	}
 
-	public void spawnTrader(ILocation location)
+	public Trader spawnTrader(ILocation location)
 	{
-		spawnTrader(location, server.createInventory(null, 36));
+		return spawnTrader(location, server.createInventory(null, 36));
 	}
 
-	public void spawnTrader(ILocation location, RunsafeInventory inventory)
+	public Trader spawnTrader(ILocation location, RunsafeInventory inventory)
 	{
-		new Trader(location, inventory);
+		return new Trader(location, inventory);
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import no.runsafe.ItemControl.enchant_container.EnchantContainerHandler;
 import no.runsafe.ItemControl.spawners.SpawnerHandler;
 import no.runsafe.ItemControl.spawners.SpawnerMonitor;
 import no.runsafe.ItemControl.trading.*;
+import no.runsafe.ItemControl.trading.commands.CreateNamedTrader;
 import no.runsafe.ItemControl.trading.commands.CreateTrader;
 import no.runsafe.framework.RunsafeConfigurablePlugin;
 import no.runsafe.framework.api.command.Command;
@@ -42,5 +43,6 @@ public class ItemControl extends RunsafeConfigurablePlugin
 		addComponent(traderCommand);
 
 		traderCommand.addSubCommand(getInstance(CreateTrader.class));
+		traderCommand.addSubCommand(getInstance(CreateNamedTrader.class));
 	}
 }
