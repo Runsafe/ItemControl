@@ -51,6 +51,7 @@ public class TradingRepository extends Repository
 	{
 		ILocation location = data.getLocation();
 
+		ItemControl.Debugger.debugFine(data.getInventory().serialize());
 		ItemControl.Debugger.debugFine(location.getWorld().getName());
 		ItemControl.Debugger.debugFine("X: " + location.getX());
 		ItemControl.Debugger.debugFine("Y: " + location.getY());
