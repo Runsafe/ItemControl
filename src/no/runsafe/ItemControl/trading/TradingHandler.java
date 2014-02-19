@@ -3,6 +3,7 @@ package no.runsafe.ItemControl.trading;
 import no.runsafe.ItemControl.ItemControl;
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.ILocation;
+import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.chunk.IChunk;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
@@ -16,10 +17,11 @@ import java.util.List;
 
 public class TradingHandler implements IChunkLoad, IConfigurationChanged, IPluginEnabled
 {
-	public TradingHandler(TradingRepository repository, IServer server)
+	public TradingHandler(TradingRepository repository, IServer server, IScheduler scheduler)
 	{
 		this.repository = repository;
 		this.server = server;
+		this.scheduler = scheduler;
 	}
 
 	@Override
@@ -46,7 +48,7 @@ public class TradingHandler implements IChunkLoad, IConfigurationChanged, IPlugi
 
 	private Trader spawnTrader(TraderData data)
 	{
-		Trader trader = new Trader(data.getLocation(), data.getInventory());
+		Trader trader = new Trader(data.getLocation(), data.getInventory(), scheduler, this);
 		if (data.getName() != null)
 			trader.setCustomName(data.getName());
 
@@ -81,6 +83,11 @@ public class TradingHandler implements IChunkLoad, IConfigurationChanged, IPlugi
 		data.get(worldName).add(node);
 	}
 
+	public void saveTraderData(TraderData node)
+	{
+		repository.updateTrader(node);
+	}
+
 	@Override
 	public void OnPluginEnabled()
 	{
@@ -90,4 +97,5 @@ public class TradingHandler implements IChunkLoad, IConfigurationChanged, IPlugi
 	private HashMap<String, List<TraderData>> data = new HashMap<String, List<TraderData>>(0);
 	private final TradingRepository repository;
 	private final IServer server;
+	private final IScheduler scheduler;
 }

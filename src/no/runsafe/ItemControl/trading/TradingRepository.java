@@ -46,6 +46,22 @@ public class TradingRepository extends Repository
 		);
 	}
 
+	public void updateTrader(TraderData data)
+	{
+		ILocation location = data.getLocation();
+		database.execute(
+				"UPDATE `traders` SET `inventory` = ? WHERE `world` = ? AND `x` = ? AND `y` = ? AND `z` = ? AND `yaw` = ? AND `pitch` = ? AND `name` = ?",
+				data.getInventory().serialize(),
+				location.getWorld().getName(),
+				location.getX(),
+				location.getY(),
+				location.getZ(),
+				location.getYaw(),
+				location.getPitch(),
+				data.getName()
+		);
+	}
+
 	@Nonnull
 	@Override
 	public String getTableName()

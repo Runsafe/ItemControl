@@ -6,6 +6,7 @@ import no.runsafe.ItemControl.spawners.SpawnerMonitor;
 import no.runsafe.ItemControl.trading.*;
 import no.runsafe.ItemControl.trading.commands.CreateNamedTrader;
 import no.runsafe.ItemControl.trading.commands.CreateTrader;
+import no.runsafe.ItemControl.trading.commands.EditTrader;
 import no.runsafe.framework.RunsafeConfigurablePlugin;
 import no.runsafe.framework.api.command.Command;
 import no.runsafe.framework.api.log.IDebug;
@@ -49,5 +50,6 @@ public class ItemControl extends RunsafeConfigurablePlugin
 
 		traderCommand.addSubCommand(getInstance(CreateTrader.class));
 		traderCommand.addSubCommand(getInstance(CreateNamedTrader.class));
+		traderCommand.addSubCommand(getInstance(EditTrader.class));
 	}
 }
