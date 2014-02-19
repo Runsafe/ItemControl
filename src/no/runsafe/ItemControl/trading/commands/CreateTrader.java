@@ -1,12 +1,11 @@
 package no.runsafe.ItemControl.trading.commands;
 
 import no.runsafe.ItemControl.trading.TradingHandler;
-import no.runsafe.framework.api.command.IBranchingExecution;
 import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.player.PlayerCommand;
 import no.runsafe.framework.api.player.IPlayer;
 
-public class CreateTrader extends PlayerCommand implements IBranchingExecution
+public class CreateTrader extends PlayerCommand
 {
 	public CreateTrader(TradingHandler handler)
 	{
