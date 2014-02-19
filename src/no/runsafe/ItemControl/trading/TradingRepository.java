@@ -33,7 +33,7 @@ public class TradingRepository extends Repository
 	public void persistTrader(ILocation location, RunsafeInventory inventory, String name)
 	{
 		database.execute(
-				"INSERT INTO `traders` (`inventory`, `world`, `x`, `y`, `z`, `yaw`, `pitch`, `name`) VALUES(?, ?, ?, ?, ?, ?, ?)",
+				"INSERT INTO `traders` (`inventory`, `world`, `x`, `y`, `z`, `yaw`, `pitch`, `name`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
 				inventory.serialize(),
 				location.getWorld().getName(),
 				location.getX(),
