@@ -1,5 +1,6 @@
 package no.runsafe.ItemControl.trading;
 
+import no.runsafe.ItemControl.ItemControl;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.database.*;
@@ -49,6 +50,15 @@ public class TradingRepository extends Repository
 	public void updateTrader(TraderData data)
 	{
 		ILocation location = data.getLocation();
+
+		ItemControl.Debugger.debugFine(location.getWorld().getName());
+		ItemControl.Debugger.debugFine("X: " + location.getX());
+		ItemControl.Debugger.debugFine("Y: " + location.getY());
+		ItemControl.Debugger.debugFine("Z: " + location.getZ());
+		ItemControl.Debugger.debugFine("Yaw: " + location.getYaw());
+		ItemControl.Debugger.debugFine("Pitch: " + location.getPitch());
+		ItemControl.Debugger.debugFine("Name: " + data.getName());
+
 		database.execute(
 				"UPDATE `traders` SET `inventory` = ? WHERE `world` = ? AND `x` = ? AND `y` = ? AND `z` = ? AND `yaw` = ? AND `pitch` = ? AND `name` = ?",
 				data.getInventory().serialize(),
