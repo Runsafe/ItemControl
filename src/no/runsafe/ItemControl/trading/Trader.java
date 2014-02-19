@@ -53,29 +53,33 @@ public class Trader extends EntityVillager
 		}
 		else
 		{
-			getList().clear(); // Wipe all existing trades.
-
-			for (int col = 0; col < 10; col++)
+			if (!this.ca())
 			{
-				RunsafeMeta firstItem = inventory.getItemInSlot(col);
-				if (firstItem == null)
-					continue;
+				getList().clear(); // Wipe all existing trades.
 
-				RunsafeMeta result = inventory.getItemInSlot(col + 18);
-				if (result == null)
-					continue;
+				for (int col = 0; col < 10; col++)
+				{
+					RunsafeMeta firstItem = inventory.getItemInSlot(col);
+					if (firstItem == null)
+						continue;
 
-				RunsafeMeta secondItem = inventory.getItemInSlot(col + 9);
-				if (secondItem != null)
-					addTrade(firstItem, secondItem, result);
-				else
-					addTrade(firstItem, result);
+					RunsafeMeta result = inventory.getItemInSlot(col + 18);
+					if (result == null)
+						continue;
+
+					RunsafeMeta secondItem = inventory.getItemInSlot(col + 9);
+					if (secondItem != null)
+						addTrade(firstItem, secondItem, result);
+					else
+						addTrade(firstItem, result);
+				}
+
+				a_(human);
+				human.openTrade(this, getCustomName());
+				return true;
 			}
-
-			a_(human);
-			human.openTrade(this, getCustomName());
-			return true;
 		}
+		return false;
 	}
 
 	private void cancelTimer()
