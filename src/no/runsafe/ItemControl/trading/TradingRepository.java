@@ -1,6 +1,5 @@
 package no.runsafe.ItemControl.trading;
 
-import no.runsafe.ItemControl.ItemControl;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.database.*;
@@ -50,18 +49,13 @@ public class TradingRepository extends Repository
 	public void updateTrader(TraderData data)
 	{
 		ILocation location = data.getLocation();
-
-		ItemControl.Debugger.debugFine("X: " + Math.round(location.getBlockX()));
-		ItemControl.Debugger.debugFine("Y: " + Math.round(location.getBlockY()));
-		ItemControl.Debugger.debugFine("Z: " + Math.round(location.getBlockZ()));
-
 		database.execute(
-				"UPDATE `traders` SET `inventory` = ? WHERE `world` = ? AND ROUND(x) = ? AND ROUND(y) = ? AND ROUND(z) = ? AND `name` = ?",
+				"UPDATE `traders` SET `inventory` = ? WHERE `world` = ? AND FLOOR(x) = ? AND FLOOR(y) = ? AND FLOOR(z) = ? AND `name` = ?",
 				data.getInventory().serialize(),
 				location.getWorld().getName(),
-				Math.round(location.getBlockX()),
-				Math.round(location.getBlockY()),
-				Math.round(location.getBlockZ()),
+				Math.floor(location.getBlockX()),
+				Math.floor(location.getBlockY()) ,
+				Math.floor(location.getBlockZ()),
 				data.getName()
 		);
 	}
