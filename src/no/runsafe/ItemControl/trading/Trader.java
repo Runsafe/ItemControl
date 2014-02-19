@@ -1,5 +1,6 @@
 package no.runsafe.ItemControl.trading;
 
+import net.minecraft.server.v1_7_R1.DamageSource;
 import net.minecraft.server.v1_7_R1.EntityAgeable;
 import net.minecraft.server.v1_7_R1.EntityHuman;
 import net.minecraft.server.v1_7_R1.EntityVillager;
@@ -27,6 +28,12 @@ public class Trader extends EntityVillager
 	public boolean a(EntityHuman human)
 	{
 		return false;
+	}
+
+	@Override
+	public boolean damageEntity(DamageSource damagesource, float f)
+	{
+		return false; // We don't want these taking damage.
 	}
 
 	private final RunsafeInventory inventory;
