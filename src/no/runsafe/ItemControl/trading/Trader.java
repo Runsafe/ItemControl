@@ -35,6 +35,7 @@ public class Trader extends EntityVillager
 		if (EditTrader.playerIsTracked(playerName))
 		{
 			human.openContainer(((CraftInventory) inventory.getRaw()).getInventory()); // Open the inventory.
+			EditTrader.stopTrackingPlayer(playerName);
 			runningTimer = scheduler.startSyncRepeatingTask(new Runnable()
 			{
 				@Override
@@ -44,7 +45,6 @@ public class Trader extends EntityVillager
 					{
 						handler.saveTraderData(new TraderData(location, inventory, getCustomName()));
 						cancelTimer();
-						EditTrader.stopTrackingPlayer(playerName);
 					}
 				}
 			}, 5, 5);
