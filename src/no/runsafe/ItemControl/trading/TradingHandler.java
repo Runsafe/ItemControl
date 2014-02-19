@@ -57,7 +57,7 @@ public class TradingHandler implements IChunkLoad, IConfigurationChanged, IPlugi
 
 	public void createTrader(ILocation location, String name)
 	{
-		TraderData data = new TraderData(location, server.createInventory(null, 36), name);
+		TraderData data = new TraderData(location, server.createInventory(null, 27), name);
 		spawnTrader(data); // Spawn the trader.
 		repository.persistTrader(data); // Persist the trader in the database.
 		storeTraderData(data); // Store in our cache.
