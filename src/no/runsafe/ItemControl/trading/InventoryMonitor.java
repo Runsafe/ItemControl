@@ -48,7 +48,7 @@ public class InventoryMonitor implements IInventoryClick
 					if (firstItem != null)
 					{
 						ItemControl.Debugger.debugFine("firstItem is not null");
-						if (firstSlot == null || !strictMatch(firstSlot,  firstItem) || !firstItem.is(Item.Special.Crafted.WrittenBook))
+						if (firstSlot == null || (!firstItem.is(Item.Special.Crafted.WrittenBook) && !strictMatch(firstSlot,  firstItem)))
 						{
 							ItemControl.Debugger.debugFine("Cancelling due to slot 1");
 							cancel = true;
@@ -58,7 +58,7 @@ public class InventoryMonitor implements IInventoryClick
 					if (secondItem != null)
 					{
 						ItemControl.Debugger.debugFine("secondItem is not null");
-						if (secondSlot == null || !strictMatch(secondSlot, secondItem) || !secondItem.is(Item.Special.Crafted.WrittenBook))
+						if (secondSlot == null || (!secondItem.is(Item.Special.Crafted.WrittenBook) && !strictMatch(secondSlot, secondItem)))
 						{
 							ItemControl.Debugger.debugFine("Cancelling due to slot 2");
 							cancel = true;
