@@ -22,7 +22,7 @@ public class TradingRepository extends Repository
 		List<TraderData> data = new ArrayList<TraderData>(0);
 		for (IRow row : database.query("SELECT `inventory`, `world`, `x`, `y`, `z`, `yaw`, `pitch`, `name` FROM `traders`"))
 		{
-			RunsafeInventory inventory = server.createInventory(null, 36);
+			RunsafeInventory inventory = server.createInventory(null, 27);
 			inventory.unserialize(row.String("inventory"));
 			data.add(new TraderData(row.Location(), inventory, row.String("name")));
 		}
