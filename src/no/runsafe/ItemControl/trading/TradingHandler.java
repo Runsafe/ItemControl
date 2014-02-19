@@ -54,6 +54,7 @@ public class TradingHandler implements IChunkLoad, IConfigurationChanged, IPlugi
 		TraderData data = new TraderData(location, server.createInventory(null, 36), name);
 		spawnTrader(data); // Spawn the trader.
 		repository.persistTrader(data); // Persist the trader in the database.
+		storeTraderData(data); // Store in our cache.
 	}
 
 	@Override
@@ -64,13 +65,16 @@ public class TradingHandler implements IChunkLoad, IConfigurationChanged, IPlugi
 
 		// Populate our cache with trader data!
 		for (TraderData node : rawData)
-		{
-			String worldName = node.getLocation().getWorld().getName();
-			if (!data.containsKey(worldName))
-				data.put(worldName, new ArrayList<TraderData>(1));
+			storeTraderData(node);
+	}
 
-			data.get(worldName).add(node);
-		}
+	private void storeTraderData(TraderData node)
+	{
+		String worldName = node.getLocation().getWorld().getName();
+		if (!data.containsKey(worldName))
+			data.put(worldName, new ArrayList<TraderData>(1));
+
+		data.get(worldName).add(node);
 	}
 
 	@Override
