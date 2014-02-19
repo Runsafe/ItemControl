@@ -1,33 +1,47 @@
 package no.runsafe.ItemControl.trading;
 
+import no.runsafe.framework.api.ILocation;
+import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.database.*;
 import no.runsafe.framework.minecraft.inventory.RunsafeInventory;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TradingRepository extends Repository
 {
-	public TradingRepository(IDatabase database)
+	public TradingRepository(IDatabase database, IServer server)
 	{
+		this.server = server;
 		this.database = database;
 	}
 
-	public HashMap<String, String> getTraders()
+	public List<TraderData> getTraders()
 	{
-		HashMap<String, String> traders = new HashMap<String, String>(0);
-		for (IRow row : database.query("SELECT `ID`, `inventory` FROM `traders`"))
-			traders.put(row.String("ID"), row.String("inventory"));
+		List<TraderData> data = new ArrayList<TraderData>(0);
+		for (IRow row : database.query("SELECT `inventory`, `world`, `x`, `y`, `z`, `yaw`, `pitch` FROM `traders`"))
+		{
+			RunsafeInventory inventory = server.createInventory(null, 36);
+			inventory.unserialize(row.String("inventory"));
+			data.add(new TraderData(row.Location(), inventory));
+		}
 
-		return traders;
+		return data;
 	}
 
-	public void persistTraders(HashMap<String, RunsafeInventory> traders)
+	public void persistTrader(ILocation location, RunsafeInventory inventory)
 	{
-		database.execute("DELETE FROM `traders`");
-		for (Map.Entry<String, RunsafeInventory> trader : traders.entrySet())
-			database.execute("INSERT INTO `traders` (`ID`, `inventory`) VALUES(?, ?)", trader.getKey(), trader.getValue().serialize());
+		database.execute(
+				"INSERT INTO `traders` (`inventory`, `world`, `x`, `y`, `z`, `yaw`, `pitch`) VALUES(?, ?, ?, ?, ?, ?)",
+				inventory.serialize(),
+				location.getWorld().getName(),
+				location.getX(),
+				location.getY(),
+				location.getZ(),
+				location.getYaw(),
+				location.getPitch()
+		);
 	}
 
 	@Nonnull
@@ -51,6 +65,20 @@ public class TradingRepository extends Repository
 			")"
 		);
 
+		updates.addQueries(
+				"DELETE FROM `traders`",
+				"ALTER TABLE `traders`" +
+					"ADD COLUMN `world` VARCHAR(30) NOT NULL AFTER `inventory`," +
+					"ADD COLUMN `x` DOUBLE NOT NULL AFTER `world`," +
+					"ADD COLUMN `y` DOUBLE NOT NULL AFTER `x`," +
+					"ADD COLUMN `z` DOUBLE NOT NULL AFTER `y`," +
+					"ADD COLUMN `yaw` FLOAT NOT NULL AFTER `z`," +
+					"ADD COLUMN `pitch` FLOAT NOT NULL AFTER `yaw`," +
+					"DROP COLUMN `ID`"
+		);
+
 		return updates;
 	}
+
+	private final IServer server;
 }

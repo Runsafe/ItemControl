@@ -4,7 +4,6 @@ import no.runsafe.ItemControl.enchant_container.EnchantContainerHandler;
 import no.runsafe.ItemControl.spawners.SpawnerHandler;
 import no.runsafe.ItemControl.spawners.SpawnerMonitor;
 import no.runsafe.ItemControl.trading.*;
-import no.runsafe.ItemControl.trading.commands.CreateMonitor;
 import no.runsafe.ItemControl.trading.commands.CreateTrader;
 import no.runsafe.ItemControl.trading.commands.EditMonitor;
 import no.runsafe.ItemControl.trading.commands.EditTrader;
@@ -27,7 +26,6 @@ public class ItemControl extends RunsafeConfigurablePlugin
 		addComponent(Globals.class);
 		addComponent(PlayerListener.class);
 		addComponent(BlockListener.class);
-		addComponent(EntityListener.class);
 
 		// XP bottle handling
 		addComponent(EnchantContainerHandler.class);
@@ -40,10 +38,8 @@ public class ItemControl extends RunsafeConfigurablePlugin
 		addComponent(TradingRepository.class);
 		addComponent(TradingHandler.class);
 
-		addComponent(CreateMonitor.class);
 		addComponent(EditMonitor.class);
-		addComponent(PlayerMonitor.class);
-		addComponent(InventoryMonitor.class);
+		//addComponent(InventoryMonitor.class);
 
 		Command traderCommand = new Command("traders", "Trader related commands", null);
 		addComponent(traderCommand);

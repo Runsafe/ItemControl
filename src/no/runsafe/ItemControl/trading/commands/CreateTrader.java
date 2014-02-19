@@ -1,22 +1,25 @@
 package no.runsafe.ItemControl.trading.commands;
 
+import no.runsafe.ItemControl.trading.TradingHandler;
 import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.player.PlayerCommand;
 import no.runsafe.framework.api.player.IPlayer;
 
 public class CreateTrader extends PlayerCommand
 {
-	public CreateTrader(CreateMonitor monitor)
+	public CreateTrader(TradingHandler handler)
 	{
 		super("create", "Create a trader", "runsafe.traders.create");
-		this.monitor = monitor;
+		this.handler = handler;
 	}
 
 	@Override
 	public String OnExecute(IPlayer executor, IArgumentList parameters)
 	{
-		monitor.trackPlayer(executor);
-		return "&eRight-click on a villager to make it a trader!";
+		// Spawn a merchant at the players location.
+		handler.spawnTrader(executor.getLocation());
+		return "&eMerchant spawned!";
 	}
-	private final CreateMonitor monitor;
+
+	private final TradingHandler handler;
 }

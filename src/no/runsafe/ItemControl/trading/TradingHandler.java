@@ -1,16 +1,20 @@
 package no.runsafe.ItemControl.trading;
 
+import no.runsafe.framework.api.IConfiguration;
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IServer;
-import no.runsafe.framework.api.event.IServerReady;
-import no.runsafe.framework.api.event.plugin.IPluginDisabled;
-import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.minecraft.entity.RunsafeEntity;
+import no.runsafe.framework.api.chunk.IChunk;
+import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
+import no.runsafe.framework.api.event.plugin.IPluginEnabled;
+import no.runsafe.framework.api.event.world.IChunkLoad;
 import no.runsafe.framework.minecraft.inventory.RunsafeInventory;
+import no.runsafe.framework.tools.nms.EntityRegister;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-public class TradingHandler implements IServerReady, IPluginDisabled
+public class TradingHandler implements IChunkLoad, IConfigurationChanged, IPluginEnabled
 {
 	public TradingHandler(TradingRepository repository, IServer server)
 	{
@@ -18,54 +22,59 @@ public class TradingHandler implements IServerReady, IPluginDisabled
 		this.server = server;
 	}
 
-	public boolean isTrader(RunsafeEntity entity)
+	@Override
+	public void OnChunkLoad(IChunk chunk)
 	{
-		return traders.containsKey(entity.getUniqueId().toString());
+		String worldName = chunk.getWorld().getName();
+
+		// Check if we have any merchants for this world.
+		if (data.containsKey(worldName))
+		{
+			// Loop all merchants we have in this world.
+			for (TraderData node : data.get(worldName))
+			{
+				// Check the merchant should be spawned inside the chunk.
+				ILocation location = node.getLocation();
+				if (chunk.locationIsInChunk(location))
+					spawnTrader(location, node.getInventory()); // Spawn the merchant!
+			}
+		}
 	}
 
-	public void makeTrader(RunsafeEntity entity)
+	public void spawnTrader(ILocation location)
 	{
-		traders.put(entity.getUniqueId().toString(), createTraderInventory());
+		spawnTrader(location, server.createInventory(null, 36));
 	}
 
-	private RunsafeInventory createTraderInventory()
+	public void spawnTrader(ILocation location, RunsafeInventory inventory)
 	{
-		return server.createInventory(null, 27, "Trader Editor");
-	}
-
-	public void openTraderEditor(IPlayer viewer, RunsafeEntity trader)
-	{
-		RunsafeInventory inventory = getTraderInventory(trader);
-		if (inventory != null)
-			viewer.openInventory(inventory);
-	}
-
-	public RunsafeInventory getTraderInventory(RunsafeEntity trader)
-	{
-		String traderID = trader.getUniqueId().toString();
-		return traders.containsKey(traderID) ? traders.get(traderID) : null;
+		new Trader(location, inventory);
 	}
 
 	@Override
-	public void OnServerReady()
+	public void OnConfigurationChanged(IConfiguration configuration)
 	{
-		// Load all traders from the database.
-		HashMap<String, String> rawTraders = repository.getTraders();
-		for (Map.Entry<String, String> rawTrader : rawTraders.entrySet())
+		data.clear(); // Clear existing data.
+		List<TraderData> rawData = repository.getTraders(); // Grab trader data from the database.
+
+		// Populate our cache with trader data!
+		for (TraderData node : rawData)
 		{
-			RunsafeInventory inventory = createTraderInventory();
-			inventory.unserialize(rawTrader.getValue());
-			traders.put(rawTrader.getKey(), inventory);
+			String worldName = node.getLocation().getWorld().getName();
+			if (!data.containsKey(worldName))
+				data.put(worldName, new ArrayList<TraderData>(1));
+
+			data.get(worldName).add(node);
 		}
 	}
 
 	@Override
-	public void OnPluginDisabled()
+	public void OnPluginEnabled()
 	{
-		repository.persistTraders(traders); // Persist all traders when we shut down.
+		EntityRegister.registerEntity(Trader.class, "Merchant", 120);
 	}
 
-	private HashMap<String, RunsafeInventory> traders = new HashMap<String, RunsafeInventory>(0);
+	private HashMap<String, List<TraderData>> data = new HashMap<String, List<TraderData>>(0);
 	private final TradingRepository repository;
 	private final IServer server;
 }
