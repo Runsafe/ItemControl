@@ -7,7 +7,6 @@ import no.runsafe.framework.api.chunk.IChunk;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.event.plugin.IPluginEnabled;
 import no.runsafe.framework.api.event.world.IChunkLoad;
-import no.runsafe.framework.minecraft.inventory.RunsafeInventory;
 import no.runsafe.framework.tools.nms.EntityRegister;
 
 import java.util.ArrayList;
@@ -36,25 +35,25 @@ public class TradingHandler implements IChunkLoad, IConfigurationChanged, IPlugi
 				// Check the merchant should be spawned inside the chunk.
 				ILocation location = node.getLocation();
 				if (chunk.locationIsInChunk(location))
-					spawnTrader(location, node.getInventory(), node.getName()); // Spawn the merchant!
+					spawnTrader(node); // Spawn the merchant!
 			}
 		}
 	}
 
-	private Trader spawnTrader(ILocation location, RunsafeInventory inventory, String name)
+	private Trader spawnTrader(TraderData data)
 	{
-		Trader trader = new Trader(location, inventory);
-		if (name != null)
-			trader.setCustomName(name);
+		Trader trader = new Trader(data.getLocation(), data.getInventory());
+		if (data.getName() != null)
+			trader.setCustomName(data.getName());
 
 		return trader;
 	}
 
 	public void createTrader(ILocation location, String name)
 	{
-		RunsafeInventory inventory = server.createInventory(null, 36); // Make blank inventory.
-		spawnTrader(location, inventory, name); // Spawn the trader.
-		repository.persistTrader(location, inventory, name);
+		TraderData data = new TraderData(location, server.createInventory(null, 36), name);
+		spawnTrader(data); // Spawn the trader.
+		repository.persistTrader(data); // Persist the trader in the database.
 	}
 
 	@Override
