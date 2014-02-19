@@ -78,7 +78,7 @@ public class TradingRepository extends Repository
 					"DROP COLUMN `ID`"
 		);
 
-		updates.addQueries("ADD COLUMN `name` VARCHAR(255) NULL DEFAULT NULL AFTER `inventory`");
+		updates.addQueries("ALTER TABLE `traders` ADD COLUMN `name` VARCHAR(255) NULL DEFAULT NULL AFTER `inventory`");
 
 		return updates;
 	}
