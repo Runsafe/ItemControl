@@ -65,7 +65,7 @@ public class TradingRepository extends Repository
 				data.getInventory().serialize(),
 				location.getWorld().getName(),
 				location.getX(),
-				location.getY(),
+				location.getBlockY(),
 				location.getZ(),
 				location.getYaw(),
 				location.getPitch(),
