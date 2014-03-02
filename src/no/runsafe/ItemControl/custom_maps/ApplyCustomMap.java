@@ -26,6 +26,7 @@ public class ApplyCustomMap extends PlayerCommand
 			MapView mapView = server.getMap(mapID);
 			mapView.getRenderers().clear();
 			mapView.addRenderer(new CustomRenderer());
+			return "&eDone!";
 		}
 		return "&cInvalid item.";
 	}
