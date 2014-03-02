@@ -8,3 +8,5 @@ description: Item control for Minecraft (CraftBukkit)
 commands:
   traders:
     description: Trader related commands
+  applycustommap:
+    description: Apply a custom map to the item held
