@@ -4,7 +4,6 @@ import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.player.PlayerCommand;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 import org.bukkit.map.MapView;
 
@@ -20,7 +19,7 @@ public class ApplyCustomMap extends PlayerCommand
 	public String OnExecute(IPlayer executor, IArgumentList parameters)
 	{
 		RunsafeMeta item = executor.getItemInHand();
-		if (item != null && item.is(Item.Miscellaneous.Map))
+		if (item != null)
 		{
 			short mapID = item.getDurability();
 			MapView mapView = server.getMap(mapID);
