@@ -8,6 +8,7 @@ import org.bukkit.map.MapView;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 public class CustomRenderer extends MapRenderer
@@ -17,8 +18,13 @@ public class CustomRenderer extends MapRenderer
 	{
 		try
 		{
-			BufferedImage image = ImageIO.read(ItemControl.customMapFile);
-			mapCanvas.drawImage(0, 0, image);
+			File file = ItemControl.plugin.getFile(mapView.getId() + ".png").getRawFile();
+
+			if (file != null)
+			{
+				BufferedImage image = ImageIO.read(file);
+				mapCanvas.drawImage(0, 0, image);
+			}
 		}
 		catch (IOException e)
 		{

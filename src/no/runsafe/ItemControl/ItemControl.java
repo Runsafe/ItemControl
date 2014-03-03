@@ -15,12 +15,9 @@ import no.runsafe.framework.features.Commands;
 import no.runsafe.framework.features.Database;
 import no.runsafe.framework.features.Events;
 
-import java.io.File;
-
 public class ItemControl extends RunsafeConfigurablePlugin
 {
 	public static IDebug Debugger = null;
-	public static File customMapFile = null;
 
 	@Override
 	protected void pluginSetup()
@@ -56,7 +53,10 @@ public class ItemControl extends RunsafeConfigurablePlugin
 		traderCommand.addSubCommand(getInstance(CreateNamedTrader.class));
 		traderCommand.addSubCommand(getInstance(EditTrader.class));
 
-		customMapFile = getFile("custom_map.png").getRawFile();
 		addComponent(ApplyCustomMap.class);
+
+		plugin = this;
 	}
+
+	public static ItemControl plugin;
 }
