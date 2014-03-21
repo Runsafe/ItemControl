@@ -78,6 +78,12 @@ public class InventoryMonitor implements IInventoryClick
 			return false;
 		}
 
+		if (first.getDurability() != second.getDurability())
+		{
+			ItemControl.Debugger.debugFine("Durability mis-match!");
+			return false;
+		}
+
 		String firstName = first.getDisplayName(); // null
 		String secondName = second.getDisplayName(); // null
 
