@@ -115,6 +115,9 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		for (int i = 0; i < 9; i++)
 		{
 			RunsafeMeta item = inventory.getItemInSlot(i);
+			if (item == null)
+				continue;
+
 			int requiredAmount = item.getAmount();
 
 			// Make a clone item to compact to prevent item count blurring the result
