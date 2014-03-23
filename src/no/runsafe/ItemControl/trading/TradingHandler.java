@@ -203,6 +203,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 					{
 						ItemControl.Debugger.debugFine("No unsaved remaining, cancelling timer!");
 						scheduler.cancelTask(timerID);
+						timerID = -1;
 					}
 				}
 			}, 10, 10);
@@ -214,5 +215,5 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 	private final TradingRepository repository;
 	private final IScheduler scheduler;
 	private final IServer server;
-	private int timerID;
+	private int timerID = -1;
 }
