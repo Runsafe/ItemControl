@@ -155,7 +155,12 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 				playerInventory.removeExact(removeItem, removeItem.getAmount());
 
 			for (int i = 18; i < 27; i++)
-				player.give(inventory.getItemInSlot(i));
+			{
+				RunsafeMeta item = inventory.getItemInSlot(i);
+
+				if (item != null)
+					player.give(item);
+			}
 
 			player.sendColouredMessage("&aPurchase complete!");
 		}
