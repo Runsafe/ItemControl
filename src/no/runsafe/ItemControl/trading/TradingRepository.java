@@ -20,11 +20,11 @@ public class TradingRepository extends Repository
 	public List<TraderData> getTraders()
 	{
 		List<TraderData> data = new ArrayList<TraderData>(0);
-		for (IRow row : database.query("SELECT `inventory`, `world`, `x`, `y`, `z`, `yaw`, `pitch`, `name` FROM `traders`"))
+		for (IRow row : database.query("SELECT `inventory`, `world`, `x`, `y`, `z` FROM `traders`"))
 		{
 			RunsafeInventory inventory = server.createInventory(null, 27);
 			inventory.unserialize(row.String("inventory"));
-			data.add(new TraderData(row.Location(), inventory, row.String("name")));
+			data.add(new TraderData(row.Location(), inventory));
 		}
 
 		return data;
@@ -34,15 +34,12 @@ public class TradingRepository extends Repository
 	{
 		ILocation location = data.getLocation();
 		database.execute(
-				"INSERT INTO `traders` (`inventory`, `world`, `x`, `y`, `z`, `yaw`, `pitch`, `name`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
+				"INSERT INTO `traders` (`inventory`, `world`, `x`, `y`, `z`) VALUES(?, ?, ?, ?, ?)",
 				data.getInventory().serialize(),
 				location.getWorld().getName(),
 				location.getX(),
 				location.getY(),
-				location.getZ(),
-				location.getYaw(),
-				location.getPitch(),
-				data.getName()
+				location.getZ()
 		);
 	}
 
@@ -50,13 +47,12 @@ public class TradingRepository extends Repository
 	{
 		ILocation location = data.getLocation();
 		database.execute(
-				"UPDATE `traders` SET `inventory` = ? WHERE `world` = ? AND FLOOR(x) = ? AND FLOOR(y) = ? AND FLOOR(z) = ? AND `name` = ?",
+				"UPDATE `traders` SET `inventory` = ? WHERE `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
 				data.getInventory().serialize(),
 				location.getWorld().getName(),
 				Math.floor(location.getBlockX()),
 				Math.floor(location.getBlockY()) ,
-				Math.floor(location.getBlockZ()),
-				data.getName()
+				Math.floor(location.getBlockZ())
 		);
 	}
 
@@ -94,6 +90,21 @@ public class TradingRepository extends Repository
 		);
 
 		updates.addQueries("ALTER TABLE `traders` ADD COLUMN `name` VARCHAR(255) NULL DEFAULT NULL AFTER `inventory`");
+
+		updates.addQueries(
+				"DELETE FROM `traders`",
+				"ALTER TABLE `traders`" +
+						"ALTER `x` DROP DEFAULT," +
+						"ALTER `y` DROP DEFAULT," +
+						"ALTER `z` DROP DEFAULT",
+				"ALTER TABLE `traders`" +
+						"CHANGE COLUMN `x` `x` INT NOT NULL AFTER `world`," +
+						"CHANGE COLUMN `y` `y` INT NOT NULL AFTER `x`," +
+						"CHANGE COLUMN `z` `z` INT NOT NULL AFTER `y`," +
+						"DROP COLUMN `yaw`," +
+						"DROP COLUMN `pitch`," +
+						"DROP COLUMN `name`"
+		);
 
 		return updates;
 	}

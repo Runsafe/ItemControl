@@ -1,66 +1,31 @@
 package no.runsafe.ItemControl.trading;
 
-import no.runsafe.ItemControl.ItemControl;
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IServer;
-import no.runsafe.framework.api.chunk.IChunk;
+import no.runsafe.framework.api.block.IBlock;
+import no.runsafe.framework.api.event.player.IPlayerRightClickBlock;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
-import no.runsafe.framework.api.event.plugin.IPluginEnabled;
-import no.runsafe.framework.api.event.world.IChunkLoad;
-import no.runsafe.framework.tools.nms.EntityRegister;
+import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.minecraft.Item;
+import no.runsafe.framework.minecraft.inventory.RunsafeInventory;
+import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
+import no.runsafe.framework.tools.ItemCompacter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class TradingHandler implements IChunkLoad, IConfigurationChanged, IPluginEnabled
+public class TradingHandler implements IConfigurationChanged, IPlayerRightClickBlock
 {
-	public TradingHandler(TradingRepository repository, IServer server, IScheduler scheduler)
+	public TradingHandler(TradingRepository repository, IScheduler scheduler, IServer server)
 	{
 		this.repository = repository;
-		this.server = server;
 		this.scheduler = scheduler;
-	}
-
-	@Override
-	public void OnChunkLoad(IChunk chunk)
-	{
-		String worldName = chunk.getWorld().getName();
-
-		// Check if we have any merchants for this world.
-		if (data.containsKey(worldName))
-		{
-			// Loop all merchants we have in this world.
-			for (TraderData node : data.get(worldName))
-			{
-				// Check the merchant should be spawned inside the chunk.
-				ILocation location = node.getLocation();
-				if (chunk.locationIsInChunk(location))
-				{
-					ItemControl.Debugger.debugFine("Trader is in this chunk, spawning!");
-					spawnTrader(node); // Spawn the merchant!
-				}
-			}
-		}
-	}
-
-	private Trader spawnTrader(TraderData data)
-	{
-		Trader trader = new Trader(data.getLocation(), data.getInventory(), scheduler, this);
-		if (data.getName() != null)
-			trader.setCustomName(data.getName());
-
-		return trader;
-	}
-
-	public void createTrader(ILocation location, String name)
-	{
-		TraderData data = new TraderData(location, server.createInventory(null, 27), name);
-		spawnTrader(data); // Spawn the trader.
-		repository.persistTrader(data); // Persist the trader in the database.
-		storeTraderData(data); // Store in our cache.
+		this.server = server;
 	}
 
 	@Override
@@ -83,19 +48,139 @@ public class TradingHandler implements IChunkLoad, IConfigurationChanged, IPlugi
 		data.get(worldName).add(node);
 	}
 
-	public void saveTraderData(TraderData node)
+	public List<String> getCreatingPlayers()
 	{
-		repository.updateTrader(node);
+		return creatingPlayers;
 	}
 
 	@Override
-	public void OnPluginEnabled()
+	public boolean OnPlayerRightClick(IPlayer player, RunsafeMeta usingItem, IBlock targetBlock)
 	{
-		EntityRegister.registerEntity(Trader.class, "Merchant", 120);
+		if (targetBlock.is(Item.Redstone.Button.Wood) || targetBlock.is(Item.Redstone.Button.Stone))
+		{
+			boolean isEditing = creatingPlayers.contains(player.getName());
+
+			String worldName = player.getWorldName();
+			if (data.containsKey(worldName))
+			{
+				ILocation location = player.getLocation();
+				List<TraderData> nodes = data.get(worldName);
+				for (TraderData node : nodes)
+				{
+					if (node.getLocation().distance(location) < 1)
+					{
+						if (isEditing)
+							editShop(player, node);
+						else
+							handlePurchase(player, node.getInventory());
+
+						return true;
+					}
+				}
+			}
+
+			// We're editing but nothing is linked to this button.
+			if (isEditing)
+			{
+				RunsafeInventory inventory = server.createInventory(null, 27);
+				TraderData newData = new TraderData(targetBlock.getLocation(), inventory);
+				repository.persistTrader(newData);
+
+				editShop(player, newData);
+			}
+		}
+		return true;
 	}
 
-	private HashMap<String, List<TraderData>> data = new HashMap<String, List<TraderData>>(0);
+	private void handlePurchase(IPlayer player, RunsafeInventory inventory)
+	{
+		List<RunsafeMeta> remove = new ArrayList<RunsafeMeta>(0);
+		HashMap<String, Integer> requiredAmounts = new HashMap<String, Integer>(0);
+
+		// Calculate what we need.
+		for (int i = 0; i < 9; i++)
+		{
+			RunsafeMeta item = inventory.getItemInSlot(i);
+			int requiredAmount = item.getAmount();
+
+			// Make a clone item to compact to prevent item count blurring the result
+			RunsafeMeta clone = item.clone();
+			clone.setAmount(1);
+			String itemString = ItemCompacter.convertToString(clone);
+
+			if (requiredAmounts.containsKey(itemString))
+				requiredAmount += requiredAmounts.get(itemString);
+
+			requiredAmounts.put(itemString, requiredAmount);
+			remove.add(item);
+		}
+
+		RunsafeInventory playerInventory = player.getInventory();
+		for (RunsafeMeta item : playerInventory.getContents())
+		{
+			RunsafeMeta clone = item.clone();
+			clone.setAmount(1);
+			String itemString = ItemCompacter.convertToString(clone);
+
+			if (requiredAmounts.containsKey(itemString))
+			{
+				int amountLeft = requiredAmounts.get(itemString);
+				if (item.getAmount() >= amountLeft)
+					requiredAmounts.remove(itemString);
+				else
+					requiredAmounts.put(itemString, amountLeft - item.getAmount());
+			}
+		}
+
+		if (requiredAmounts.isEmpty())
+		{
+			for (RunsafeMeta removeItem : remove)
+				playerInventory.removeExact(removeItem, removeItem.getAmount());
+
+			for (int i = 18; i < 27; i++)
+				player.give(inventory.getItemInSlot(i));
+
+			player.sendColouredMessage("&aPurchase complete!");
+		}
+		else
+		{
+			player.sendColouredMessage("&cYou don't have enough to buy that!");
+		}
+	}
+
+	private void editShop(IPlayer player, TraderData traderData)
+	{
+		creatingPlayers.remove(player.getName()); // Remove the player from the tracking list.
+		player.openInventory(traderData.getInventory());
+		traderData.setSaved(false);
+
+		if (timerID == -1) // Only start a timer if we don't have one already.
+		{
+			timerID = scheduler.startAsyncRepeatingTask(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					for (Map.Entry<String, List<TraderData>> node : data.entrySet())
+					{
+						for (TraderData data : node.getValue())
+						{
+							if (data.getInventory().getViewers().isEmpty() && !data.isSaved())
+							{
+								repository.updateTrader(data);
+								data.setSaved(true);
+							}
+						}
+					}
+				}
+			}, 10, 10);
+		}
+	}
+
+	private ConcurrentHashMap<String, List<TraderData>> data = new ConcurrentHashMap<String, List<TraderData>>(0);
+	private final List<String> creatingPlayers = new ArrayList<String>();
 	private final TradingRepository repository;
-	private final IServer server;
 	private final IScheduler scheduler;
+	private final IServer server;
+	private int timerID;
 }

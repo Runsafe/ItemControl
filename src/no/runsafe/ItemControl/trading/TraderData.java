@@ -5,11 +5,10 @@ import no.runsafe.framework.minecraft.inventory.RunsafeInventory;
 
 public class TraderData
 {
-	public TraderData(ILocation location, RunsafeInventory inventory, String name)
+	public TraderData(ILocation location, RunsafeInventory inventory)
 	{
 		this.location = location;
 		this.inventory = inventory;
-		this.name = name;
 	}
 
 	public ILocation getLocation()
@@ -22,12 +21,17 @@ public class TraderData
 		return inventory;
 	}
 
-	public String getName()
+	public boolean isSaved()
 	{
-		return name;
+		return isSaved;
+	}
+
+	public void setSaved(boolean saved)
+	{
+		isSaved = saved;
 	}
 
 	private final ILocation location;
 	private final RunsafeInventory inventory;
-	private final String name;
+	private boolean isSaved = true;
 }
