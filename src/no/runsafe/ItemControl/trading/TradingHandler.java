@@ -86,6 +86,11 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 				TraderData newData = new TraderData(targetBlock.getLocation(), inventory);
 				repository.persistTrader(newData);
 
+				if (!data.containsKey(worldName))
+					data.put(worldName, new ArrayList<TraderData>(1));
+
+				data.get(worldName).add(newData);
+
 				editShop(player, newData);
 			}
 		}
