@@ -1,5 +1,6 @@
 package no.runsafe.ItemControl.trading;
 
+import no.runsafe.ItemControl.ItemControl;
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
@@ -59,16 +60,20 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		if (targetBlock.is(Item.Redstone.Button.Wood) || targetBlock.is(Item.Redstone.Button.Stone))
 		{
 			boolean isEditing = creatingPlayers.contains(player.getName());
+			ItemControl.Debugger.debugFine(isEditing ? "Player is editing shop" : "Player not editing shop");
 
 			String worldName = player.getWorldName();
 			if (data.containsKey(worldName))
 			{
+				ItemControl.Debugger.debugFine("Traders exist for this world: " + worldName);
 				ILocation location = player.getLocation();
 				List<TraderData> nodes = data.get(worldName);
 				for (TraderData node : nodes)
 				{
+					ItemControl.Debugger.debugFine("Distance checking shop at : " + node.getLocation().toString());
 					if (node.getLocation().distance(location) < 1)
 					{
+						ItemControl.Debugger.debugFine("Location is less than 1");
 						if (isEditing)
 							editShop(player, node);
 						else
@@ -76,21 +81,25 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 
 						return true;
 					}
+					ItemControl.Debugger.debugFine("Location is greater or equal to 1");
 				}
 			}
 
 			// We're editing but nothing is linked to this button.
 			if (isEditing)
 			{
+				ItemControl.Debugger.debugFine("Shop does not exist, creating new.");
 				RunsafeInventory inventory = server.createInventory(null, 27);
 				TraderData newData = new TraderData(targetBlock.getLocation(), inventory);
 				repository.persistTrader(newData);
 
 				if (!data.containsKey(worldName))
+				{
+					ItemControl.Debugger.debugFine("World does not have holder, creating new: " + worldName);
 					data.put(worldName, new ArrayList<TraderData>(1));
+				}
 
 				data.get(worldName).add(newData);
-
 				editShop(player, newData);
 			}
 		}
@@ -161,6 +170,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 
 		if (timerID == -1) // Only start a timer if we don't have one already.
 		{
+			ItemControl.Debugger.debugFine("Timer does not exist, starting new.");
 			timerID = scheduler.startAsyncRepeatingTask(new Runnable()
 			{
 				@Override
@@ -173,13 +183,16 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 						{
 							if (!data.isSaved())
 							{
+								ItemControl.Debugger.debugFine("Found unsaved node..");
 								if (data.getInventory().getViewers().isEmpty())
 								{
+									ItemControl.Debugger.debugFine("No viewers in the node, saving and persisting in DB");
 									repository.updateTrader(data);
 									data.setSaved(true);
 								}
 								else
 								{
+									ItemControl.Debugger.debugFine("Viewers found, skipping!");
 									unsavedRemaining = true;
 								}
 							}
@@ -187,7 +200,10 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 					}
 
 					if (!unsavedRemaining)
+					{
+						ItemControl.Debugger.debugFine("No unsaved remaining, cancelling timer!");
 						scheduler.cancelTask(timerID);
+					}
 				}
 			}, 10, 10);
 		}
