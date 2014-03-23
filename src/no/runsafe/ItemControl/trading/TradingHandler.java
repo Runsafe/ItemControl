@@ -161,17 +161,28 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 				@Override
 				public void run()
 				{
+					boolean unsavedRemaining = false;
 					for (Map.Entry<String, List<TraderData>> node : data.entrySet())
 					{
 						for (TraderData data : node.getValue())
 						{
-							if (data.getInventory().getViewers().isEmpty() && !data.isSaved())
+							if (!data.isSaved())
 							{
-								repository.updateTrader(data);
-								data.setSaved(true);
+								if (data.getInventory().getViewers().isEmpty())
+								{
+									repository.updateTrader(data);
+									data.setSaved(true);
+								}
+								else
+								{
+									unsavedRemaining = true;
+								}
 							}
 						}
 					}
+
+					if (!unsavedRemaining)
+						scheduler.cancelTask(timerID);
 				}
 			}, 10, 10);
 		}
