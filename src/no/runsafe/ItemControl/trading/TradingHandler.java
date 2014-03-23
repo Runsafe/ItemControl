@@ -10,6 +10,7 @@ import no.runsafe.framework.api.event.player.IPlayerRightClickBlock;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
+import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.inventory.RunsafeInventory;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 import no.runsafe.framework.tools.ItemCompacter;
@@ -161,6 +162,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 					player.give(item);
 			}
 
+			player.getLocation().playSound(Sound.Item.PickUp, 2F, 0F);
 			player.sendColouredMessage("&aPurchase complete!");
 		}
 		else
