@@ -66,12 +66,11 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 			if (data.containsKey(worldName))
 			{
 				ItemControl.Debugger.debugFine("Traders exist for this world: " + worldName);
-				ILocation location = player.getLocation();
 				List<TraderData> nodes = data.get(worldName);
 				for (TraderData node : nodes)
 				{
 					ItemControl.Debugger.debugFine("Distance checking shop at : " + node.getLocation().toString());
-					if (node.getLocation().distance(location) < 1)
+					if (node.getLocation().distance(targetBlock.getLocation()) < 1)
 					{
 						ItemControl.Debugger.debugFine("Location is less than 1");
 						if (isEditing)
