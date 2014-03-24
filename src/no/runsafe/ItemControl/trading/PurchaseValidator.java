@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("unchecked")
 public class PurchaseValidator
@@ -36,7 +37,8 @@ public class PurchaseValidator
 
 	private boolean playerCanPurchase(IPlayer player)
 	{
-		HashMap<RunsafeMeta, Integer> checklist = (HashMap<RunsafeMeta, Integer>) requiredItems.clone();
+		ConcurrentHashMap<RunsafeMeta, Integer> checklist = new ConcurrentHashMap<RunsafeMeta, Integer>(requiredItems.size());
+		checklist.putAll(requiredItems);
 
 		for (RunsafeMeta item : player.getInventory().getContents())
 		{
@@ -134,5 +136,5 @@ public class PurchaseValidator
 	}
 
 	private List<RunsafeMeta> purchaseItems = new ArrayList<RunsafeMeta>(0);
-	private HashMap<RunsafeMeta, Integer> requiredItems = new HashMap<RunsafeMeta, Integer>(0);
+	private ConcurrentHashMap<RunsafeMeta, Integer> requiredItems = new ConcurrentHashMap<RunsafeMeta, Integer>(0);
 }
