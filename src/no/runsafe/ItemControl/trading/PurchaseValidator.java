@@ -63,8 +63,12 @@ public class PurchaseValidator
 		{
 			RunsafeInventory playerInventory = player.getInventory();
 
+			List<RunsafeMeta> inventoryItems = playerInventory.getContents();
+
 			for (Map.Entry<RunsafeMeta, Integer> items : requiredItems.entrySet())
-				playerInventory.removeExact(items.getKey(), items.getValue());
+				for (RunsafeMeta inventoryItem : inventoryItems)
+					if (strictItemMatch(inventoryItem, items.getKey()))
+						playerInventory.removeExact(inventoryItem, items.getValue());
 
 			for (RunsafeMeta item : purchaseItems)
 				player.give(item);
