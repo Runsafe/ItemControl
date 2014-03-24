@@ -181,7 +181,11 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 					player.give(item);
 			}
 
-			player.getLocation().playSound(Sound.Item.PickUp, 2F, 0F);
+			ILocation location = player.getLocation();
+
+			if (location != null)
+				location.playSound(Sound.Item.PickUp, 2F, 0F);
+
 			player.sendColouredMessage("&aPurchase complete!");
 		}
 		else
