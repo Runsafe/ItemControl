@@ -65,6 +65,9 @@ public class PurchaseValidator
 			for (Map.Entry<RunsafeMeta, Integer> items : requiredItems.entrySet())
 				playerInventory.removeExact(items.getKey(), items.getValue());
 
+			for (RunsafeMeta item : purchaseItems)
+				player.give(item);
+
 			ILocation location = player.getLocation();
 
 			if (location != null)
