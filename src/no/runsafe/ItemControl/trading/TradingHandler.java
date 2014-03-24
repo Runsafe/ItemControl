@@ -2,7 +2,6 @@ package no.runsafe.ItemControl.trading;
 
 import no.runsafe.ItemControl.ItemControl;
 import no.runsafe.framework.api.IConfiguration;
-import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.block.IBlock;
@@ -10,13 +9,10 @@ import no.runsafe.framework.api.event.player.IPlayerRightClickBlock;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
-import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.inventory.RunsafeInventory;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
-import no.runsafe.framework.tools.ItemCompacter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -77,7 +73,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 						if (isEditing)
 							editShop(player, node);
 						else
-							handlePurchase(player, node.getInventory());
+							node.getPurchaseValidator().purchase(player);
 
 						return true;
 					}
@@ -104,95 +100,6 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 			}
 		}
 		return true;
-	}
-
-	private void handlePurchase(IPlayer player, RunsafeInventory inventory)
-	{
-		ItemControl.Debugger.debugFine("-- HANDLING PURCHASE --");
-		List<RunsafeMeta> remove = new ArrayList<RunsafeMeta>(0);
-		HashMap<String, Integer> requiredAmounts = new HashMap<String, Integer>(0);
-
-		// Calculate what we need.
-		for (int i = 0; i < 9; i++)
-		{
-			RunsafeMeta item = inventory.getItemInSlot(i);
-			if (item == null)
-				continue;
-
-			int requiredAmount = item.getAmount();
-			ItemControl.Debugger.debugFine("Item stack amount: " + requiredAmount);
-
-			// Make a clone item to compact to prevent item count blurring the result
-			RunsafeMeta clone = item.clone();
-			clone.setAmount(1);
-			String itemString = ItemCompacter.convertToString(clone);
-			ItemControl.Debugger.debugFine("Item String: " + itemString);
-
-			if (requiredAmounts.containsKey(itemString))
-			{
-				ItemControl.Debugger.debugFine("Item already has amount, increasing!");
-				requiredAmount += requiredAmounts.get(itemString);
-			}
-
-			ItemControl.Debugger.debugFine("Updated amount: " + requiredAmount);
-			requiredAmounts.put(itemString, requiredAmount);
-			remove.add(item);
-		}
-
-		ItemControl.Debugger.debugFine("Checking players inventory.");
-		RunsafeInventory playerInventory = player.getInventory();
-		for (RunsafeMeta item : playerInventory.getContents())
-		{
-			RunsafeMeta clone = item.clone();
-			clone.setAmount(1);
-			String itemString = ItemCompacter.convertToString(clone);
-			ItemControl.Debugger.debugFine("Item in inventory: " + itemString);
-
-			if (requiredAmounts.containsKey(itemString))
-			{
-				ItemControl.Debugger.debugFine("Required Amounts contains this item!");
-
-				int amountLeft = requiredAmounts.get(itemString);
-				ItemControl.Debugger.debugFine("Amount left: " + amountLeft);
-
-				if (item.getAmount() >= amountLeft)
-				{
-					ItemControl.Debugger.debugFine("Stack has more/equal than left, removing requirement");
-					requiredAmounts.remove(itemString);
-				}
-				else
-				{
-					ItemControl.Debugger.debugFine("Stack has less than needed, reducing amount");
-					requiredAmounts.put(itemString, amountLeft - item.getAmount());
-				}
-			}
-		}
-
-		if (requiredAmounts.isEmpty())
-		{
-			for (RunsafeMeta removeItem : remove)
-				playerInventory.removeExact(removeItem, removeItem.getAmount());
-
-			for (int i = 18; i < 27; i++)
-			{
-				RunsafeMeta item = inventory.getItemInSlot(i);
-
-				if (item != null)
-					player.give(item);
-			}
-
-			ILocation location = player.getLocation();
-
-			if (location != null)
-				location.playSound(Sound.Item.PickUp, 2F, 0F);
-
-			player.sendColouredMessage("&aPurchase complete!");
-		}
-		else
-		{
-			player.sendColouredMessage("&cYou don't have enough to buy that!");
-		}
-		ItemControl.Debugger.debugFine("-- PURCHASE HANDLED --");
 	}
 
 	private void editShop(IPlayer player, TraderData traderData)
@@ -222,6 +129,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 									ItemControl.Debugger.debugFine("No viewers in the node, saving and persisting in DB");
 									repository.updateTrader(data);
 									data.setSaved(true);
+									data.refresh();
 								}
 								else
 								{
