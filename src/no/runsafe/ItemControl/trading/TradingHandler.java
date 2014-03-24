@@ -108,6 +108,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 
 	private void handlePurchase(IPlayer player, RunsafeInventory inventory)
 	{
+		ItemControl.Debugger.debugFine("-- HANDLING PURCHASE --");
 		List<RunsafeMeta> remove = new ArrayList<RunsafeMeta>(0);
 		HashMap<String, Integer> requiredAmounts = new HashMap<String, Integer>(0);
 
@@ -119,33 +120,51 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 				continue;
 
 			int requiredAmount = item.getAmount();
+			ItemControl.Debugger.debugFine("Item stack amount: " + requiredAmount);
 
 			// Make a clone item to compact to prevent item count blurring the result
 			RunsafeMeta clone = item.clone();
 			clone.setAmount(1);
 			String itemString = ItemCompacter.convertToString(clone);
+			ItemControl.Debugger.debugFine("Item String: " + itemString);
 
 			if (requiredAmounts.containsKey(itemString))
+			{
+				ItemControl.Debugger.debugFine("Item already has amount, increasing!");
 				requiredAmount += requiredAmounts.get(itemString);
+			}
 
+			ItemControl.Debugger.debugFine("Updated amount: " + requiredAmount);
 			requiredAmounts.put(itemString, requiredAmount);
 			remove.add(item);
 		}
 
+		ItemControl.Debugger.debugFine("Checking players inventory.");
 		RunsafeInventory playerInventory = player.getInventory();
 		for (RunsafeMeta item : playerInventory.getContents())
 		{
 			RunsafeMeta clone = item.clone();
 			clone.setAmount(1);
 			String itemString = ItemCompacter.convertToString(clone);
+			ItemControl.Debugger.debugFine("Item in inventory: " + itemString);
 
 			if (requiredAmounts.containsKey(itemString))
 			{
+				ItemControl.Debugger.debugFine("Required Amounts contains this item!");
+
 				int amountLeft = requiredAmounts.get(itemString);
+				ItemControl.Debugger.debugFine("Amount left: " + amountLeft);
+
 				if (item.getAmount() >= amountLeft)
+				{
+					ItemControl.Debugger.debugFine("Stack has more/equal than left, removing requirement");
 					requiredAmounts.remove(itemString);
+				}
 				else
+				{
+					ItemControl.Debugger.debugFine("Stack has less than needed, reducing amount");
 					requiredAmounts.put(itemString, amountLeft - item.getAmount());
+				}
 			}
 		}
 
@@ -169,6 +188,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		{
 			player.sendColouredMessage("&cYou don't have enough to buy that!");
 		}
+		ItemControl.Debugger.debugFine("-- PURCHASE HANDLED --");
 	}
 
 	private void editShop(IPlayer player, TraderData traderData)
