@@ -49,8 +49,8 @@ public class ItemControl extends RunsafeConfigurablePlugin
 		traderCommand.addSubCommand(getInstance(CreateShop.class));
 
 		plugin = this;
-		addComponent(ApplyCustomMap.class);
-		addComponent(MapHandler.class);
+		//addComponent(ApplyCustomMap.class);
+		//addComponent(MapHandler.class);
 	}
 
 	public static ItemControl plugin;
