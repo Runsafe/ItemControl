@@ -77,7 +77,7 @@ public class PurchaseValidator
 			}
 
 			for (RunsafeMeta item : purchaseItems)
-				player.give(item);
+				player.give(item.clone());
 
 			ILocation location = player.getLocation();
 
