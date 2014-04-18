@@ -30,7 +30,7 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 	@Override
 	public void OnPlayerInteractEvent(RunsafePlayerInteractEvent event)
 	{
-		if (!event.isRightClick())
+		if (!event.isRightClick() || event.isCancelled())
 			return;
 
 		IPlayer player = event.getPlayer();
