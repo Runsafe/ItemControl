@@ -27,13 +27,21 @@ public class EnchantContainerHandler implements IPlayerRightClick
 					{
 						player.setLevel(0);
 						RunsafeInventory inventory = player.getInventory();
-						inventory.removeExact(usingItem, 1);
-						RunsafeMeta item = Item.Miscellaneous.ExperienceBottle.getItem();
-						item.setAmount(1);
-						item.addLore("§3Contains:§f " + playerLevel + " levels");
-						inventory.addItems(item);
-						player.updateInventory();
-						player.sendColouredMessage("&eYour levels have been stored in the bottle!");
+
+						if (inventory.getContents().size() < inventory.getSize() - 2)
+						{
+							inventory.removeExact(usingItem, 1);
+							RunsafeMeta item = Item.Miscellaneous.ExperienceBottle.getItem();
+							item.setAmount(1);
+							item.addLore("§3Contains:§f " + playerLevel + " levels");
+							inventory.addItems(item);
+							player.updateInventory();
+							player.sendColouredMessage("&eYour levels have been stored in the bottle!");
+						}
+						else
+						{
+							player.sendColouredMessage("&cYour inventory is a bit too full to do that..");
+						}
 					}
 					else
 					{
@@ -58,12 +66,12 @@ public class EnchantContainerHandler implements IPlayerRightClick
 						int levels = Integer.parseInt(stringSplit[1]);
 						player.setLevel(player.getLevel() + levels);
 						RunsafeInventory inventory = player.getInventory();
+
 						inventory.removeExact(usingItem, 1);
 						RunsafeMeta item = Item.Brewing.GlassBottle.getItem();
 						item.setAmount(1);
 						inventory.addItems(item);
 						player.updateInventory();
-
 						player.sendColouredMessage("&aGained " + levels + " levels!");
 
 						ILocation playerLocation = player.getLocation();
