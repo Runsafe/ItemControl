@@ -27,7 +27,7 @@ public class EnchantContainerHandler implements IPlayerRightClick
 					{
 						RunsafeInventory inventory = player.getInventory();
 
-						if (inventory.getContents().size() < inventory.getSize() - 2)
+						if (inventory.getContents().size() < inventory.getSize())
 						{
 							player.setLevel(0);
 							inventory.removeExact(usingItem, 1);
