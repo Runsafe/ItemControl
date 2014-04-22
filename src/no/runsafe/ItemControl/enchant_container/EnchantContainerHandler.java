@@ -25,11 +25,11 @@ public class EnchantContainerHandler implements IPlayerRightClick
 					int playerLevel = player.getLevel();
 					if (playerLevel > 0)
 					{
-						player.setLevel(0);
 						RunsafeInventory inventory = player.getInventory();
 
 						if (inventory.getContents().size() < inventory.getSize() - 2)
 						{
+							player.setLevel(0);
 							inventory.removeExact(usingItem, 1);
 							RunsafeMeta item = Item.Miscellaneous.ExperienceBottle.getItem();
 							item.setAmount(1);
