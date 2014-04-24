@@ -1,5 +1,6 @@
 package no.runsafe.ItemControl.spawners;
 
+import net.minecraft.server.v1_7_R2.EntitySlime;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.block.IBlock;
@@ -9,12 +10,15 @@ import no.runsafe.framework.api.event.entity.IMobSpawnerPulsed;
 import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.minecraft.RunsafeEntityType;
 import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 import no.runsafe.framework.minecraft.Enchant;
 import no.runsafe.framework.minecraft.Item;
+import no.runsafe.framework.minecraft.entity.LivingEntity;
 import no.runsafe.framework.minecraft.entity.RunsafeLivingEntity;
 import no.runsafe.framework.minecraft.event.block.RunsafeBlockBreakEvent;
 import no.runsafe.framework.minecraft.item.RunsafeItemStack;
 
+import java.util.Random;
 import java.util.logging.Level;
 
 public class SpawnerMonitor implements IBlockBreakEvent, IMobSpawnerPulsed
@@ -92,10 +96,26 @@ public class SpawnerMonitor implements IBlockBreakEvent, IMobSpawnerPulsed
 			);
 			return false;
 		}
+
+		if (entity.getEntityType() == LivingEntity.Slime)
+		{
+			EntitySlime rawSlime = (EntitySlime) ObjectUnwrapper.getMinecraft(entity);
+			if (rawSlime != null && !rawSlime.canSpawn())
+			{
+				for (int x = 0; x < 4; x++)
+				{
+					ILocation newLocation = location.clone();
+					newLocation.offset(random.nextInt(2), 0, random.nextInt(2));
+					LivingEntity.Slime.spawn(newLocation);
+				}
+			}
+		}
+
 		return true;
 	}
 
 	private final IScheduler scheduler;
 	private final IConsole console;
 	private final SpawnerHandler handler;
+	private final Random random = new Random();
 }
