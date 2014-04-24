@@ -97,20 +97,6 @@ public class SpawnerMonitor implements IBlockBreakEvent, IMobSpawnerPulsed
 			return false;
 		}
 
-		if (entity.getEntityType() == LivingEntity.Slime)
-		{
-			EntitySlime rawSlime = (EntitySlime) ObjectUnwrapper.getMinecraft(entity);
-			if (rawSlime != null && !rawSlime.canSpawn())
-			{
-				for (int x = 0; x < 4; x++)
-				{
-					ILocation newLocation = location.clone();
-					newLocation.offset(random.nextInt(2), 0, random.nextInt(2));
-					LivingEntity.Slime.spawn(newLocation);
-				}
-			}
-		}
-
 		return true;
 	}
 
