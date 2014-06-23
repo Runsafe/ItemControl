@@ -1,6 +1,5 @@
 package no.runsafe.ItemControl.spawners;
 
-import net.minecraft.server.v1_7_R2.EntitySlime;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.block.IBlock;
@@ -10,10 +9,8 @@ import no.runsafe.framework.api.event.entity.IMobSpawnerPulsed;
 import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.minecraft.RunsafeEntityType;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 import no.runsafe.framework.minecraft.Enchant;
 import no.runsafe.framework.minecraft.Item;
-import no.runsafe.framework.minecraft.entity.LivingEntity;
 import no.runsafe.framework.minecraft.entity.RunsafeLivingEntity;
 import no.runsafe.framework.minecraft.event.block.RunsafeBlockBreakEvent;
 import no.runsafe.framework.minecraft.item.RunsafeItemStack;
@@ -51,26 +48,26 @@ public class SpawnerMonitor implements IBlockBreakEvent, IMobSpawnerPulsed
 				if (!handler.spawnerTypeValid(creature, thePlayer))
 				{
 					console.outputToConsole(
-							String.format(
-									"%s tried harvesting an invalid %s spawner!",
-									thePlayer.getName(),
-									creature.getName()
-							),
-							Level.WARNING
+						String.format(
+							"%s tried harvesting an invalid %s spawner!",
+							thePlayer.getName(),
+							creature.getName()
+						),
+						Level.WARNING
 					);
 					return;
 				}
 				scheduler.createSyncTimer(
-				new Runnable()
-				{
-					@Override
-					public void run()
+					new Runnable()
 					{
-						if (!blockBreakEvent.isCancelled())
-							Item.Miscellaneous.MonsterEgg.Get(creature).Drop(theBlock.getLocation(), 1);
-					}
-				},
-				10L
+						@Override
+						public void run()
+						{
+							if (!blockBreakEvent.isCancelled())
+								Item.Miscellaneous.MonsterEgg.Get(creature).Drop(theBlock.getLocation(), 1);
+						}
+					},
+					10L
 				);
 				blockBreakEvent.setXP(0);
 			}
@@ -87,12 +84,12 @@ public class SpawnerMonitor implements IBlockBreakEvent, IMobSpawnerPulsed
 		if (!handler.spawnerTypeValid(entity.getEntityType(), null))
 		{
 			console.logInformation(
-					"SPAWNER WARNING: &cBlocked invalid spawner of &e%s&c at (%s,%d,%d,%d)",
-					entity.getRaw().getType().name(),
-					location.getWorld().getName(),
-					location.getBlockX(),
-					location.getBlockY(),
-					location.getBlockZ()
+				"SPAWNER WARNING: &cBlocked invalid spawner of &e%s&c at (%s,%d,%d,%d)",
+				entity.getRaw().getType().name(),
+				location.getWorld().getName(),
+				location.getBlockX(),
+				location.getBlockY(),
+				location.getBlockZ()
 			);
 			return false;
 		}
