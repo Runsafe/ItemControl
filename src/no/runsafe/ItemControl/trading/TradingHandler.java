@@ -4,6 +4,7 @@ import no.runsafe.ItemControl.ItemControl;
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IServer;
+import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.player.IPlayerRightClickBlock;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
@@ -39,11 +40,16 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 
 	private void storeTraderData(TraderData node)
 	{
-		String worldName = node.getLocation().getWorld().getName();
-		if (!data.containsKey(worldName))
-			data.put(worldName, new ArrayList<TraderData>(1));
+		IWorld world = node.getLocation().getWorld();
 
-		data.get(worldName).add(node);
+		if (world != null)
+		{
+			String worldName = world.getName();
+			if (!data.containsKey(worldName))
+				data.put(worldName, new ArrayList<TraderData>(1));
+
+			data.get(worldName).add(node);
+		}
 	}
 
 	public List<String> getCreatingPlayers()
