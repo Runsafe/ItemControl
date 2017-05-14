@@ -16,7 +16,7 @@ public class CreateShop extends PlayerCommand
 	@Override
 	public String OnExecute(IPlayer executor, IArgumentList parameters)
 	{
-		handler.getCreatingPlayers().add(executor.getName());
+		handler.getCreatingPlayers().add(executor.getUniqueId());
 		return "&eClick a button to turn it into a shop!";
 	}
 
