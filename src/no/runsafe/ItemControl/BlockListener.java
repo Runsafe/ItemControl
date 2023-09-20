@@ -16,7 +16,7 @@ public class BlockListener implements IItemDispensed
 	public boolean OnBlockDispense(IBlock block, RunsafeMeta itemStack)
 	{
 		IWorld blockWorld = block.getWorld();
-		if (globals.itemIsDisabled(blockWorld, itemStack.getItemId()))
+		if (globals.itemIsDisabled(blockWorld, itemStack))
 		{
 			blockWorld.createExplosion(block.getLocation(), 0, true);
 			block.breakNaturally();

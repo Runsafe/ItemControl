@@ -40,7 +40,7 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 		if (usingItem == null)
 			return;
 
-		if (globals.itemIsDisabled(world, usingItem.getItemId()))
+		if (globals.itemIsDisabled(world, usingItem))
 		{
 			if (globals.blockedItemShouldBeRemoved())
 				player.removeItem(usingItem.getItemType());
