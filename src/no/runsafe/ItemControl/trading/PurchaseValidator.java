@@ -144,6 +144,6 @@ public class PurchaseValidator
 		return true;
 	}
 
-	private List<RunsafeMeta> purchaseItems = new ArrayList<RunsafeMeta>(0);
-	private ConcurrentHashMap<RunsafeMeta, Integer> requiredItems = new ConcurrentHashMap<RunsafeMeta, Integer>(0);
+	private final List<RunsafeMeta> purchaseItems = new ArrayList<RunsafeMeta>(0);
+	private final ConcurrentHashMap<RunsafeMeta, Integer> requiredItems = new ConcurrentHashMap<RunsafeMeta, Integer>(0);
 }

@@ -119,9 +119,9 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 		}
 	}
 
-	private HashMap<String, List<String>> noDeathItemsRegions = new HashMap<String, List<String>>();
-	private List<String> noDeathItemsWorlds = new ArrayList<String>();
-	private IRegionControl worldGuardInterface;
+	private final HashMap<String, List<String>> noDeathItemsRegions = new HashMap<String, List<String>>();
+	private final List<String> noDeathItemsWorlds = new ArrayList<String>();
+	private final IRegionControl worldGuardInterface;
 
 	private final Globals globals;
 	private final SpawnerHandler spawnerHandler;
