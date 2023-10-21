@@ -2,6 +2,8 @@
 
 disabledItems.*: [137]
 disabledItems.Creative: [385]
+disabledItemNames.*: [command block]
+disabledItemNames.Creative: [ender chest]
 remove.disabledItems: true
 spawnerDrop:
   - world

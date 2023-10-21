@@ -14,15 +14,20 @@ public class Globals implements IConfigurationChanged
 	@Override
 	public void OnConfigurationChanged(IConfiguration config)
 	{
-		disabledItems.clear();
-		disabledItems.putAll(config.getConfigSectionsAsIntegerList("disabledItems"));
+		disabledItemIDs.clear();
+		disabledItemNames.clear();
+		disabledItemIDs.putAll(config.getConfigSectionsAsIntegerList("disabledItems"));
+		disabledItemNames.putAll(config.getConfigSectionsAsList("disabledItemNames"));
 		removeBlocked = config.getConfigValueAsBoolean("remove.disabledItems");
 	}
 
 	public Boolean itemIsDisabled(IWorld world, RunsafeMeta item)
 	{
-		return (disabledItems.containsKey("*") && disabledItems.get("*").contains(item.getItemId()))
-			|| (disabledItems.containsKey(world.getName()) && disabledItems.get(world.getName()).contains(item.getItemId()));
+		String worldName = world.getName();
+		return ((disabledItemIDs.containsKey("*") && disabledItemIDs.get("*").contains(item.getItemId())) // Check item IDs
+			|| (disabledItemIDs.containsKey(worldName) && disabledItemIDs.get(worldName).contains(item.getItemId())))
+			|| ((disabledItemNames.containsKey("*") && disabledItemNames.get("*").contains(item.getNormalName())) // Check item names
+			|| (disabledItemNames.containsKey(worldName) && disabledItemNames.get(worldName).contains(item.getNormalName())));
 	}
 
 	public boolean blockedItemShouldBeRemoved()
@@ -31,6 +36,7 @@ public class Globals implements IConfigurationChanged
 	}
 
 
-	private final Map<String, List<Integer>> disabledItems = new HashMap<String, List<Integer>>();
+	private final Map<String, List<Integer>> disabledItemIDs = new HashMap<String, List<Integer>>();
+	private final Map<String, List<String>> disabledItemNames = new HashMap<String, List<String>>();
 	private boolean removeBlocked;
 }
