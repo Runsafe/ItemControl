@@ -168,7 +168,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		}, 10, 10);
 	}
 
-	private ConcurrentHashMap<String, List<TraderData>> data = new ConcurrentHashMap<String, List<TraderData>>(0);
+	private final ConcurrentHashMap<String, List<TraderData>> data = new ConcurrentHashMap<String, List<TraderData>>(0);
 	private final List<UUID> creatingPlayers = new ArrayList<UUID>();
 	private final TradingRepository repository;
 	private final IScheduler scheduler;
