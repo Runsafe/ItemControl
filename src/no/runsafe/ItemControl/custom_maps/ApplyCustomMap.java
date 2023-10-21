@@ -19,15 +19,14 @@ public class ApplyCustomMap extends PlayerCommand
 	public String OnExecute(IPlayer executor, IArgumentList parameters)
 	{
 		RunsafeMeta item = executor.getItemInHand();
-		if (item != null)
-		{
-			short mapID = item.getDurability();
-			MapView mapView = server.getMap(mapID);
-			mapView.getRenderers().clear();
-			mapView.addRenderer(new CustomRenderer());
-			return "&eDone!";
-		}
-		return "&cInvalid item.";
+		if (item == null)
+			return "&cInvalid item.";
+
+		short mapID = item.getDurability();
+		MapView mapView = server.getMap(mapID);
+		mapView.getRenderers().clear();
+		mapView.addRenderer(new CustomRenderer());
+		return "&eDone!";
 	}
 
 	private final IServer server;

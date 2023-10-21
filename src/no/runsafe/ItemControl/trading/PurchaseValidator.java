@@ -59,37 +59,36 @@ public class PurchaseValidator
 
 	public void purchase(IPlayer player)
 	{
-		if (playerCanPurchase(player))
-		{
-			RunsafeInventory playerInventory = player.getInventory();
-			List<RunsafeMeta> inventoryItems = playerInventory.getContents();
-
-			for (Map.Entry<RunsafeMeta, Integer> items : requiredItems.entrySet())
-			{
-				for (RunsafeMeta inventoryItem : inventoryItems)
-				{
-					if (strictItemMatch(inventoryItem, items.getKey()))
-					{
-						playerInventory.removeExact(inventoryItem, items.getValue());
-						break;
-					}
-				}
-			}
-
-			for (RunsafeMeta item : purchaseItems)
-				player.give(item.clone());
-
-			ILocation location = player.getLocation();
-
-			if (location != null)
-				location.playSound(Sound.Item.PickUp, 2F, 0F);
-
-			player.sendColouredMessage("&aPurchase complete!");
-		}
-		else
+		if (!playerCanPurchase(player))
 		{
 			player.sendColouredMessage("&cYou don't have enough to buy that!");
+			return;
 		}
+
+		RunsafeInventory playerInventory = player.getInventory();
+		List<RunsafeMeta> inventoryItems = playerInventory.getContents();
+
+		for (Map.Entry<RunsafeMeta, Integer> items : requiredItems.entrySet())
+		{
+			for (RunsafeMeta inventoryItem : inventoryItems)
+			{
+				if (strictItemMatch(inventoryItem, items.getKey()))
+				{
+					playerInventory.removeExact(inventoryItem, items.getValue());
+					break;
+				}
+			}
+		}
+
+		for (RunsafeMeta item : purchaseItems)
+			player.give(item.clone());
+
+		ILocation location = player.getLocation();
+
+		if (location != null)
+			location.playSound(Sound.Item.PickUp, 2F, 0F);
+
+		player.sendColouredMessage("&aPurchase complete!");
 	}
 
 	private boolean strictItemMatch(RunsafeMeta item, RunsafeMeta check)
