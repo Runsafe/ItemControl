@@ -58,6 +58,11 @@ public class TradingRepository extends Repository
 		);
 	}
 
+	public void deleteTag(String tag)
+	{
+		database.execute("UPDATE `traders` SET `tagName` = NULL, WHERE `tagName` = ?;", tag);
+	}
+
 	@Nonnull
 	@Override
 	public String getTableName()

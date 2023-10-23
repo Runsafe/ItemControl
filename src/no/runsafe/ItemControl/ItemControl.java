@@ -7,6 +7,7 @@ import no.runsafe.ItemControl.spawners.SpawnerHandler;
 import no.runsafe.ItemControl.spawners.SpawnerMonitor;
 import no.runsafe.ItemControl.trading.*;
 import no.runsafe.ItemControl.trading.commands.CreateShop;
+import no.runsafe.ItemControl.trading.commands.DeleteTag;
 import no.runsafe.ItemControl.trading.commands.TagArgument;
 import no.runsafe.framework.RunsafeConfigurablePlugin;
 import no.runsafe.framework.api.command.Command;
@@ -50,6 +51,7 @@ public class ItemControl extends RunsafeConfigurablePlugin
 		addComponent(TagArgument.class);
 
 		traderCommand.addSubCommand(getInstance(CreateShop.class));
+		traderCommand.addSubCommand(getInstance(DeleteTag.class));
 
 		plugin = this;
 		//addComponent(ApplyCustomMap.class);

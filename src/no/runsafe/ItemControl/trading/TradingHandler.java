@@ -60,6 +60,12 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		return creatingPlayers;
 	}
 
+	public void deleteTag(String tag)
+	{
+		tradingRepository.deleteTag(tag);
+		tagRepository.deleteTag(tag);
+	}
+
 	@Override
 	public boolean OnPlayerRightClick(IPlayer player, RunsafeMeta usingItem, IBlock targetBlock)
 	{
