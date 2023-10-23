@@ -40,6 +40,7 @@ public class ItemControl extends RunsafeConfigurablePlugin
 		addComponent(SpawnerMonitor.class);
 
 		// Merchants
+		addComponent(ItemTagIDRepository.class);
 		addComponent(TradingRepository.class);
 		addComponent(TradingHandler.class);
 
