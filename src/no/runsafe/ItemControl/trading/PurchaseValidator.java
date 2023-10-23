@@ -57,7 +57,7 @@ public class PurchaseValidator
 		return checklist.isEmpty();
 	}
 
-	public void purchase(IPlayer player)
+	public void purchase(IPlayer player, String tag)
 	{
 		if (!playerCanPurchase(player))
 		{
@@ -81,7 +81,15 @@ public class PurchaseValidator
 		}
 
 		for (RunsafeMeta item : purchaseItems)
-			player.give(item.clone());
+		{
+			if (tag == null)
+				player.give(item.clone());
+			else
+			{
+				item.addLore(tag);
+				player.give(item.clone());
+			}
+		}
 
 		ILocation location = player.getLocation();
 
