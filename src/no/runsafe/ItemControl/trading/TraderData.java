@@ -31,6 +31,11 @@ public class TraderData
 		return tag;
 	}
 
+	public void setTag(String tag)
+	{
+		this.tag = tag;
+	}
+
 	public boolean isSaved()
 	{
 		return isSaved;
@@ -67,7 +72,7 @@ public class TraderData
 		return purchaseValidator;
 	}
 
-	private final String tag;
+	private String tag;
 	private final ILocation location;
 	private final RunsafeInventory inventory;
 	private boolean isSaved = true;
