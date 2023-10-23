@@ -13,7 +13,6 @@ import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class TradingHandler implements IConfigurationChanged, IPlayerRightClickBlock
@@ -55,7 +54,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		data.get(worldName).add(node);
 	}
 
-	public List<UUID> getCreatingPlayers()
+	public List<IPlayer> getCreatingPlayers()
 	{
 		return creatingPlayers;
 	}
@@ -66,7 +65,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		if (!targetBlock.is(Item.Redstone.Button.Wood) && !targetBlock.is(Item.Redstone.Button.Stone))
 			return true;
 
-		boolean isEditing = creatingPlayers.contains(player.getUniqueId());
+		boolean isEditing = creatingPlayers.contains(player);
 		ItemControl.Debugger.debugFine(isEditing ? "Player is editing shop" : "Player not editing shop");
 
 		String worldName = player.getWorldName();
@@ -121,7 +120,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 
 	private void editShop(IPlayer player, TraderData traderData)
 	{
-		creatingPlayers.remove(player.getUniqueId()); // Remove the player from the tracking list.
+		creatingPlayers.remove(player); // Remove the player from the tracking list.
 		player.openInventory(traderData.getInventory());
 		traderData.setSaved(false);
 
@@ -169,7 +168,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 	}
 
 	private final ConcurrentHashMap<String, List<TraderData>> data = new ConcurrentHashMap<String, List<TraderData>>(0);
-	private final List<UUID> creatingPlayers = new ArrayList<UUID>();
+	private final List<IPlayer> creatingPlayers = new ArrayList<IPlayer>();
 	private final TradingRepository repository;
 	private final IScheduler scheduler;
 	private final IServer server;
