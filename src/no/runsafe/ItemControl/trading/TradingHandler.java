@@ -66,6 +66,11 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		tagRepository.deleteTag(tag);
 	}
 
+	public List<String> getAllTags()
+	{
+		return tagRepository.getTags();
+	}
+
 	@Override
 	public boolean OnPlayerRightClick(IPlayer player, RunsafeMeta usingItem, IBlock targetBlock)
 	{

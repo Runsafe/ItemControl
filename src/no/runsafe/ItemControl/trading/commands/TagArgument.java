@@ -1,6 +1,6 @@
 package no.runsafe.ItemControl.trading.commands;
 
-import no.runsafe.ItemControl.trading.ItemTagIDRepository;
+import no.runsafe.ItemControl.trading.TradingHandler;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.ITabComplete;
 import no.runsafe.framework.api.command.argument.IValueExpander;
@@ -12,22 +12,22 @@ import java.util.List;
 
 public class TagArgument extends OptionalArgument implements ITabComplete, IValueExpander
 {
-	public TagArgument(ItemTagIDRepository repository)
+	public TagArgument(TradingHandler handler)
 	{
 		super("itemTag");
-		this.repository = repository;
+		this.handler = handler;
 	}
 
-	public TagArgument(String name, ItemTagIDRepository repository)
+	public TagArgument(String name, TradingHandler handler)
 	{
 		super(name);
-		this.repository = repository;
+		this.handler = handler;
 	}
 
 	@Override
 	public List<String> getAlternatives(IPlayer executor, String partial)
 	{
-		return repository.getTags();
+		return handler.getAllTags();
 	}
 
 	@Nullable
@@ -36,12 +36,12 @@ public class TagArgument extends OptionalArgument implements ITabComplete, IValu
 	{
 		if (value == null)
 			return null;
-		for (String alternative : repository.getTags())
+		for (String alternative : handler.getAllTags())
 			if (alternative.toUpperCase().startsWith(value.toUpperCase()))
 				return alternative;
 
 		return null;
 	}
 
-	private final ItemTagIDRepository repository;
+	private final TradingHandler handler;
 }

@@ -8,13 +8,13 @@ import no.runsafe.framework.api.player.IPlayer;
 
 public class CreateShop extends PlayerCommand
 {
-	public CreateShop(TradingHandler handler, ItemTagIDRepository tagRepository)
+	public CreateShop(TradingHandler handler)
 	{
 		super(
 			"create",
 			"Create a shop",
 			"runsafe.traders.create",
-			new TagArgument(TAG_NAME, tagRepository)
+			new TagArgument(TAG_NAME, handler)
 		);
 		this.handler = handler;
 	}

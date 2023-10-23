@@ -8,16 +8,15 @@ import no.runsafe.framework.api.player.IPlayer;
 
 public class DeleteTag  extends PlayerCommand
 {
-	public DeleteTag(TradingHandler handler, ItemTagIDRepository tagRepository)
+	public DeleteTag(TradingHandler handler)
 	{
 		super(
 			"deleteTag",
 			"Deletes an item tag.",
 			"runsafe.traders.tag.delete",
-			new TagArgument(TAG_NAME, tagRepository).require()
+			new TagArgument(TAG_NAME, handler).require()
 		);
 		this.handler = handler;
-		this.tagRepository = tagRepository;
 	}
 
 	private static final String TAG_NAME = "tagName";
@@ -27,7 +26,7 @@ public class DeleteTag  extends PlayerCommand
 	{
 		String tag = parameters.getRequired(TAG_NAME);
 
-		if (!tagRepository.getTags().contains(tag))
+		if (!handler.getAllTags().contains(tag))
 			return "&cInvalid item tag.";
 
 		handler.deleteTag(tag);
@@ -35,5 +34,4 @@ public class DeleteTag  extends PlayerCommand
 	}
 
 	private final TradingHandler handler;
-	private final ItemTagIDRepository tagRepository;
 }
