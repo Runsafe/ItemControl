@@ -4,13 +4,13 @@ import no.runsafe.ItemControl.trading.ItemTagIDRepository;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.ITabComplete;
 import no.runsafe.framework.api.command.argument.IValueExpander;
-import no.runsafe.framework.api.command.argument.RequiredArgument;
+import no.runsafe.framework.api.command.argument.OptionalArgument;
 import no.runsafe.framework.api.player.IPlayer;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class TagArgument extends RequiredArgument implements ITabComplete, IValueExpander
+public class TagArgument extends OptionalArgument implements ITabComplete, IValueExpander
 {
 	public TagArgument(ItemTagIDRepository repository)
 	{
