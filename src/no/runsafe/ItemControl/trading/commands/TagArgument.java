@@ -12,36 +12,36 @@ import java.util.List;
 
 public class TagArgument extends RequiredArgument implements ITabComplete, IValueExpander
 {
-    public TagArgument(ItemTagIDRepository repository)
-    {
-        super("itemTag");
-        this.repository = repository;
-    }
+	public TagArgument(ItemTagIDRepository repository)
+	{
+		super("itemTag");
+		this.repository = repository;
+	}
 
-    public TagArgument(String name, ItemTagIDRepository repository)
-    {
-        super(name);
-        this.repository = repository;
-    }
+	public TagArgument(String name, ItemTagIDRepository repository)
+	{
+		super(name);
+		this.repository = repository;
+	}
 
-    @Override
-    public List<String> getAlternatives(IPlayer executor, String partial)
-    {
-        return repository.getTags();
-    }
+	@Override
+	public List<String> getAlternatives(IPlayer executor, String partial)
+	{
+		return repository.getTags();
+	}
 
-    @Nullable
-    @Override
-    public String expand(ICommandExecutor context, @Nullable String value)
-    {
-        if (value == null)
-            return null;
-        for (String alternative : repository.getTags())
-            if (alternative.toUpperCase().startsWith(value.toUpperCase()))
-                return alternative;
+	@Nullable
+	@Override
+	public String expand(ICommandExecutor context, @Nullable String value)
+	{
+		if (value == null)
+			return null;
+		for (String alternative : repository.getTags())
+			if (alternative.toUpperCase().startsWith(value.toUpperCase()))
+				return alternative;
 
-        return null;
-    }
+		return null;
+	}
 
-    private final ItemTagIDRepository repository;
+	private final ItemTagIDRepository repository;
 }
