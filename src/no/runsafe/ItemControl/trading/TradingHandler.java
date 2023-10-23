@@ -102,7 +102,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 
 		ItemControl.Debugger.debugFine("Shop does not exist, creating new.");
 		RunsafeInventory inventory = server.createInventory(null, 27);
-		TraderData newData = new TraderData(targetBlock.getLocation(), inventory);
+		TraderData newData = new TraderData(targetBlock.getLocation(), inventory, null);
 		repository.persistTrader(newData);
 
 		if (!data.containsKey(worldName))

@@ -20,11 +20,11 @@ public class TradingRepository extends Repository
 	public List<TraderData> getTraders()
 	{
 		List<TraderData> data = new ArrayList<TraderData>(0);
-		for (IRow row : database.query("SELECT `inventory`, `world`, `x`, `y`, `z` FROM `traders`"))
+		for (IRow row : database.query("SELECT `inventory`, `tagName`,` world`, `x`, `y`, `z` FROM `traders`"))
 		{
 			RunsafeInventory inventory = server.createInventory(null, 27);
 			inventory.unserialize(row.String("inventory"));
-			data.add(new TraderData(row.Location(), inventory));
+			data.add(new TraderData(row.Location(), inventory, row.String("tagName")));
 		}
 
 		return data;
@@ -34,8 +34,9 @@ public class TradingRepository extends Repository
 	{
 		ILocation location = data.getLocation();
 		database.execute(
-				"INSERT INTO `traders` (`inventory`, `world`, `x`, `y`, `z`) VALUES(?, ?, ?, ?, ?)",
+				"INSERT INTO `traders` (`inventory`, `tagName`, `world`, `x`, `y`, `z`) VALUES(?, ?, ?, ?, ?)",
 				data.getInventory().serialize(),
+				data.getTag(),
 				location.getWorld().getName(),
 				location.getX(),
 				location.getY(),
@@ -47,8 +48,9 @@ public class TradingRepository extends Repository
 	{
 		ILocation location = data.getLocation();
 		database.execute(
-				"UPDATE `traders` SET `inventory` = ? WHERE `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
+				"UPDATE `traders` SET `inventory` = ?, 'tagName` = ? WHERE `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
 				data.getInventory().serialize(),
+				data.getTag(),
 				location.getWorld().getName(),
 				Math.floor(location.getBlockX()),
 				Math.floor(location.getBlockY()) ,
@@ -105,6 +107,8 @@ public class TradingRepository extends Repository
 						"DROP COLUMN `pitch`," +
 						"DROP COLUMN `name`"
 		);
+
+		updates.addQueries("ALTER TABLE `traders` ADD COLUMN `tagName` VARCHAR(32) NULL DEFAULT NULL AFTER `inventory`");
 
 		return updates;
 	}
