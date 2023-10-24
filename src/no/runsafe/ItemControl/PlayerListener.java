@@ -14,6 +14,7 @@ import no.runsafe.framework.minecraft.event.inventory.RunsafeCraftItemEvent;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerDeathEvent;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerInteractEvent;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
+import no.runsafe.framework.minecraft.item.meta.RunsafeSpawnEgg;
 import no.runsafe.worldguardbridge.IRegionControl;
 
 import java.util.ArrayList;
@@ -54,13 +55,13 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 		if (!player.canBuildNow() || targetBlock == null)
 			return;
 
-		if (usingItem.is(Item.Miscellaneous.MonsterEgg.Any) && spawnerHandler.spawnerIsHarvestable(world))
+		if (usingItem instanceof RunsafeSpawnEgg && spawnerHandler.spawnerIsHarvestable(world))
 		{
 			// If the block has an interface or is interact block, don't let them place a spawner
 			if (event.isCancelled() || targetBlock.hasInterface() || targetBlock.isInteractBlock())
 				return;
 
-			if (spawnerHandler.createSpawner(player, event.getTargetBlock(), usingItem))
+			if (spawnerHandler.createSpawner(player, event.getTargetBlock(), (RunsafeSpawnEgg) usingItem))
 				player.removeItem(usingItem.getItemType(), 1);
 
 			event.cancel();

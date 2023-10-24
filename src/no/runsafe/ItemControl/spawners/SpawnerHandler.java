@@ -10,8 +10,7 @@ import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.minecraft.RunsafeEntityType;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
-import no.runsafe.framework.minecraft.entity.EntityType;
-import no.runsafe.framework.minecraft.item.RunsafeItemStack;
+import no.runsafe.framework.minecraft.item.meta.RunsafeSpawnEgg;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +27,13 @@ public class SpawnerHandler implements IConfigurationChanged
 		return spawnerWorlds.contains("*") || spawnerWorlds.contains(world.getName());
 	}
 
-	public boolean createSpawner(IPlayer actor, ILocation location, RunsafeItemStack itemInHand)
+	public boolean createSpawner(IPlayer actor, ILocation location, RunsafeSpawnEgg spawnEgg)
 	{
 		IBlock target = location.getBlock();
-		Item inHand = itemInHand.getItemType();
-		RunsafeEntityType spawnerType = EntityType.Get(inHand);
 
-		if (target.isAir() && spawnerTypeValid(inHand.getData(), actor))
+		RunsafeEntityType spawnerType = spawnEgg.getEntityType();
+
+		if (target.isAir() && spawnerTypeValid(spawnerType, actor))
 		{
 			Item.Unavailable.MobSpawner.Place(location);
 			if (setSpawnerEntityID(location.getBlock(), spawnerType))
@@ -43,11 +42,6 @@ public class SpawnerHandler implements IConfigurationChanged
 			Item.Unavailable.Air.Place(location);
 		}
 		return false;
-	}
-
-	private boolean spawnerTypeValid(byte data, IPlayer actor)
-	{
-		return spawnerTypeValid(EntityType.Get(data), actor);
 	}
 
 	public boolean spawnerTypeValid(RunsafeEntityType entityType, IPlayer actor)
