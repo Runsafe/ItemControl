@@ -4,12 +4,15 @@ import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.minecraft.inventory.RunsafeInventory;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 
+import javax.annotation.Nullable;
+
 public class TraderData
 {
-	public TraderData(ILocation location, RunsafeInventory inventory)
+	public TraderData(ILocation location, RunsafeInventory inventory, @Nullable String tag)
 	{
 		this.location = location;
 		this.inventory = inventory;
+		this.tag = tag;
 		refresh();
 	}
 
@@ -21,6 +24,16 @@ public class TraderData
 	public RunsafeInventory getInventory()
 	{
 		return inventory;
+	}
+
+	public String getTag()
+	{
+		return tag;
+	}
+
+	public void setTag(String tag)
+	{
+		this.tag = tag;
 	}
 
 	public boolean isSaved()
@@ -59,6 +72,7 @@ public class TraderData
 		return purchaseValidator;
 	}
 
+	private String tag;
 	private final ILocation location;
 	private final RunsafeInventory inventory;
 	private boolean isSaved = true;

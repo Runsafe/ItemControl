@@ -13,14 +13,14 @@ import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class TradingHandler implements IConfigurationChanged, IPlayerRightClickBlock
 {
-	public TradingHandler(TradingRepository repository, IScheduler scheduler, IServer server)
+	public TradingHandler(TradingRepository tradingRepository, ItemTagIDRepository tagRepository, IScheduler scheduler, IServer server)
 	{
-		this.repository = repository;
+		this.tradingRepository = tradingRepository;
+		this.tagRepository = tagRepository;
 		this.scheduler = scheduler;
 		this.server = server;
 	}
@@ -29,7 +29,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 	public void OnConfigurationChanged(IConfiguration configuration)
 	{
 		data.clear(); // Clear existing data.
-		List<TraderData> rawData = repository.getTraders(); // Grab trader data from the database.
+		List<TraderData> rawData = tradingRepository.getTraders(); // Grab trader data from the database.
 
 		// Populate our cache with trader data!
 		for (TraderData node : rawData)
@@ -55,9 +55,20 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		data.get(worldName).add(node);
 	}
 
-	public List<UUID> getCreatingPlayers()
+	public Map<IPlayer, String> getCreatingPlayers()
 	{
 		return creatingPlayers;
+	}
+
+	public void deleteTag(String tag)
+	{
+		tradingRepository.deleteTag(tag);
+		tagRepository.deleteTag(tag);
+	}
+
+	public List<String> getAllTags()
+	{
+		return tagRepository.getTags();
 	}
 
 	@Override
@@ -66,8 +77,12 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		if (!targetBlock.is(Item.Redstone.Button.Wood) && !targetBlock.is(Item.Redstone.Button.Stone))
 			return true;
 
-		boolean isEditing = creatingPlayers.contains(player.getUniqueId());
+		boolean isEditing = creatingPlayers.containsKey(player);
 		ItemControl.Debugger.debugFine(isEditing ? "Player is editing shop" : "Player not editing shop");
+
+		String tag = creatingPlayers.get(player);
+		if (tag != null && !tagRepository.getTags().contains(tag)) // Create new tag if it doesn't already exist
+			tagRepository.createNewTag(tag);
 
 		String worldName = player.getWorldName();
 		if (data.containsKey(worldName))
@@ -87,9 +102,17 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 				{
 					ItemControl.Debugger.debugFine("Location is less than 1");
 					if (isEditing)
+					{
+						node.setTag(tag);
 						editShop(player, node);
+					}
 					else
-						node.getPurchaseValidator().purchase(player);
+					{
+						if (tag != null)
+							node.getPurchaseValidator().purchase(player, "ID: " + tag + "_" + tagRepository.incrementID(tag));
+						else
+							node.getPurchaseValidator().purchase(player, null);
+					}
 
 					return true;
 				}
@@ -103,8 +126,8 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 
 		ItemControl.Debugger.debugFine("Shop does not exist, creating new.");
 		RunsafeInventory inventory = server.createInventory(null, 27);
-		TraderData newData = new TraderData(targetBlock.getLocation(), inventory);
-		repository.persistTrader(newData);
+		TraderData newData = new TraderData(targetBlock.getLocation(), inventory, tag);
+		tradingRepository.persistTrader(newData);
 
 		if (!data.containsKey(worldName))
 		{
@@ -121,7 +144,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 
 	private void editShop(IPlayer player, TraderData traderData)
 	{
-		creatingPlayers.remove(player.getUniqueId()); // Remove the player from the tracking list.
+		creatingPlayers.remove(player); // Remove the player from the tracking list.
 		player.openInventory(traderData.getInventory());
 		traderData.setSaved(false);
 
@@ -146,7 +169,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 						if (data.getInventory().getViewers().isEmpty())
 						{
 							ItemControl.Debugger.debugFine("No viewers in the node, saving and persisting in DB");
-							repository.updateTrader(data);
+							tradingRepository.updateTrader(data);
 							data.setSaved(true);
 							data.refresh();
 						}
@@ -169,8 +192,9 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 	}
 
 	private final ConcurrentHashMap<String, List<TraderData>> data = new ConcurrentHashMap<String, List<TraderData>>(0);
-	private final List<UUID> creatingPlayers = new ArrayList<UUID>();
-	private final TradingRepository repository;
+	private final Map<IPlayer, String> creatingPlayers = new ConcurrentHashMap<IPlayer, String>(0);
+	private final TradingRepository tradingRepository;
+	private final ItemTagIDRepository tagRepository;
 	private final IScheduler scheduler;
 	private final IServer server;
 	private int timerID = -1;

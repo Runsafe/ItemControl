@@ -6,15 +6,15 @@ import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.player.PlayerCommand;
 import no.runsafe.framework.api.player.IPlayer;
 
-public class CreateShop extends PlayerCommand
+public class DeleteTag  extends PlayerCommand
 {
-	public CreateShop(TradingHandler handler)
+	public DeleteTag(TradingHandler handler)
 	{
 		super(
-			"create",
-			"Create a shop",
-			"runsafe.traders.create",
-			new TagArgument(TAG_NAME, handler)
+			"deleteTag",
+			"Deletes an item tag.",
+			"runsafe.traders.tag.delete",
+			new TagArgument(TAG_NAME, handler).require()
 		);
 		this.handler = handler;
 	}
@@ -24,8 +24,13 @@ public class CreateShop extends PlayerCommand
 	@Override
 	public String OnExecute(IPlayer executor, IArgumentList parameters)
 	{
-		handler.getCreatingPlayers().put(executor, parameters.<String>getValue(TAG_NAME));
-		return "&eClick a button to turn it into a shop!";
+		String tag = parameters.getRequired(TAG_NAME);
+
+		if (!handler.getAllTags().contains(tag))
+			return "&cInvalid item tag.";
+
+		handler.deleteTag(tag);
+		return "&aTag information cleared for:" + tag;
 	}
 
 	private final TradingHandler handler;
