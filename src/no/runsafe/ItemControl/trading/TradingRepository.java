@@ -48,7 +48,7 @@ public class TradingRepository extends Repository
 	{
 		ILocation location = data.getLocation();
 		database.execute(
-				"UPDATE `traders` SET `inventory` = ?, 'tagName` = ? WHERE `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
+				"UPDATE `traders` SET `inventory` = ?, `tagName` = ? WHERE `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
 				data.getInventory().serialize(),
 				data.getTag(),
 				location.getWorld().getName(),
