@@ -2,11 +2,13 @@ package no.runsafe.ItemControl.trading.commands;
 
 import no.runsafe.ItemControl.trading.ItemTagIDRepository;
 import no.runsafe.ItemControl.trading.TradingHandler;
+import no.runsafe.framework.api.command.ExecutableCommand;
+import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.player.PlayerCommand;
 import no.runsafe.framework.api.player.IPlayer;
 
-public class DeleteTag  extends PlayerCommand
+public class DeleteTag extends ExecutableCommand
 {
 	public DeleteTag(TradingHandler handler)
 	{
@@ -22,7 +24,7 @@ public class DeleteTag  extends PlayerCommand
 	private static final String TAG_NAME = "tagName";
 
 	@Override
-	public String OnExecute(IPlayer executor, IArgumentList parameters)
+	public String OnExecute(ICommandExecutor executor, IArgumentList parameters)
 	{
 		String tag = parameters.getRequired(TAG_NAME);
 
