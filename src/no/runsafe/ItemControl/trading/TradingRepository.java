@@ -34,7 +34,7 @@ public class TradingRepository extends Repository
 	{
 		ILocation location = data.getLocation();
 		database.execute(
-				"INSERT INTO `traders` (`inventory`, `tagName`, `world`, `x`, `y`, `z`) VALUES(?, ?, ?, ?, ?)",
+				"INSERT INTO `traders` (`inventory`, `tagName`, `world`, `x`, `y`, `z`) VALUES(?, ?, ?, ?, ?, ?)",
 				data.getInventory().serialize(),
 				data.getTag(),
 				location.getWorld().getName(),
