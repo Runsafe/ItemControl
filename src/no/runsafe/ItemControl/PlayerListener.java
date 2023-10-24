@@ -37,7 +37,7 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 
 		IPlayer player = event.getPlayer();
 		IWorld world = player.getWorld();
-		RunsafeMeta usingItem = player.getItemInHand();
+		RunsafeMeta usingItem = player.getItemInMainHand();
 
 		if (usingItem == null)
 			return;
