@@ -11,6 +11,7 @@ import no.runsafe.framework.minecraft.inventory.RunsafeInventory;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -192,7 +193,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 	}
 
 	private final ConcurrentHashMap<String, List<TraderData>> data = new ConcurrentHashMap<String, List<TraderData>>(0);
-	private final Map<IPlayer, String> creatingPlayers = new ConcurrentHashMap<IPlayer, String>(0);
+	private final Map<IPlayer, String> creatingPlayers = new HashMap<IPlayer, String>(0);
 	private final TradingRepository tradingRepository;
 	private final ItemTagIDRepository tagRepository;
 	private final IScheduler scheduler;
