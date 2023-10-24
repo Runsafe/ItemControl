@@ -4,11 +4,13 @@ import no.runsafe.ItemControl.spawners.SpawnerHandler;
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.block.IBlock;
+import no.runsafe.framework.api.event.inventory.ICraftItem;
 import no.runsafe.framework.api.event.player.IPlayerDeathEvent;
 import no.runsafe.framework.api.event.player.IPlayerInteractEvent;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
+import no.runsafe.framework.minecraft.event.inventory.RunsafeCraftItemEvent;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerDeathEvent;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerInteractEvent;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
@@ -18,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, IConfigurationChanged
+public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, ICraftItem, IConfigurationChanged
 {
 	public PlayerListener(IRegionControl worldGuardInterface, Globals globals, SpawnerHandler spawnerHandler)
 	{
@@ -63,6 +65,13 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 
 			event.cancel();
 		}
+	}
+
+	@Override
+	public void OnCraftItem(RunsafeCraftItemEvent event)
+	{
+		if (event.getRecipe().getResult().is(Item.Transportation.Elytra))
+			event.cancel();
 	}
 
 	@Override
