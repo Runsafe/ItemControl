@@ -104,7 +104,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 			List<TraderData> nodes = data.get(worldName);
 			for (TraderData node : nodes)
 			{
-				if (node.getLocation().getWorld() != targetBlock.getWorld())
+				if (node.getLocation().getWorld().isWorld(targetBlock.getWorld()))
 				{
 					ItemControl.Debugger.debugFine("Location is in wrong world.");
 					continue;
