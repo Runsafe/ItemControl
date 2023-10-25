@@ -61,6 +61,15 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		return creatingPlayers;
 	}
 
+	public boolean createTag(String tag)
+	{
+		if (tag == null || tagRepository.getTags().contains(tag))
+			return false;
+
+		tagRepository.createNewTag(tag);
+		return true;
+	}
+
 	public void deleteTag(String tag)
 	{
 		tradingRepository.deleteTag(tag);
@@ -70,6 +79,11 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 	public List<String> getAllTags()
 	{
 		return tagRepository.getTags();
+	}
+
+	public Map<String, Integer> getAllTagInfo()
+	{
+		return tagRepository.getTagInfo();
 	}
 
 	@Override
@@ -82,8 +96,6 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		ItemControl.Debugger.debugFine(isEditing ? "Player is editing shop" : "Player not editing shop");
 
 		String tag = creatingPlayers.get(player);
-		if (tag != null && !tagRepository.getTags().contains(tag)) // Create new tag if it doesn't already exist
-			tagRepository.createNewTag(tag);
 
 		String worldName = player.getWorldName();
 		if (data.containsKey(worldName))
@@ -92,7 +104,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 			List<TraderData> nodes = data.get(worldName);
 			for (TraderData node : nodes)
 			{
-				if (node.getLocation().getWorld() != targetBlock.getWorld())
+				if (node.getLocation().getWorld().isWorld(targetBlock.getWorld()))
 				{
 					ItemControl.Debugger.debugFine("Location is in wrong world.");
 					continue;

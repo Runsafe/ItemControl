@@ -1,4 +1,4 @@
-package no.runsafe.ItemControl.trading.commands;
+package no.runsafe.ItemControl.trading.commands.Tag;
 
 import no.runsafe.ItemControl.trading.TradingHandler;
 import no.runsafe.framework.api.command.ICommandExecutor;
