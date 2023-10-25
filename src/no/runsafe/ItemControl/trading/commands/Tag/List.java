@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class List extends ExecutableCommand
 {
-	protected List(TradingHandler handler)
+	public List(TradingHandler handler)
 	{
 		super(
 			"list",
