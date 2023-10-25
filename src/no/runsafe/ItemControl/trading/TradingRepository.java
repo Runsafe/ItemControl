@@ -19,7 +19,7 @@ public class TradingRepository extends Repository
 
 	public List<TraderData> getTraders()
 	{
-		List<TraderData> data = new ArrayList<TraderData>(0);
+		List<TraderData> data = new ArrayList<>(0);
 		for (IRow row : database.query("SELECT `inventory`, `tagName`,`world`, `x`, `y`, `z` FROM `traders`"))
 		{
 			RunsafeInventory inventory = server.createInventory(null, 27);
