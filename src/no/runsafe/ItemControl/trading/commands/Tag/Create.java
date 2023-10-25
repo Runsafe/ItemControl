@@ -8,7 +8,7 @@ import no.runsafe.framework.api.command.argument.RequiredArgument;
 
 public class Create extends ExecutableCommand
 {
-	protected Create(TradingHandler handler)
+	public Create(TradingHandler handler)
 	{
 		super(
 			"create",
