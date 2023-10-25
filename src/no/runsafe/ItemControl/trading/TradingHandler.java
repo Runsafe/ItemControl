@@ -51,7 +51,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 
 		String worldName = world.getName();
 		if (!data.containsKey(worldName))
-			data.put(worldName, new ArrayList<TraderData>(1));
+			data.put(worldName, new ArrayList<>(1));
 
 		data.get(worldName).add(node);
 	}
@@ -149,7 +149,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		if (!data.containsKey(worldName))
 		{
 			ItemControl.Debugger.debugFine("World does not have holder, creating new: " + worldName);
-			data.put(worldName, new ArrayList<TraderData>(1));
+			data.put(worldName, new ArrayList<>(1));
 		}
 
 		data.get(worldName).add(newData);
@@ -169,47 +169,43 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 			return;
 
 		ItemControl.Debugger.debugFine("Timer does not exist, starting new.");
-		timerID = scheduler.startAsyncRepeatingTask(new Runnable()
+		timerID = scheduler.startAsyncRepeatingTask(() ->
 		{
-			@Override
-			public void run()
+			boolean unsavedRemaining = false;
+			for (Map.Entry<String, List<TraderData>> node : data.entrySet())
 			{
-				boolean unsavedRemaining = false;
-				for (Map.Entry<String, List<TraderData>> node : data.entrySet())
+				for (TraderData data : node.getValue())
 				{
-					for (TraderData data : node.getValue())
-					{
-						if (data.isSaved())
-							continue;
+					if (data.isSaved())
+						continue;
 
-						ItemControl.Debugger.debugFine("Found unsaved node..");
-						if (data.getInventory().getViewers().isEmpty())
-						{
-							ItemControl.Debugger.debugFine("No viewers in the node, saving and persisting in DB");
-							tradingRepository.updateTrader(data);
-							data.setSaved(true);
-							data.refresh();
-						}
-						else
-						{
-							ItemControl.Debugger.debugFine("Viewers found, skipping!");
-							unsavedRemaining = true;
-						}
+					ItemControl.Debugger.debugFine("Found unsaved node..");
+					if (data.getInventory().getViewers().isEmpty())
+					{
+						ItemControl.Debugger.debugFine("No viewers in the node, saving and persisting in DB");
+						tradingRepository.updateTrader(data);
+						data.setSaved(true);
+						data.refresh();
+					}
+					else
+					{
+						ItemControl.Debugger.debugFine("Viewers found, skipping!");
+						unsavedRemaining = true;
 					}
 				}
+			}
 
-				if (!unsavedRemaining)
-				{
-					ItemControl.Debugger.debugFine("No unsaved remaining, cancelling timer!");
-					scheduler.cancelTask(timerID);
-					timerID = -1;
-				}
+			if (!unsavedRemaining)
+			{
+				ItemControl.Debugger.debugFine("No unsaved remaining, cancelling timer!");
+				scheduler.cancelTask(timerID);
+				timerID = -1;
 			}
 		}, 10, 10);
 	}
 
-	private final ConcurrentHashMap<String, List<TraderData>> data = new ConcurrentHashMap<String, List<TraderData>>(0);
-	private final Map<IPlayer, String> creatingPlayers = new HashMap<IPlayer, String>(0);
+	private final ConcurrentHashMap<String, List<TraderData>> data = new ConcurrentHashMap<>(0);
+	private final Map<IPlayer, String> creatingPlayers = new HashMap<>(0);
 	private final TradingRepository tradingRepository;
 	private final ItemTagIDRepository tagRepository;
 	private final IScheduler scheduler;

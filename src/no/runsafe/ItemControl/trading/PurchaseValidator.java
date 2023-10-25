@@ -36,7 +36,7 @@ public class PurchaseValidator
 
 	private boolean playerCanPurchase(IPlayer player)
 	{
-		ConcurrentHashMap<RunsafeMeta, Integer> checklist = new ConcurrentHashMap<RunsafeMeta, Integer>(requiredItems.size());
+		ConcurrentHashMap<RunsafeMeta, Integer> checklist = new ConcurrentHashMap<>(requiredItems.size());
 		checklist.putAll(requiredItems);
 
 		for (RunsafeMeta item : player.getInventory().getContents())
@@ -151,6 +151,6 @@ public class PurchaseValidator
 		return true;
 	}
 
-	private final List<RunsafeMeta> purchaseItems = new ArrayList<RunsafeMeta>(0);
-	private final ConcurrentHashMap<RunsafeMeta, Integer> requiredItems = new ConcurrentHashMap<RunsafeMeta, Integer>(0);
+	private final List<RunsafeMeta> purchaseItems = new ArrayList<>(0);
+	private final ConcurrentHashMap<RunsafeMeta, Integer> requiredItems = new ConcurrentHashMap<>(0);
 }

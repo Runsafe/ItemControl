@@ -98,7 +98,7 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 
 		if (stopItems)
 		{
-			event.setDrops(new ArrayList<RunsafeMeta>());
+			event.setDrops(new ArrayList<>());
 			event.setDroppedXP(0);
 			event.setNewLevelAmount(0);
 		}
@@ -118,7 +118,7 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 			{
 				String[] parts = node.split("\\.");
 				if (!noDeathItemsRegions.containsKey(parts[0]))
-					noDeathItemsRegions.put(parts[0], new ArrayList<String>());
+					noDeathItemsRegions.put(parts[0], new ArrayList<>());
 
 				noDeathItemsRegions.get(parts[0]).add(parts[1]);
 			}
@@ -129,8 +129,8 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 		}
 	}
 
-	private final HashMap<String, List<String>> noDeathItemsRegions = new HashMap<String, List<String>>();
-	private final List<String> noDeathItemsWorlds = new ArrayList<String>();
+	private final HashMap<String, List<String>> noDeathItemsRegions = new HashMap<>();
+	private final List<String> noDeathItemsWorlds = new ArrayList<>();
 	private final IRegionControl worldGuardInterface;
 
 	private final Globals globals;
