@@ -1,14 +1,13 @@
 package no.runsafe.ItemControl;
 
-import no.runsafe.ItemControl.custom_maps.ApplyCustomMap;
-import no.runsafe.ItemControl.custom_maps.MapHandler;
 import no.runsafe.ItemControl.enchant_container.EnchantContainerHandler;
 import no.runsafe.ItemControl.spawners.SpawnerHandler;
 import no.runsafe.ItemControl.spawners.SpawnerMonitor;
 import no.runsafe.ItemControl.trading.*;
-import no.runsafe.ItemControl.trading.commands.CreateShop;
-import no.runsafe.ItemControl.trading.commands.DeleteTag;
-import no.runsafe.ItemControl.trading.commands.TagArgument;
+import no.runsafe.ItemControl.trading.commands.*;
+import no.runsafe.ItemControl.trading.commands.Tag.Create;
+import no.runsafe.ItemControl.trading.commands.Tag.Delete;
+import no.runsafe.ItemControl.trading.commands.Tag.TagArgument;
 import no.runsafe.framework.RunsafeConfigurablePlugin;
 import no.runsafe.framework.api.command.Command;
 import no.runsafe.framework.api.log.IDebug;
@@ -51,7 +50,11 @@ public class ItemControl extends RunsafeConfigurablePlugin
 		addComponent(TagArgument.class);
 
 		traderCommand.addSubCommand(getInstance(CreateShop.class));
-		traderCommand.addSubCommand(getInstance(DeleteTag.class));
+
+		Command tag = new Command("tag", "Shop tag ID commands.", null);
+		tag.addSubCommand(getInstance(Create.class));
+		tag.addSubCommand(getInstance(Delete.class));
+		traderCommand.addSubCommand(tag);
 
 		plugin = this;
 		//addComponent(ApplyCustomMap.class);

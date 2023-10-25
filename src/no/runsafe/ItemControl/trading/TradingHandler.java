@@ -61,6 +61,15 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		return creatingPlayers;
 	}
 
+	public boolean createTag(String tag)
+	{
+		if (tag == null || tagRepository.getTags().contains(tag))
+			return false;
+
+		tagRepository.createNewTag(tag);
+		return true;
+	}
+
 	public void deleteTag(String tag)
 	{
 		tradingRepository.deleteTag(tag);
@@ -82,8 +91,6 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		ItemControl.Debugger.debugFine(isEditing ? "Player is editing shop" : "Player not editing shop");
 
 		String tag = creatingPlayers.get(player);
-		if (tag != null && !tagRepository.getTags().contains(tag)) // Create new tag if it doesn't already exist
-			tagRepository.createNewTag(tag);
 
 		String worldName = player.getWorldName();
 		if (data.containsKey(worldName))

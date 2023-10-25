@@ -1,19 +1,16 @@
-package no.runsafe.ItemControl.trading.commands;
+package no.runsafe.ItemControl.trading.commands.Tag;
 
-import no.runsafe.ItemControl.trading.ItemTagIDRepository;
 import no.runsafe.ItemControl.trading.TradingHandler;
 import no.runsafe.framework.api.command.ExecutableCommand;
 import no.runsafe.framework.api.command.ICommandExecutor;
 import no.runsafe.framework.api.command.argument.IArgumentList;
-import no.runsafe.framework.api.command.player.PlayerCommand;
-import no.runsafe.framework.api.player.IPlayer;
 
-public class DeleteTag extends ExecutableCommand
+public class Delete extends ExecutableCommand
 {
-	public DeleteTag(TradingHandler handler)
+	public Delete(TradingHandler handler)
 	{
 		super(
-			"deleteTag",
+			"delete",
 			"Deletes an item tag.",
 			"runsafe.traders.tag.delete",
 			new TagArgument(TAG_NAME, handler).require()
