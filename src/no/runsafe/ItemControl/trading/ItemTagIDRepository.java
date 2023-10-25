@@ -1,11 +1,15 @@
 package no.runsafe.ItemControl.trading;
 
+import no.runsafe.framework.api.database.IRow;
 import no.runsafe.framework.api.database.ISchemaUpdate;
 import no.runsafe.framework.api.database.Repository;
 import no.runsafe.framework.api.database.SchemaUpdate;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ItemTagIDRepository extends Repository
 {
@@ -60,5 +64,14 @@ public class ItemTagIDRepository extends Repository
 	public List<String> getTags()
 	{
 		return database.queryStrings("SELECT `name` FROM `" + getTableName() + "`;");
+	}
+
+	public Map<String, Integer> getTagInfo()
+	{
+		HashMap<String, Integer> result = new LinkedHashMap<>();
+		for (IRow row : database.query("SELECT `name`, `ID` FROM `" + getTableName() + "`;"))
+			result.put(row.String("name"), row.Integer("ID"));
+
+		return result;
 	}
 }

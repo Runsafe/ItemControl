@@ -81,6 +81,11 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		return tagRepository.getTags();
 	}
 
+	public Map<String, Integer> getAllTagInfo()
+	{
+		return tagRepository.getTagInfo();
+	}
+
 	@Override
 	public boolean OnPlayerRightClick(IPlayer player, RunsafeMeta usingItem, IBlock targetBlock)
 	{

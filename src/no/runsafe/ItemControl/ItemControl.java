@@ -7,6 +7,7 @@ import no.runsafe.ItemControl.trading.*;
 import no.runsafe.ItemControl.trading.commands.*;
 import no.runsafe.ItemControl.trading.commands.Tag.Create;
 import no.runsafe.ItemControl.trading.commands.Tag.Delete;
+import no.runsafe.ItemControl.trading.commands.Tag.List;
 import no.runsafe.ItemControl.trading.commands.Tag.TagArgument;
 import no.runsafe.framework.RunsafeConfigurablePlugin;
 import no.runsafe.framework.api.command.Command;
@@ -54,6 +55,7 @@ public class ItemControl extends RunsafeConfigurablePlugin
 		Command tag = new Command("tag", "Shop tag ID commands.", null);
 		tag.addSubCommand(getInstance(Create.class));
 		tag.addSubCommand(getInstance(Delete.class));
+		tag.addSubCommand(getInstance(List.class));
 		traderCommand.addSubCommand(tag);
 
 		plugin = this;
