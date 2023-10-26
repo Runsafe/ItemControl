@@ -82,13 +82,10 @@ public class PurchaseValidator
 
 		for (RunsafeMeta item : purchaseItems)
 		{
-			if (tag == null)
-				player.give(item.clone());
-			else
-			{
-				item.addLore(tag);
-				player.give(item.clone());
-			}
+			RunsafeMeta newItem = item.clone();
+			if (tag != null)
+				newItem.addLore(tag);
+			player.give(newItem);
 		}
 
 		ILocation location = player.getLocation();
