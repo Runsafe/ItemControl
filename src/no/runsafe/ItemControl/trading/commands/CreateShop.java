@@ -29,7 +29,10 @@ public class CreateShop extends PlayerCommand
 			tag = null;
 
 		handler.getCreatingPlayers().put(executor, tag);
-		return "&eClick a button to turn it into a shop!";
+		if (tag == null)
+			return "&eClick a button to turn it into a shop!";
+		else
+			return "&eClick a button to turn it into a shop using the tag:" + tag;
 	}
 
 	private final TradingHandler handler;
