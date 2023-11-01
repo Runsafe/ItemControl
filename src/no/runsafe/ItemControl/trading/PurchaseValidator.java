@@ -1,5 +1,6 @@
 package no.runsafe.ItemControl.trading;
 
+import no.runsafe.ItemControl.ItemControl;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Sound;
@@ -39,21 +40,42 @@ public class PurchaseValidator
 		ConcurrentHashMap<RunsafeMeta, Integer> checklist = new ConcurrentHashMap<>(requiredItems.size());
 		checklist.putAll(requiredItems);
 
+		ItemControl.Debugger.debugFine(
+			"Player %s attempting to make a purchase that requires payment of: %s",
+			player.getName(), checklist.toString()
+		);
+
 		for (RunsafeMeta item : player.getInventory().getContents())
 		{
 			for (Map.Entry<RunsafeMeta, Integer> checkNode : checklist.entrySet())
 			{
 				int checkItemAmount = checkNode.getValue();
 				RunsafeMeta checkItem = checkNode.getKey();
+
+				ItemControl.Debugger.debugFiner("Comparing %s against %s", item.toString(), checkItem.toString());
+
 				if (strictItemMatch(item, checkItem))
 				{
 					if (item.getAmount() >= checkItemAmount)
 						checklist.remove(checkItem);
 					else
 						checklist.put(checkItem, checkItemAmount - item.getAmount());
+
+					ItemControl.Debugger.debugFiner("Passed: %s is %s", item.toString(), checkItem.toString());
 				}
+				else
+					ItemControl.Debugger.debugFiner("Failed: %s is not %s", item.toString(), checkItem.toString());
 			}
 		}
+
+		if (!checklist.isEmpty())
+			ItemControl.Debugger.debugFine(
+				"Player %s does not have required payment. missing: %s",
+				player.getName(), checklist.toString()
+			);
+		else
+			ItemControl.Debugger.debugFine("Player %s has required items to make purchase", player.getName());
+
 		return checklist.isEmpty();
 	}
 
