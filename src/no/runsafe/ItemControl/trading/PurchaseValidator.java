@@ -94,8 +94,8 @@ public class PurchaseValidator
 		return StringUtils.join(items, ", ");
 	}
 
-	public void purchase(IPlayer player, String tag)
-	{
+	public void purchase(IPlayer player, String tag, ItemTagIDRepository tagRepository)
+	{//
 		if (!playerCanPurchase(player))
 		{
 			player.sendColouredMessage("&cYou don't have enough to buy that!");
@@ -121,7 +121,7 @@ public class PurchaseValidator
 		{
 			RunsafeMeta newItem = item.clone();
 			if (tag != null)
-				newItem.addLore(tag);
+				newItem.addLore("ID: " + tag + "_" + tagRepository.incrementID(tag));
 			player.give(newItem);
 		}
 
