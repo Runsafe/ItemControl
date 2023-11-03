@@ -7,6 +7,7 @@ import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.enchantment.RunsafeEnchantment;
 import no.runsafe.framework.minecraft.inventory.RunsafeInventory;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,7 @@ public class PurchaseValidator
 
 		ItemControl.Debugger.debugFine(
 			"Player %s attempting to make a purchase that requires payment of: %s",
-			player.getName(), checklist.toString()
+			player.getName(), serialize(checklist)
 		);
 
 		for (RunsafeMeta item : player.getInventory().getContents())
@@ -52,7 +53,7 @@ public class PurchaseValidator
 				int checkItemAmount = checkNode.getValue();
 				RunsafeMeta checkItem = checkNode.getKey();
 
-				ItemControl.Debugger.debugFiner("Comparing %s against %s", item.toString(), checkItem.toString());
+				ItemControl.Debugger.debugFiner("Comparing %s against %s", item.serialize(), checkItem.serialize());
 
 				if (strictItemMatch(item, checkItem))
 				{
@@ -61,17 +62,17 @@ public class PurchaseValidator
 					else
 						checklist.put(checkItem, checkItemAmount - item.getAmount());
 
-					ItemControl.Debugger.debugFiner("Passed: %s is %s", item.toString(), checkItem.toString());
+					ItemControl.Debugger.debugFiner("Passed: %s is %s", item.serialize(), checkItem.serialize());
 				}
 				else
-					ItemControl.Debugger.debugFiner("Failed: %s is not %s", item.toString(), checkItem.toString());
+					ItemControl.Debugger.debugFiner("Failed: %s is not %s", item.serialize(), checkItem.serialize());
 			}
 		}
 
 		if (!checklist.isEmpty())
 			ItemControl.Debugger.debugFine(
 				"Player %s does not have required payment. missing: %s",
-				player.getName(), checklist.toString()
+				player.getName(), serialize(checklist)
 			);
 		else
 			ItemControl.Debugger.debugFine("Player %s has required items to make purchase", player.getName());
@@ -79,8 +80,22 @@ public class PurchaseValidator
 		return checklist.isEmpty();
 	}
 
-	public void purchase(IPlayer player, String tag)
+	private String serialize(Map<RunsafeMeta, Integer> itemList)
 	{
+		List<String> items = new ArrayList<>();
+
+		for (Map.Entry<RunsafeMeta, Integer> itemEntry : itemList.entrySet())
+		{
+			RunsafeMeta item = itemEntry.getKey();
+			int numberOfItems = itemEntry.getValue();
+			items.add("(" + item.serialize() + " Count: " + numberOfItems + " )");
+		}
+
+		return StringUtils.join(items, ", ");
+	}
+
+	public void purchase(IPlayer player, String tag, ItemTagIDRepository tagRepository)
+	{//
 		if (!playerCanPurchase(player))
 		{
 			player.sendColouredMessage("&cYou don't have enough to buy that!");
@@ -106,7 +121,7 @@ public class PurchaseValidator
 		{
 			RunsafeMeta newItem = item.clone();
 			if (tag != null)
-				newItem.addLore(tag);
+				newItem.addLore("ID: " + tag + "_" + tagRepository.incrementID(tag));
 			player.give(newItem);
 		}
 
