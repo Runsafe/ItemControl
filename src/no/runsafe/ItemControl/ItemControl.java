@@ -1,5 +1,7 @@
 package no.runsafe.ItemControl;
 
+import no.runsafe.ItemControl.custom_maps.ApplyCustomMap;
+import no.runsafe.ItemControl.custom_maps.MapHandler;
 import no.runsafe.ItemControl.enchant_container.EnchantContainerHandler;
 import no.runsafe.ItemControl.spawners.SpawnerHandler;
 import no.runsafe.ItemControl.spawners.SpawnerMonitor;
@@ -59,8 +61,8 @@ public class ItemControl extends RunsafeConfigurablePlugin
 		traderCommand.addSubCommand(tag);
 
 		plugin = this;
-		//addComponent(ApplyCustomMap.class);
-		//addComponent(MapHandler.class);
+		addComponent(ApplyCustomMap.class);
+		addComponent(MapHandler.class);
 	}
 
 	public static ItemControl plugin;
