@@ -171,7 +171,7 @@ public class PurchaseValidator
 
 		// Check the lore.
 		List<String> itemLore = item.getLore();
-		List<String> checkLore = item.getLore();
+		List<String> checkLore = check.getLore();
 
 		// Check the lore lists are either both null, or both not null.
 		if (shouldCompareLore && ((itemLore == null && checkLore != null) || (itemLore != null && checkLore == null)))
