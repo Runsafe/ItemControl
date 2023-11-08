@@ -105,7 +105,7 @@ public class PurchaseValidator
 			{
 				if (strictItemMatch(inventoryItem, items.getKey()))
 				{
-					playerInventory.removeExact(inventoryItem, items.getValue());
+					removeExact(playerInventory, inventoryItem, items.getValue());
 					break;
 				}
 			}
@@ -215,6 +215,45 @@ public class PurchaseValidator
 
 		ItemControl.Debugger.debugFiner("Item Comparison Passed");
 		return true;
+	}
+
+	private void removeExact(RunsafeInventory inventory, RunsafeMeta meta, int amount)
+	{
+		removeExact(inventory, meta, amount, true, true, true, true);
+	}
+
+	private void removeExact(RunsafeInventory inventory, RunsafeMeta meta, int amount,
+		boolean shouldCompareName, boolean shouldCompareDurability, boolean shouldCompareLore, boolean shouldCompareEnchants
+	)
+	{
+		int needed = amount;
+		for (int slot = 0; slot < inventory.getSize(); slot++)
+		{
+			RunsafeMeta itemStack = inventory.getItemInSlot(slot);
+
+			if (itemStack == null)
+				continue;
+
+			RunsafeMeta cloneStack = itemStack.clone();
+			cloneStack.setAmount(meta.getAmount());
+
+			if (!strictItemMatch(cloneStack, meta, shouldCompareName, shouldCompareDurability, shouldCompareLore, shouldCompareEnchants))
+				continue;
+
+			if (itemStack.getAmount() <= needed)
+			{
+				needed -= itemStack.getAmount();
+				inventory.removeItemInSlot(slot);
+
+				if (needed == 0)
+					break;
+			}
+			else
+			{
+				itemStack.setAmount(itemStack.getAmount() - needed);
+				break;
+			}
+		}
 	}
 
 	private final List<RunsafeMeta> purchaseItems = new ArrayList<>(0);
