@@ -129,6 +129,13 @@ public class PurchaseValidator
 
 	private boolean strictItemMatch(RunsafeMeta item, RunsafeMeta check)
 	{
+		return strictItemMatch(item, check, true, true, true, true);
+	}
+
+	private boolean strictItemMatch(RunsafeMeta item, RunsafeMeta check,
+		boolean shouldCompareName, boolean shouldCompareDurability, boolean shouldCompareLore, boolean shouldCompareEnchants
+	)
+	{
 		ItemControl.Debugger.debugFiner("Comparing %s against %s", item.serialize(), check.serialize());
 
 		// Check the item is the same.
@@ -139,7 +146,7 @@ public class PurchaseValidator
 		}
 
 		// Check the durability matches
-		if (item.getDurability() != check.getDurability())
+		if (shouldCompareDurability && item.getDurability() != check.getDurability())
 		{
 			ItemControl.Debugger.debugFiner("Failed: different durability values..");
 			return false;
@@ -149,14 +156,14 @@ public class PurchaseValidator
 		String checkName = check.getDisplayName();
 
 		// Check the names are either both null, or both not null.
-		if ((displayName == null && checkName != null) || (displayName != null && checkName == null))
+		if (shouldCompareName && ((displayName == null && checkName != null) || (displayName != null && checkName == null)))
 		{
 			ItemControl.Debugger.debugFiner("Failed: different names.");
 			return false;
 		}
 
 		// Check the names match.
-		if (displayName != null && !checkName.equals(displayName))
+		if (shouldCompareName && displayName != null && !checkName.equals(displayName))
 		{
 			ItemControl.Debugger.debugFiner("Failed: different names.");
 			return false;
@@ -167,14 +174,14 @@ public class PurchaseValidator
 		List<String> checkLore = item.getLore();
 
 		// Check the lore lists are either both null, or both not null.
-		if ((itemLore == null && checkLore != null) || (itemLore != null && checkLore == null))
+		if (shouldCompareLore && ((itemLore == null && checkLore != null) || (itemLore != null && checkLore == null)))
 		{
 			ItemControl.Debugger.debugFiner("Failed: different lore.");
 			return false;
 		}
 
 		// Make sure both the lore lists are the same (order-sensitive).
-		if (itemLore != null && !itemLore.equals(checkLore))
+		if (shouldCompareLore && itemLore != null && !itemLore.equals(checkLore))
 		{
 			ItemControl.Debugger.debugFiner("Failed: different lore.");
 			return false;
@@ -184,22 +191,25 @@ public class PurchaseValidator
 		Map<RunsafeEnchantment, Integer> enchants = item.getEnchantments();
 
 		// Check both enchantment maps are the same size, otherwise they don't match.
-		if (enchants.size() != check.getEnchantments().size())
+		if (shouldCompareEnchants && enchants.size() != check.getEnchantments().size())
 		{
 			ItemControl.Debugger.debugFiner("Failed: different enchants.");
 			return false;
 		}
 
 		// Check all the enchants match.
-		for (Map.Entry<RunsafeEnchantment, Integer> enchantNode : enchants.entrySet())
+		if (shouldCompareEnchants)
 		{
-			RunsafeEnchantment enchant = enchantNode.getKey();
-
-			// Make sure the enchant exists on the item and has the same level.
-			if (!check.hasEnchant(enchant) || check.getEnchantLevel(enchant) != enchantNode.getValue())
+			for (Map.Entry<RunsafeEnchantment, Integer> enchantNode : enchants.entrySet())
 			{
-				ItemControl.Debugger.debugFiner("Failed: different enchants.");
-				return false;
+				RunsafeEnchantment enchant = enchantNode.getKey();
+
+				// Make sure the enchant exists on the item and has the same level.
+				if (!check.hasEnchant(enchant) || check.getEnchantLevel(enchant) != enchantNode.getValue())
+				{
+					ItemControl.Debugger.debugFiner("Failed: different enchants.");
+					return false;
+				}
 			}
 		}
 
