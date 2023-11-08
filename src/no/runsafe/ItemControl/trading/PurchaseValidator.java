@@ -53,19 +53,13 @@ public class PurchaseValidator
 				int checkItemAmount = checkNode.getValue();
 				RunsafeMeta checkItem = checkNode.getKey();
 
-				ItemControl.Debugger.debugFiner("Comparing %s against %s", item.serialize(), checkItem.serialize());
-
 				if (strictItemMatch(item, checkItem))
 				{
 					if (item.getAmount() >= checkItemAmount)
 						checklist.remove(checkItem);
 					else
 						checklist.put(checkItem, checkItemAmount - item.getAmount());
-
-					ItemControl.Debugger.debugFiner("Passed: %s is %s", item.serialize(), checkItem.serialize());
 				}
-				else
-					ItemControl.Debugger.debugFiner("Failed: %s is not %s", item.serialize(), checkItem.serialize());
 			}
 		}
 
@@ -111,7 +105,7 @@ public class PurchaseValidator
 			{
 				if (strictItemMatch(inventoryItem, items.getKey()))
 				{
-					playerInventory.removeExact(inventoryItem, items.getValue());
+					removeExact(playerInventory, inventoryItem, items.getValue());
 					break;
 				}
 			}
@@ -135,54 +129,131 @@ public class PurchaseValidator
 
 	private boolean strictItemMatch(RunsafeMeta item, RunsafeMeta check)
 	{
+		return strictItemMatch(item, check, true, true, true, true);
+	}
+
+	private boolean strictItemMatch(RunsafeMeta item, RunsafeMeta check,
+		boolean shouldCompareName, boolean shouldCompareDurability, boolean shouldCompareLore, boolean shouldCompareEnchants
+	)
+	{
+		ItemControl.Debugger.debugFiner("Comparing %s against %s", item.serialize(), check.serialize());
+
 		// Check the item is the same.
 		if (!item.is(check.getItemType()))
+		{
+			ItemControl.Debugger.debugFiner("Failed: item is not of same type.");
 			return false;
+		}
 
 		// Check the durability matches
-		if (item.getDurability() != check.getDurability())
+		if (shouldCompareDurability && item.getDurability() != check.getDurability())
+		{
+			ItemControl.Debugger.debugFiner("Failed: different durability values..");
 			return false;
+		}
 
 		String displayName = item.getDisplayName();
 		String checkName = check.getDisplayName();
 
 		// Check the names are either both null, or both not null.
-		if ((displayName == null && checkName != null) || (displayName != null && checkName == null))
+		if (shouldCompareName && ((displayName == null && checkName != null) || (displayName != null && checkName == null)))
+		{
+			ItemControl.Debugger.debugFiner("Failed: different names.");
 			return false;
+		}
 
 		// Check the names match.
-		if (displayName != null && !checkName.equals(displayName))
+		if (shouldCompareName && displayName != null && !checkName.equals(displayName))
+		{
+			ItemControl.Debugger.debugFiner("Failed: different names.");
 			return false;
+		}
 
 		// Check the lore.
 		List<String> itemLore = item.getLore();
 		List<String> checkLore = item.getLore();
 
 		// Check the lore lists are either both null, or both not null.
-		if ((itemLore == null && checkLore != null) || (itemLore != null && checkLore == null))
+		if (shouldCompareLore && ((itemLore == null && checkLore != null) || (itemLore != null && checkLore == null)))
+		{
+			ItemControl.Debugger.debugFiner("Failed: different lore.");
 			return false;
+		}
 
 		// Make sure both the lore lists are the same (order-sensitive).
-		if (itemLore != null && !itemLore.equals(checkLore))
+		if (shouldCompareLore && itemLore != null && !itemLore.equals(checkLore))
+		{
+			ItemControl.Debugger.debugFiner("Failed: different lore.");
 			return false;
+		}
 
 		// Enchant checking
 		Map<RunsafeEnchantment, Integer> enchants = item.getEnchantments();
 
 		// Check both enchantment maps are the same size, otherwise they don't match.
-		if (enchants.size() != check.getEnchantments().size())
+		if (shouldCompareEnchants && enchants.size() != check.getEnchantments().size())
+		{
+			ItemControl.Debugger.debugFiner("Failed: different enchants.");
 			return false;
+		}
 
 		// Check all the enchants match.
-		for (Map.Entry<RunsafeEnchantment, Integer> enchantNode : enchants.entrySet())
+		if (shouldCompareEnchants)
 		{
-			RunsafeEnchantment enchant = enchantNode.getKey();
+			for (Map.Entry<RunsafeEnchantment, Integer> enchantNode : enchants.entrySet())
+			{
+				RunsafeEnchantment enchant = enchantNode.getKey();
 
-			// Make sure the enchant exists on the item and has the same level.
-			if (!check.hasEnchant(enchant) || check.getEnchantLevel(enchant) != enchantNode.getValue())
-				return false;
+				// Make sure the enchant exists on the item and has the same level.
+				if (!check.hasEnchant(enchant) || check.getEnchantLevel(enchant) != enchantNode.getValue())
+				{
+					ItemControl.Debugger.debugFiner("Failed: different enchants.");
+					return false;
+				}
+			}
 		}
+
+		ItemControl.Debugger.debugFiner("Item Comparison Passed");
 		return true;
+	}
+
+	private void removeExact(RunsafeInventory inventory, RunsafeMeta meta, int amount)
+	{
+		removeExact(inventory, meta, amount, true, true, true, true);
+	}
+
+	private void removeExact(RunsafeInventory inventory, RunsafeMeta meta, int amount,
+		boolean shouldCompareName, boolean shouldCompareDurability, boolean shouldCompareLore, boolean shouldCompareEnchants
+	)
+	{
+		int needed = amount;
+		for (int slot = 0; slot < inventory.getSize(); slot++)
+		{
+			RunsafeMeta itemStack = inventory.getItemInSlot(slot);
+
+			if (itemStack == null)
+				continue;
+
+			RunsafeMeta cloneStack = itemStack.clone();
+			cloneStack.setAmount(meta.getAmount());
+
+			if (!strictItemMatch(cloneStack, meta, shouldCompareName, shouldCompareDurability, shouldCompareLore, shouldCompareEnchants))
+				continue;
+
+			if (itemStack.getAmount() <= needed)
+			{
+				needed -= itemStack.getAmount();
+				inventory.removeItemInSlot(slot);
+
+				if (needed == 0)
+					break;
+			}
+			else
+			{
+				itemStack.setAmount(itemStack.getAmount() - needed);
+				break;
+			}
+		}
 	}
 
 	private final List<RunsafeMeta> purchaseItems = new ArrayList<>(0);
