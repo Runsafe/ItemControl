@@ -20,11 +20,17 @@ public class TradingRepository extends Repository
 	public List<TraderData> getTraders()
 	{
 		List<TraderData> data = new ArrayList<>(0);
-		for (IRow row : database.query("SELECT `inventory`, `tagName`,`world`, `x`, `y`, `z` FROM `traders`"))
+		for (IRow row : database.query(
+			"SELECT `inventory`,`tagName`,`compareName`,`compareDurability`," +
+					"`compareLore`,`compareEnchants`,`world`, `x`, `y`, `z` FROM `traders`"
+		))
 		{
 			RunsafeInventory inventory = server.createInventory(null, 27);
 			inventory.unserialize(row.String("inventory"));
-			data.add(new TraderData(row.Location(), inventory, row.String("tagName")));
+			data.add(new TraderData(row.Location(), inventory, row.String("tagName"),
+				(row.Integer("compareName") != 0), (row.Integer("compareDurability") != 0),
+				(row.Integer("compareLore") != 0), (row.Integer("compareEnchants") != 0)
+			));
 		}
 
 		return data;
@@ -34,9 +40,14 @@ public class TradingRepository extends Repository
 	{
 		ILocation location = data.getLocation();
 		database.execute(
-				"INSERT INTO `traders` (`inventory`, `tagName`, `world`, `x`, `y`, `z`) VALUES(?, ?, ?, ?, ?, ?)",
+				"INSERT INTO `traders` (`inventory`, `tagName`, `compareName`, `compareDurability`, " +
+					"`compareLore`, `compareEnchants`, `world`, `x`, `y`, `z`) VALUES(?, ?, ?, ?, ?, ?)",
 				data.getInventory().serialize(),
 				data.getTag(),
+				data.shouldCompareName(),
+				data.shouldCompareDurability(),
+				data.shouldCompareLore(),
+				data.shouldCompareEnchants(),
 				location.getWorld().getName(),
 				location.getX(),
 				location.getY(),
@@ -48,9 +59,14 @@ public class TradingRepository extends Repository
 	{
 		ILocation location = data.getLocation();
 		database.execute(
-				"UPDATE `traders` SET `inventory` = ?, `tagName` = ? WHERE `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
+				"UPDATE `traders` SET `inventory` = ?, `tagName` = ?, `compareName` = ?, `compareDurability` = ?," +
+					"`compareLore` = ?,`compareEnchants` = ? WHERE `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
 				data.getInventory().serialize(),
 				data.getTag(),
+				data.shouldCompareName(),
+				data.shouldCompareDurability(),
+				data.shouldCompareLore(),
+				data.shouldCompareEnchants(),
 				location.getWorld().getName(),
 				Math.floor(location.getBlockX()),
 				Math.floor(location.getBlockY()) ,
@@ -114,6 +130,14 @@ public class TradingRepository extends Repository
 		);
 
 		updates.addQueries("ALTER TABLE `traders` ADD COLUMN `tagName` VARCHAR(32) NULL DEFAULT NULL AFTER `inventory`");
+
+		updates.addQueries(
+			"ALTER TABLE `traders`" +
+				"ADD COLUMN `compareName` TINYINT(1) NOT NULL DEFAULT 1 AFTER `tagName`," +
+				"ADD COLUMN `compareDurability` TINYINT(1) NOT NULL DEFAULT 1 AFTER `compareName`," +
+				"ADD COLUMN `compareLore` TINYINT(1) NOT NULL DEFAULT 1 AFTER `compareDurability`," +
+				"ADD COLUMN `compareEnchants` TINYINT(1) NOT NULL DEFAULT 1 AFTER `compareLore`;"
+		);
 
 		return updates;
 	}

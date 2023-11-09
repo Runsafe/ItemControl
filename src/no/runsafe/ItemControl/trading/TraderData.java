@@ -8,11 +8,17 @@ import javax.annotation.Nullable;
 
 public class TraderData
 {
-	public TraderData(ILocation location, RunsafeInventory inventory, @Nullable String tag)
+	public TraderData(ILocation location, RunsafeInventory inventory, @Nullable String tag,
+		boolean compareName, boolean compareDurability, boolean compareLore, boolean compareEnchants
+	)
 	{
 		this.location = location;
 		this.inventory = inventory;
 		this.tag = tag;
+		this.compareName = compareName;
+		this.compareDurability = compareDurability;
+		this.compareLore = compareLore;
+		this.compareEnchants = compareEnchants;
 		refresh();
 	}
 
@@ -46,9 +52,49 @@ public class TraderData
 		isSaved = saved;
 	}
 
+	public boolean shouldCompareName()
+	{
+		return compareName;
+	}
+
+	public void setCompareName(boolean value)
+	{
+		compareName = value;
+	}
+
+	public boolean shouldCompareDurability()
+	{
+		return compareDurability;
+	}
+
+	public void setCompareDurability(boolean value)
+	{
+		compareDurability = value;
+	}
+
+	public boolean shouldCompareLore()
+	{
+		return compareLore;
+	}
+
+	public void setCompareLore(boolean value)
+	{
+		compareLore = value;
+	}
+
+	public boolean shouldCompareEnchants()
+	{
+		return compareEnchants;
+	}
+
+	public void setCompareEnchants(boolean value)
+	{
+		compareEnchants = value;
+	}
+
 	public void refresh()
 	{
-		purchaseValidator = new PurchaseValidator();
+		purchaseValidator = new PurchaseValidator(compareName, compareDurability, compareLore, compareEnchants);
 
 		for (int i = 0; i < 9; i++)
 		{
@@ -73,6 +119,10 @@ public class TraderData
 	}
 
 	private String tag;
+	private boolean compareName;
+	private boolean compareDurability;
+	private boolean compareLore;
+	private boolean compareEnchants;
 	private final ILocation location;
 	private final RunsafeInventory inventory;
 	private boolean isSaved = true;

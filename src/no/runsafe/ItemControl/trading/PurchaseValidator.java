@@ -17,6 +17,14 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings("unchecked")
 public class PurchaseValidator
 {
+	public PurchaseValidator(boolean compareName, boolean compareDurability, boolean compareLore, boolean compareEnchants)
+	{
+		this.compareName = compareName;
+		this.compareDurability = compareDurability;
+		this.compareLore = compareLore;
+		this.compareEnchants = compareEnchants;
+	}
+
 	public void addPurchaseItem(RunsafeMeta item)
 	{
 		purchaseItems.add(item);
@@ -129,13 +137,6 @@ public class PurchaseValidator
 
 	private boolean strictItemMatch(RunsafeMeta item, RunsafeMeta check)
 	{
-		return strictItemMatch(item, check, true, true, true, true);
-	}
-
-	private boolean strictItemMatch(RunsafeMeta item, RunsafeMeta check,
-		boolean shouldCompareName, boolean shouldCompareDurability, boolean shouldCompareLore, boolean shouldCompareEnchants
-	)
-	{
 		ItemControl.Debugger.debugFiner("Comparing %s against %s", item.serialize(), check.serialize());
 
 		// Check the item is the same.
@@ -146,7 +147,7 @@ public class PurchaseValidator
 		}
 
 		// Check the durability matches
-		if (shouldCompareDurability && item.getDurability() != check.getDurability())
+		if (compareDurability && item.getDurability() != check.getDurability())
 		{
 			ItemControl.Debugger.debugFiner("Failed: different durability values..");
 			return false;
@@ -156,14 +157,14 @@ public class PurchaseValidator
 		String checkName = check.getDisplayName();
 
 		// Check the names are either both null, or both not null.
-		if (shouldCompareName && ((displayName == null && checkName != null) || (displayName != null && checkName == null)))
+		if (compareName && ((displayName == null && checkName != null) || (displayName != null && checkName == null)))
 		{
 			ItemControl.Debugger.debugFiner("Failed: different names.");
 			return false;
 		}
 
 		// Check the names match.
-		if (shouldCompareName && displayName != null && !checkName.equals(displayName))
+		if (compareName && displayName != null && !checkName.equals(displayName))
 		{
 			ItemControl.Debugger.debugFiner("Failed: different names.");
 			return false;
@@ -174,14 +175,14 @@ public class PurchaseValidator
 		List<String> checkLore = check.getLore();
 
 		// Check the lore lists are either both null, or both not null.
-		if (shouldCompareLore && ((itemLore == null && checkLore != null) || (itemLore != null && checkLore == null)))
+		if (compareLore && ((itemLore == null && checkLore != null) || (itemLore != null && checkLore == null)))
 		{
 			ItemControl.Debugger.debugFiner("Failed: different lore.");
 			return false;
 		}
 
 		// Make sure both the lore lists are the same (order-sensitive).
-		if (shouldCompareLore && itemLore != null && !itemLore.equals(checkLore))
+		if (compareLore && itemLore != null && !itemLore.equals(checkLore))
 		{
 			ItemControl.Debugger.debugFiner("Failed: different lore.");
 			return false;
@@ -191,14 +192,14 @@ public class PurchaseValidator
 		Map<RunsafeEnchantment, Integer> enchants = item.getEnchantments();
 
 		// Check both enchantment maps are the same size, otherwise they don't match.
-		if (shouldCompareEnchants && enchants.size() != check.getEnchantments().size())
+		if (compareEnchants && enchants.size() != check.getEnchantments().size())
 		{
 			ItemControl.Debugger.debugFiner("Failed: different enchants.");
 			return false;
 		}
 
 		// Check all the enchants match.
-		if (shouldCompareEnchants)
+		if (compareEnchants)
 		{
 			for (Map.Entry<RunsafeEnchantment, Integer> enchantNode : enchants.entrySet())
 			{
@@ -219,13 +220,6 @@ public class PurchaseValidator
 
 	private void removeExact(RunsafeInventory inventory, RunsafeMeta meta, int amount)
 	{
-		removeExact(inventory, meta, amount, true, true, true, true);
-	}
-
-	private void removeExact(RunsafeInventory inventory, RunsafeMeta meta, int amount,
-		boolean shouldCompareName, boolean shouldCompareDurability, boolean shouldCompareLore, boolean shouldCompareEnchants
-	)
-	{
 		int needed = amount;
 		for (int slot = 0; slot < inventory.getSize(); slot++)
 		{
@@ -237,7 +231,7 @@ public class PurchaseValidator
 			RunsafeMeta cloneStack = itemStack.clone();
 			cloneStack.setAmount(meta.getAmount());
 
-			if (!strictItemMatch(cloneStack, meta, shouldCompareName, shouldCompareDurability, shouldCompareLore, shouldCompareEnchants))
+			if (!strictItemMatch(cloneStack, meta))
 				continue;
 
 			if (itemStack.getAmount() <= needed)
@@ -256,6 +250,10 @@ public class PurchaseValidator
 		}
 	}
 
+	private final boolean compareName;
+	private final boolean compareDurability;
+	private final boolean compareLore;
+	private final boolean compareEnchants;
 	private final List<RunsafeMeta> purchaseItems = new ArrayList<>(0);
 	private final ConcurrentHashMap<RunsafeMeta, Integer> requiredItems = new ConcurrentHashMap<>(0);
 }
