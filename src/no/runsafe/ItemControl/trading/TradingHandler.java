@@ -56,7 +56,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		data.get(worldName).add(node);
 	}
 
-	public Map<IPlayer, String> getCreatingPlayers()
+	public Map<IPlayer, PurchaseData> getCreatingPlayers()
 	{
 		return creatingPlayers;
 	}
@@ -95,7 +95,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		boolean isEditing = creatingPlayers.containsKey(player);
 		ItemControl.Debugger.debugFine(isEditing ? "Player is editing shop" : "Player not editing shop");
 
-		String tag = creatingPlayers.get(player);
+		PurchaseData purchaseData = creatingPlayers.get(player);
 
 		String worldName = player.getWorldName();
 		if (data.containsKey(worldName))
@@ -120,7 +120,11 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 					ItemControl.Debugger.debugFine("Location is less than 1");
 					if (isEditing)
 					{
-						node.setTag(tag);
+						node.setTag(purchaseData.getTag());
+						node.setCompareName(purchaseData.shouldCompareName());
+						node.setCompareDurability(purchaseData.shouldCompareDurability());
+						node.setCompareLore(purchaseData.shouldCompareLore());
+						node.setCompareEnchants(purchaseData.shouldCompareEnchants());
 						editShop(player, node);
 					}
 					else
@@ -144,7 +148,10 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 
 		ItemControl.Debugger.debugFine("Shop does not exist, creating new.");
 		RunsafeInventory inventory = server.createInventory(null, 27);
-		TraderData newData = new TraderData(targetBlock.getLocation(), inventory, tag);
+		TraderData newData = new TraderData(targetBlock.getLocation(), inventory, purchaseData.getTag(),
+			purchaseData.shouldCompareName(), purchaseData.shouldCompareDurability(),
+			purchaseData.shouldCompareLore(), purchaseData.shouldCompareEnchants()
+		);
 		tradingRepository.persistTrader(newData);
 
 		if (!data.containsKey(worldName))
@@ -206,7 +213,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 	}
 
 	private final ConcurrentHashMap<String, List<TraderData>> data = new ConcurrentHashMap<>(0);
-	private final Map<IPlayer, String> creatingPlayers = new HashMap<>(0);
+	private final Map<IPlayer, PurchaseData> creatingPlayers = new HashMap<>(0);
 	private final TradingRepository tradingRepository;
 	private final ItemTagIDRepository tagRepository;
 	private final IScheduler scheduler;
