@@ -27,9 +27,13 @@ public class TradingRepository extends Repository
 		{
 			RunsafeInventory inventory = server.createInventory(null, 27);
 			inventory.unserialize(row.String("inventory"));
+			int compareName = row.Integer("compareName");
+			int compareDurability = row.Integer("compareDurability");
+			int compareLore = row.Integer("compareLore");
+			int compareEnchants = row.Integer("compareEnchants");
+
 			data.add(new TraderData(row.Location(), inventory, row.String("tagName"),
-				(row.Integer("compareName") != 0), (row.Integer("compareDurability") != 0),
-				(row.Integer("compareLore") != 0), (row.Integer("compareEnchants") != 0)
+				(compareName != 0), (compareDurability != 0), (compareLore != 0), (compareEnchants != 0)
 			));
 		}
 
@@ -41,13 +45,13 @@ public class TradingRepository extends Repository
 		ILocation location = data.getLocation();
 		database.execute(
 				"INSERT INTO `traders` (`inventory`, `tagName`, `compareName`, `compareDurability`, " +
-					"`compareLore`, `compareEnchants`, `world`, `x`, `y`, `z`) VALUES(?, ?, ?, ?, ?, ?)",
+					"`compareLore`, `compareEnchants`, `world`, `x`, `y`, `z`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 				data.getInventory().serialize(),
 				data.getTag(),
-				data.shouldCompareName(),
-				data.shouldCompareDurability(),
-				data.shouldCompareLore(),
-				data.shouldCompareEnchants(),
+				data.shouldCompareName() ? 1 : 0,
+				data.shouldCompareDurability() ? 1 : 0,
+				data.shouldCompareLore() ? 1 : 0,
+				data.shouldCompareEnchants() ? 1 : 0,
 				location.getWorld().getName(),
 				location.getX(),
 				location.getY(),
@@ -63,10 +67,10 @@ public class TradingRepository extends Repository
 					"`compareLore` = ?,`compareEnchants` = ? WHERE `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
 				data.getInventory().serialize(),
 				data.getTag(),
-				data.shouldCompareName(),
-				data.shouldCompareDurability(),
-				data.shouldCompareLore(),
-				data.shouldCompareEnchants(),
+				data.shouldCompareName() ? 1 : 0,
+				data.shouldCompareDurability() ? 1 : 0,
+				data.shouldCompareLore() ? 1 : 0,
+				data.shouldCompareEnchants() ? 1 : 0,
 				location.getWorld().getName(),
 				Math.floor(location.getBlockX()),
 				Math.floor(location.getBlockY()) ,
