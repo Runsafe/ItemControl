@@ -137,10 +137,10 @@ public class TradingRepository extends Repository
 
 		updates.addQueries(
 			"ALTER TABLE `traders`" +
-				"ADD COLUMN `compareName` TINYINT(1) NOT NULL DEFAULT 1 AFTER `tagName`," +
-				"ADD COLUMN `compareDurability` TINYINT(1) NOT NULL DEFAULT 1 AFTER `compareName`," +
-				"ADD COLUMN `compareLore` TINYINT(1) NOT NULL DEFAULT 1 AFTER `compareDurability`," +
-				"ADD COLUMN `compareEnchants` TINYINT(1) NOT NULL DEFAULT 1 AFTER `compareLore`;"
+				"ADD COLUMN `compareName` TINYINT(2) NOT NULL DEFAULT 1 AFTER `tagName`," +
+				"ADD COLUMN `compareDurability` TINYINT(2) NOT NULL DEFAULT 1 AFTER `compareName`," +
+				"ADD COLUMN `compareLore` TINYINT(2) NOT NULL DEFAULT 1 AFTER `compareDurability`," +
+				"ADD COLUMN `compareEnchants` TINYINT(2) NOT NULL DEFAULT 1 AFTER `compareLore`;"
 		);
 
 		return updates;
