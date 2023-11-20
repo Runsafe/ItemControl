@@ -140,7 +140,7 @@ public class PurchaseValidator
 		ItemControl.Debugger.debugFiner("Comparing %s against %s", item.serialize(), check.serialize());
 
 		// Check the item is the same.
-		if (!item.is(check.getItemType()))
+		if (item.getType() != check.getType())
 		{
 			ItemControl.Debugger.debugFiner("Failed: item is not of same type.");
 			return false;
