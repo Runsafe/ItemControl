@@ -115,30 +115,31 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 				}
 
 				ItemControl.Debugger.debugFine("Distance checking shop at : " + node.getLocation().toString());
-				if (node.getLocation().distance(targetBlock.getLocation()) < 1)
+				if (!(node.getLocation().distance(targetBlock.getLocation()) < 1))
 				{
-					ItemControl.Debugger.debugFine("Location is less than 1");
-					if (isEditing)
-					{
-						node.setTag(purchaseData.getTag());
-						node.setCompareName(purchaseData.shouldCompareName());
-						node.setCompareDurability(purchaseData.shouldCompareDurability());
-						node.setCompareLore(purchaseData.shouldCompareLore());
-						node.setCompareEnchants(purchaseData.shouldCompareEnchants());
-						editShop(player, node);
-					}
-					else
-					{
-						String shopTag = node.getTag();
-						if (shopTag != null)
-							node.getPurchaseValidator().purchase(player, shopTag, tagRepository);
-						else
-							node.getPurchaseValidator().purchase(player, null, null);
-					}
+					ItemControl.Debugger.debugFine("Location is greater or equal to 1");
+					continue;
+				}
 
+				ItemControl.Debugger.debugFine("Location is less than 1");
+				if (isEditing)
+				{
+					node.setTag(purchaseData.getTag());
+					node.setCompareName(purchaseData.shouldCompareName());
+					node.setCompareDurability(purchaseData.shouldCompareDurability());
+					node.setCompareLore(purchaseData.shouldCompareLore());
+					node.setCompareEnchants(purchaseData.shouldCompareEnchants());
+					editShop(player, node);
 					return true;
 				}
-				ItemControl.Debugger.debugFine("Location is greater or equal to 1");
+
+				String shopTag = node.getTag();
+				if (shopTag != null)
+					node.getPurchaseValidator().purchase(player, shopTag, tagRepository);
+				else
+					node.getPurchaseValidator().purchase(player, null, null);
+
+				return true;
 			}
 		}
 
@@ -194,12 +195,11 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 						tradingRepository.updateTrader(data);
 						data.setSaved(true);
 						data.refresh();
+						continue;
 					}
-					else
-					{
-						ItemControl.Debugger.debugFine("Viewers found, skipping!");
-						unsavedRemaining = true;
-					}
+
+					ItemControl.Debugger.debugFine("Viewers found, skipping!");
+					unsavedRemaining = true;
 				}
 			}
 

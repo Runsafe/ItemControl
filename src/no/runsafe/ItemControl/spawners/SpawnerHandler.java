@@ -33,14 +33,14 @@ public class SpawnerHandler implements IConfigurationChanged
 
 		RunsafeEntityType spawnerType = spawnEgg.getEntityType();
 
-		if (target.isAir() && spawnerTypeValid(spawnerType, actor))
-		{
-			Item.Unavailable.MobSpawner.Place(location);
-			if (setSpawnerEntityID(location.getBlock(), spawnerType))
-				return true;
+		if (!target.isAir() || !spawnerTypeValid(spawnerType, actor))
+			return false;
 
-			Item.Unavailable.Air.Place(location);
-		}
+		Item.Unavailable.MobSpawner.Place(location);
+		if (setSpawnerEntityID(location.getBlock(), spawnerType))
+			return true;
+
+		Item.Unavailable.Air.Place(location);
 		return false;
 	}
 
@@ -49,31 +49,32 @@ public class SpawnerHandler implements IConfigurationChanged
 		if (entityType == null && actor != null)
 		{
 			console.logInformation(
-					"SPAWNER WARNING: %s tried to create/break a NULL spawner [%s,%d,%d,%d]!",
-					actor.getPrettyName(),
-					actor.getWorld().getName(),
-					actor.getLocation().getBlockX(),
-					actor.getLocation().getBlockY(),
-					actor.getLocation().getBlockZ()
+				"SPAWNER WARNING: %s tried to create/break a NULL spawner [%s,%d,%d,%d]!",
+				actor.getPrettyName(),
+				actor.getWorld().getName(),
+				actor.getLocation().getBlockX(),
+				actor.getLocation().getBlockY(),
+				actor.getLocation().getBlockZ()
 			);
 			return false;
 		}
 
-		if (entityType == null || !validSpawner.contains(entityType.getName().toLowerCase()))
-		{
-			if (actor != null)
-				console.logInformation(
-						"SPAWNER WARNING: %s tried to create/break an invalid %s spawner [%s,%d,%d,%d]!",
-						actor.getPrettyName(),
-						entityType,
-						actor.getWorld().getName(),
-						actor.getLocation().getBlockX(),
-						actor.getLocation().getBlockY(),
-						actor.getLocation().getBlockZ()
-				);
+		if (entityType != null && validSpawner.contains(entityType.getName().toLowerCase()))
+			return true;
+
+		if (actor == null)
 			return false;
-		}
-		return true;
+
+		console.logInformation(
+			"SPAWNER WARNING: %s tried to create/break an invalid %s spawner [%s,%d,%d,%d]!",
+			actor.getPrettyName(),
+			entityType,
+			actor.getWorld().getName(),
+			actor.getLocation().getBlockX(),
+			actor.getLocation().getBlockY(),
+			actor.getLocation().getBlockZ()
+		);
+		return false;
 	}
 
 	private boolean setSpawnerEntityID(IBlock block, RunsafeEntityType entityType)
@@ -97,7 +98,7 @@ public class SpawnerHandler implements IConfigurationChanged
 		validSpawner = config.getConfigValueAsList("spawner.allow");
 	}
 
-	private List<String> spawnerWorlds = new ArrayList<String>(0);
-	private List<String> validSpawner = new ArrayList<String>(0);
+	private List<String> spawnerWorlds = new ArrayList<>(0);
+	private List<String> validSpawner = new ArrayList<>(0);
 	private final IConsole console;
 }

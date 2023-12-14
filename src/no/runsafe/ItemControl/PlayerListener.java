@@ -9,7 +9,6 @@ import no.runsafe.framework.api.event.player.IPlayerDeathEvent;
 import no.runsafe.framework.api.event.player.IPlayerInteractEvent;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.event.inventory.RunsafeCraftItemEvent;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerDeathEvent;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerInteractEvent;
@@ -39,7 +38,7 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 		IWorld world = player.getWorld();
 		RunsafeMeta usingItem = player.getItemInMainHand();
 
-		if (usingItem == null)
+		if (usingItem == null || world == null)
 			return;
 
 		if (Globals.itemIsDisabled(world, usingItem))
@@ -54,17 +53,17 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 		if (!player.canBuildNow() || targetBlock == null)
 			return;
 
-		if (usingItem instanceof RunsafeSpawnEgg && spawnerHandler.spawnerIsHarvestable(world))
-		{
-			// If the block has an interface or is interact block, don't let them place a spawner
-			if (event.isCancelled() || targetBlock.hasInterface() || targetBlock.isInteractBlock())
-				return;
+		if (!(usingItem instanceof RunsafeSpawnEgg) || !spawnerHandler.spawnerIsHarvestable(world))
+			return;
 
-			if (spawnerHandler.createSpawner(player, event.getTargetBlock(), (RunsafeSpawnEgg) usingItem))
-				player.removeItem(usingItem.getItemType(), 1);
+		// If the block has an interface or is interact block, don't let them place a spawner
+		if (event.isCancelled() || targetBlock.hasInterface() || targetBlock.isInteractBlock())
+			return;
 
-			event.cancel();
-		}
+		if (spawnerHandler.createSpawner(player, event.getTargetBlock(), (RunsafeSpawnEgg) usingItem))
+			player.removeItem(usingItem.getItemType(), 1);
+
+		event.cancel();
 	}
 
 	@Override
@@ -107,12 +106,12 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 			stopItems = true;
 		}
 
-		if (stopItems)
-		{
-			event.setDrops(new ArrayList<>());
-			event.setDroppedXP(0);
-			event.setNewLevelAmount(0);
-		}
+		if (!stopItems)
+			return;
+
+		event.setDrops(new ArrayList<>());
+		event.setDroppedXP(0);
+		event.setNewLevelAmount(0);
 	}
 
 	@Override
@@ -125,18 +124,17 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 
 		for (String node : nodes)
 		{
-			if (node.contains("."))
-			{
-				String[] parts = node.split("\\.");
-				if (!noDeathItemsRegions.containsKey(parts[0]))
-					noDeathItemsRegions.put(parts[0], new ArrayList<>());
-
-				noDeathItemsRegions.get(parts[0]).add(parts[1]);
-			}
-			else
+			if (!node.contains("."))
 			{
 				noDeathItemsWorlds.add(node);
+				continue;
 			}
+
+			String[] parts = node.split("\\.");
+			if (!noDeathItemsRegions.containsKey(parts[0]))
+				noDeathItemsRegions.put(parts[0], new ArrayList<>());
+
+			noDeathItemsRegions.get(parts[0]).add(parts[1]);
 		}
 	}
 

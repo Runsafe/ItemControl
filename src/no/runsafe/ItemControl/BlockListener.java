@@ -12,11 +12,10 @@ public class BlockListener implements IItemDispensed
 	public boolean OnBlockDispense(IBlock block, RunsafeMeta itemStack)
 	{
 		IWorld blockWorld = block.getWorld();
-		if (Globals.itemIsDisabled(blockWorld, itemStack))
-		{
-			block.getLocation().playSound(Sound.Creature.Cat.Hiss);
-			return false;
-		}
-		return true;
+		if (!Globals.itemIsDisabled(blockWorld, itemStack))
+			return true;
+
+		block.getLocation().playSound(Sound.Creature.Cat.Hiss);
+		return false;
 	}
 }
