@@ -8,22 +8,14 @@ import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 
 public class BlockListener implements IItemDispensed
 {
-	public BlockListener(Globals globals)
-	{
-		this.globals = globals;
-	}
-
 	@Override
 	public boolean OnBlockDispense(IBlock block, RunsafeMeta itemStack)
 	{
 		IWorld blockWorld = block.getWorld();
-		if (globals.itemIsDisabled(blockWorld, itemStack))
-		{
-			block.getLocation().playSound(Sound.Creature.Cat.Hiss);
-			return false;
-		}
-		return true;
-	}
+		if (!Globals.itemIsDisabled(blockWorld, itemStack))
+			return true;
 
-	private final Globals globals;
+		block.getLocation().playSound(Sound.Creature.Cat.Hiss);
+		return false;
+	}
 }

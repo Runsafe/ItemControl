@@ -36,11 +36,11 @@ public class PurchaseValidator
 		for (Map.Entry<RunsafeMeta, Integer> itemNode : requiredItems.entrySet())
 		{
 			RunsafeMeta requiredItem = itemNode.getKey();
-			if (strictItemMatch(requiredItem, item))
-			{
-				requiredItems.put(requiredItem, itemNode.getValue() + item.getAmount());
-				return;
-			}
+			if (!strictItemMatch(requiredItem, item))
+				continue;
+
+			requiredItems.put(requiredItem, itemNode.getValue() + item.getAmount());
+			return;
 		}
 		requiredItems.put(item, item.getAmount());
 	}
@@ -62,13 +62,13 @@ public class PurchaseValidator
 				int checkItemAmount = checkNode.getValue();
 				RunsafeMeta checkItem = checkNode.getKey();
 
-				if (strictItemMatch(item, checkItem))
-				{
-					if (item.getAmount() >= checkItemAmount)
-						checklist.remove(checkItem);
-					else
-						checklist.put(checkItem, checkItemAmount - item.getAmount());
-				}
+				if (!strictItemMatch(item, checkItem))
+					continue;
+
+				if (item.getAmount() >= checkItemAmount)
+					checklist.remove(checkItem);
+				else
+					checklist.put(checkItem, checkItemAmount - item.getAmount());
 			}
 		}
 
@@ -235,19 +235,17 @@ public class PurchaseValidator
 			if (!strictItemMatch(cloneStack, meta))
 				continue;
 
-			if (itemStack.getAmount() <= needed)
-			{
-				needed -= itemStack.getAmount();
-				inventory.removeItemInSlot(slot);
-
-				if (needed == 0)
-					break;
-			}
-			else
+			if (itemStack.getAmount() > needed)
 			{
 				itemStack.setAmount(itemStack.getAmount() - needed);
 				break;
 			}
+
+			needed -= itemStack.getAmount();
+			inventory.removeItemInSlot(slot);
+
+			if (needed == 0)
+				break;
 		}
 	}
 

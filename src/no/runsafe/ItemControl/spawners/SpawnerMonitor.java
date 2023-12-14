@@ -15,7 +15,6 @@ import no.runsafe.framework.minecraft.entity.RunsafeLivingEntity;
 import no.runsafe.framework.minecraft.event.block.RunsafeBlockBreakEvent;
 import no.runsafe.framework.minecraft.item.RunsafeItemStack;
 
-import java.util.Random;
 import java.util.logging.Level;
 
 public class SpawnerMonitor implements IBlockBreakEvent, IMobSpawnerPulsed
@@ -39,66 +38,59 @@ public class SpawnerMonitor implements IBlockBreakEvent, IMobSpawnerPulsed
 		RunsafeItemStack heldItem = thePlayer.getItemInMainHand();
 		final IBlock theBlock = event.getBlock();
 
-		if (Enchant.SilkTouch.isOn(heldItem) && handler.spawnerIsHarvestable(thePlayer.getWorld()))
+		if (!Enchant.SilkTouch.isOn(heldItem) || !handler.spawnerIsHarvestable(thePlayer.getWorld()))
+			return;
+
+		try
 		{
-			try
+			ICreatureSpawner spawner = (ICreatureSpawner) theBlock;
+			final RunsafeEntityType creature = spawner.getCreature();
+			if (!handler.spawnerTypeValid(creature, thePlayer))
 			{
-				ICreatureSpawner spawner = (ICreatureSpawner) theBlock;
-				final RunsafeEntityType creature = spawner.getCreature();
-				if (!handler.spawnerTypeValid(creature, thePlayer))
-				{
-					console.outputToConsole(
-						String.format(
-							"%s tried harvesting an invalid %s spawner!",
-							thePlayer.getName(),
-							creature.getName()
-						),
-						Level.WARNING
-					);
-					return;
-				}
-				scheduler.createSyncTimer(
-					new Runnable()
-					{
-						@Override
-						public void run()
-						{
-							if (!blockBreakEvent.isCancelled())
-								Item.Miscellaneous.MonsterEgg.Get(creature).Drop(theBlock.getLocation(), 1);
-						}
-					},
-					10L
+				console.outputToConsole(
+					String.format(
+						"%s tried harvesting an invalid %s spawner!",
+						thePlayer.getName(),
+						creature.getName()
+					),
+					Level.WARNING
 				);
-				blockBreakEvent.setXP(0);
+				return;
 			}
-			catch (Exception e)
-			{
-				console.logException(e);
-			}
+			scheduler.createSyncTimer(
+					() ->
+					{
+						if (!blockBreakEvent.isCancelled())
+							Item.Miscellaneous.MonsterEgg.Get(creature).Drop(theBlock.getLocation(), 1);
+					},
+				10L
+			);
+			blockBreakEvent.setXP(0);
+		}
+		catch (Exception e)
+		{
+			console.logException(e);
 		}
 	}
 
 	@Override
 	public boolean OnMobSpawnerPulsed(RunsafeLivingEntity entity, ILocation location)
 	{
-		if (!handler.spawnerTypeValid(entity.getEntityType(), null))
-		{
-			console.logInformation(
-				"SPAWNER WARNING: &cBlocked invalid spawner of &e%s&c at (%s,%d,%d,%d)",
-				entity.getRaw().getType().name(),
-				location.getWorld().getName(),
-				location.getBlockX(),
-				location.getBlockY(),
-				location.getBlockZ()
-			);
-			return false;
-		}
+		if (handler.spawnerTypeValid(entity.getEntityType(), null))
+			return true;
 
-		return true;
+		console.logInformation(
+			"SPAWNER WARNING: &cBlocked invalid spawner of &e%s&c at (%s,%d,%d,%d)",
+			entity.getRaw().getType().name(),
+			location.getWorld().getName(),
+			location.getBlockX(),
+			location.getBlockY(),
+			location.getBlockZ()
+		);
+		return false;
 	}
 
 	private final IScheduler scheduler;
 	private final IConsole console;
 	private final SpawnerHandler handler;
-	private final Random random = new Random();
 }

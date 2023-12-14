@@ -46,8 +46,8 @@ public class CreateTagShop extends PlayerCommand
 
 		if (tag == null)
 			return Globals.getCommandsShopCreateMessage();
-		else
-			return String.format(Globals.getCommandsShopCreateTagMessage(), tag);
+
+		return String.format(Globals.getCommandsShopCreateTagMessage(), tag);
 	}
 
 	private final TradingHandler handler;

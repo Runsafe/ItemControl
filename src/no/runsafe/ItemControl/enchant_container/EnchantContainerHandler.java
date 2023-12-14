@@ -51,38 +51,38 @@ public class EnchantContainerHandler implements IPlayerRightClick
 
 			return false;
 		}
-		else if (usingItem.is(Item.Miscellaneous.ExperienceBottle))
-		{
-			List<String> lore = usingItem.getLore();
-			if (lore == null)
-				return true;
 
-			String levelString = null;
-			for (String loreString : lore)
-				if (loreString.startsWith("§3Contains:§f ") && loreString.endsWith(" levels"))
-					levelString = loreString;
+		if (!usingItem.is(Item.Miscellaneous.ExperienceBottle))
+			return true;
 
-			if (levelString == null)
-				return true;
+		List<String> lore = usingItem.getLore();
+		if (lore == null)
+			return true;
 
-			String[] stringSplit = levelString.split(" ");
-			int levels = Integer.parseInt(stringSplit[1]);
-			player.setLevel(player.getLevel() + levels);
-			RunsafeInventory inventory = player.getInventory();
+		String levelString = null;
+		for (String loreString : lore)
+			if (loreString.startsWith("§3Contains:§f ") && loreString.endsWith(" levels"))
+				levelString = loreString;
 
-			inventory.removeExact(usingItem, 1);
-			RunsafeMeta item = Item.Brewing.GlassBottle.getItem();
-			item.setAmount(1);
-			inventory.addItems(item);
-			player.updateInventory();
-			player.sendColouredMessage(Globals.getEnchantContainerUsedBottleMessage(), levels);
+		if (levelString == null)
+			return true;
 
-			ILocation playerLocation = player.getLocation();
-			if (playerLocation != null)
-				playerLocation.playSound(Sound.Player.LevelUp, 2, 1);
+		String[] stringSplit = levelString.split(" ");
+		int levels = Integer.parseInt(stringSplit[1]);
+		player.setLevel(player.getLevel() + levels);
+		RunsafeInventory inventory = player.getInventory();
 
-			return false;
-		}
-		return true;
+		inventory.removeExact(usingItem, 1);
+		RunsafeMeta item = Item.Brewing.GlassBottle.getItem();
+		item.setAmount(1);
+		inventory.addItems(item);
+		player.updateInventory();
+		player.sendColouredMessage(Globals.getEnchantContainerUsedBottleMessage(), levels);
+
+		ILocation playerLocation = player.getLocation();
+		if (playerLocation != null)
+			playerLocation.playSound(Sound.Player.LevelUp, 2, 1);
+
+		return false;
 	}
 }

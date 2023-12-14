@@ -36,7 +36,7 @@ public class Globals implements IConfigurationChanged
 		commandsShopCreateTagMessage = config.getConfigValueAsString("message.commands.shopCreateTag");
 	}
 
-	public Boolean itemIsDisabled(IWorld world, RunsafeMeta item)
+	public static Boolean itemIsDisabled(IWorld world, RunsafeMeta item)
 	{
 		String worldName = world.getName();
 		return ((disabledItemIDs.containsKey("*") && disabledItemIDs.get("*").contains(item.getItemId())) // Check item IDs
@@ -45,7 +45,7 @@ public class Globals implements IConfigurationChanged
 			|| (disabledItemNames.containsKey(worldName) && disabledItemNames.get(worldName).contains(item.getNormalName())));
 	}
 
-	public Boolean itemIsCraftable(IWorld world, RunsafeMeta item)
+	public static Boolean itemIsCraftable(IWorld world, RunsafeMeta item)
 	{
 		if (world == null)
 			return false;
@@ -55,7 +55,7 @@ public class Globals implements IConfigurationChanged
 			|| (disabledCraftableItems.containsKey(worldName) && disabledCraftableItems.get(worldName).contains(item.getNormalName())));
 	}
 
-	public boolean blockedItemShouldBeRemoved()
+	public static boolean blockedItemShouldBeRemoved()
 	{
 		return removeBlocked;
 	}
@@ -105,9 +105,9 @@ public class Globals implements IConfigurationChanged
 		return commandsShopCreateTagMessage;
 	}
 
-	private final Map<String, List<Integer>> disabledItemIDs = new HashMap<>();
-	private final Map<String, List<String>> disabledItemNames = new HashMap<>();
-	private final Map<String, List<String>> disabledCraftableItems = new HashMap<>();
+	private static final Map<String, List<Integer>> disabledItemIDs = new HashMap<>();
+	private static final Map<String, List<String>> disabledItemNames = new HashMap<>();
+	private static final Map<String, List<String>> disabledCraftableItems = new HashMap<>();
 	private static String craftDenyMessage;
 	private static String enchantContainerLevelsStoredMessage;
 	private static String enchantContainerInventoryFullMessage;
@@ -117,5 +117,5 @@ public class Globals implements IConfigurationChanged
 	private static String tradersLowFundsMessage;
 	private static String commandsShopCreateMessage;
 	private static String commandsShopCreateTagMessage;
-	private boolean removeBlocked;
+	private static boolean removeBlocked;
 }

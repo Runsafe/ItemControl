@@ -72,9 +72,9 @@ public class TradingRepository extends Repository
 				data.shouldCompareLore() ? 1 : 0,
 				data.shouldCompareEnchants() ? 1 : 0,
 				location.getWorld().getName(),
-				Math.floor(location.getBlockX()),
-				Math.floor(location.getBlockY()) ,
-				Math.floor(location.getBlockZ())
+				(double) location.getBlockX(),
+				(double) location.getBlockY(),
+				(double) location.getBlockZ()
 		);
 	}
 
