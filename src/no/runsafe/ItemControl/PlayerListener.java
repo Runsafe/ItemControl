@@ -71,8 +71,18 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 	@Override
 	public void OnCraftItem(RunsafeCraftItemEvent event)
 	{
-		if (event.getRecipe().getResult().is(Item.Transportation.Elytra))
-			event.cancel();
+		IPlayer crafter = event.getWhoClicked();
+		if (crafter == null)
+		{
+			ItemControl.Debugger.debugFine("Invalid player attempted to craft item.");
+			return;
+		}
+
+		if (globals.itemIsCraftable(crafter.getWorld(), event.getRecipe().getResult().getItem()))
+			return;
+
+		event.cancel();
+		crafter.sendColouredMessage(Globals.getCraftDenyMessage());
 	}
 
 	@Override

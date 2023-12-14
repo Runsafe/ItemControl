@@ -16,9 +16,13 @@ public class Globals implements IConfigurationChanged
 	{
 		disabledItemIDs.clear();
 		disabledItemNames.clear();
+		disabledCraftableItems.clear();
 		disabledItemIDs.putAll(config.getConfigSectionsAsIntegerList("disabledItems"));
 		disabledItemNames.putAll(config.getConfigSectionsAsList("disabledItemNames"));
+		disabledCraftableItems.putAll(config.getConfigSectionsAsList("disabledCraftableItems"));
 		removeBlocked = config.getConfigValueAsBoolean("remove.disabledItems");
+
+		craftDenyMessage = config.getConfigValueAsString("message.craftDeny");
 	}
 
 	public Boolean itemIsDisabled(IWorld world, RunsafeMeta item)
@@ -30,13 +34,29 @@ public class Globals implements IConfigurationChanged
 			|| (disabledItemNames.containsKey(worldName) && disabledItemNames.get(worldName).contains(item.getNormalName())));
 	}
 
+	public Boolean itemIsCraftable(IWorld world, RunsafeMeta item)
+	{
+		if (world == null)
+			return false;
+
+		String worldName = world.getName();
+		return ((disabledCraftableItems.containsKey("*") && disabledCraftableItems.get("*").contains(item.getNormalName()))
+			|| (disabledCraftableItems.containsKey(worldName) && disabledCraftableItems.get(worldName).contains(item.getNormalName())));
+	}
+
 	public boolean blockedItemShouldBeRemoved()
 	{
 		return removeBlocked;
 	}
 
+	public static String getCraftDenyMessage()
+	{
+		return craftDenyMessage;
+	}
 
 	private final Map<String, List<Integer>> disabledItemIDs = new HashMap<>();
 	private final Map<String, List<String>> disabledItemNames = new HashMap<>();
+	private final Map<String, List<String>> disabledCraftableItems = new HashMap<>();
+	private static String craftDenyMessage;
 	private boolean removeBlocked;
 }

@@ -5,6 +5,14 @@ disabledItems.Creative: [385]
 disabledItemNames.*: [command block]
 disabledItemNames.Creative: [ender chest]
 remove.disabledItems: true
+disabledCraftableItems:
+  '*':
+  - elytra
+  - purple_shulker_box
+  world:
+  - cake
+message:
+  craftDeny: '&cYou are not allowed to craft this item.'
 spawnerDrop:
   - world
   - world_the_end
