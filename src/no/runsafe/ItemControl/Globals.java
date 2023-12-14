@@ -51,7 +51,7 @@ public class Globals implements IConfigurationChanged
 			return false;
 
 		String worldName = world.getName();
-		return ((disabledCraftableItems.containsKey("*") && disabledCraftableItems.get("*").contains(item.getNormalName()))
+		return !((disabledCraftableItems.containsKey("*") && disabledCraftableItems.get("*").contains(item.getNormalName()))
 			|| (disabledCraftableItems.containsKey(worldName) && disabledCraftableItems.get(worldName).contains(item.getNormalName())));
 	}
 
