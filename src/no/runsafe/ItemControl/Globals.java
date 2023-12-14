@@ -23,6 +23,17 @@ public class Globals implements IConfigurationChanged
 		removeBlocked = config.getConfigValueAsBoolean("remove.disabledItems");
 
 		craftDenyMessage = config.getConfigValueAsString("message.craftDeny");
+
+		enchantContainerLevelsStoredMessage = config.getConfigValueAsString("message.enchantContainer.levelsStored");
+		enchantContainerInventoryFullMessage = config.getConfigValueAsString("message.enchantContainer.inventoryFull");
+		enchantContainerNoLevelsMessage = config.getConfigValueAsString("message.enchantContainer.noLevels");
+		enchantContainerUsedBottleMessage = config.getConfigValueAsString("message.enchantContainer.usedBottle");
+
+		tradersPurchaceCompleteMessage = config.getConfigValueAsString("message.traders.purchaceComplete");
+		tradersLowFundsMessage = config.getConfigValueAsString("message.traders.lowFunds");
+
+		commandsShopCreateMessage = config.getConfigValueAsString("message.commands.shopCreate");
+		commandsShopCreateTagMessage = config.getConfigValueAsString("message.commands.shopCreateTag");
 	}
 
 	public Boolean itemIsDisabled(IWorld world, RunsafeMeta item)
@@ -54,9 +65,57 @@ public class Globals implements IConfigurationChanged
 		return craftDenyMessage;
 	}
 
+	public static String getEnchantContainerLevelsStoredMessage()
+	{
+		return enchantContainerLevelsStoredMessage;
+	}
+
+	public static String getEnchantContainerInventoryFullMessage()
+	{
+		return enchantContainerInventoryFullMessage;
+	}
+
+	public static String getEnchantContainerNoLevelsMessage()
+	{
+		return enchantContainerNoLevelsMessage;
+	}
+
+	public static String getEnchantContainerUsedBottleMessage()
+	{
+		return enchantContainerUsedBottleMessage;
+	}
+
+	public static String getTradersPurchaceCompleteMessage()
+	{
+		return tradersPurchaceCompleteMessage;
+	}
+
+	public static String getTradersLowFundsMessage()
+	{
+		return tradersLowFundsMessage;
+	}
+
+	public static String getCommandsShopCreateMessage()
+	{
+		return commandsShopCreateMessage;
+	}
+
+	public static String getCommandsShopCreateTagMessage()
+	{
+		return commandsShopCreateTagMessage;
+	}
+
 	private final Map<String, List<Integer>> disabledItemIDs = new HashMap<>();
 	private final Map<String, List<String>> disabledItemNames = new HashMap<>();
 	private final Map<String, List<String>> disabledCraftableItems = new HashMap<>();
 	private static String craftDenyMessage;
+	private static String enchantContainerLevelsStoredMessage;
+	private static String enchantContainerInventoryFullMessage;
+	private static String enchantContainerNoLevelsMessage;
+	private static String enchantContainerUsedBottleMessage;
+	private static String tradersPurchaceCompleteMessage;
+	private static String tradersLowFundsMessage;
+	private static String commandsShopCreateMessage;
+	private static String commandsShopCreateTagMessage;
 	private boolean removeBlocked;
 }
