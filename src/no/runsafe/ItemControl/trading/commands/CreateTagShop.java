@@ -1,5 +1,6 @@
 package no.runsafe.ItemControl.trading.commands;
 
+import no.runsafe.ItemControl.Globals;
 import no.runsafe.ItemControl.trading.PurchaseData;
 import no.runsafe.ItemControl.trading.TradingHandler;
 import no.runsafe.ItemControl.trading.commands.Tag.TagArgument;
@@ -35,7 +36,7 @@ public class CreateTagShop extends PlayerCommand
 	public String OnExecute(IPlayer executor, IArgumentList parameters)
 	{
 		String tag = parameters.getValue(TAG_NAME);
-		if (!handler.getAllTags().contains(tag))
+		if (tag == null || tag.contains("%") || !handler.getAllTags().contains(tag))
 			tag = null;
 
 		handler.getCreatingPlayers().put(executor, new PurchaseData(tag,
@@ -44,9 +45,9 @@ public class CreateTagShop extends PlayerCommand
 		));
 
 		if (tag == null)
-			return "&eClick a button to turn it into a shop!";
+			return Globals.getCommandsShopCreateMessage();
 		else
-			return "&eClick a button to turn it into a shop using the tag:" + tag;
+			return String.format(Globals.getCommandsShopCreateTagMessage(), tag);
 	}
 
 	private final TradingHandler handler;

@@ -5,6 +5,25 @@ disabledItems.Creative: [385]
 disabledItemNames.*: [command block]
 disabledItemNames.Creative: [ender chest]
 remove.disabledItems: true
+disabledCraftableItems:
+  '*':
+  - elytra
+  - purple_shulker_box
+  world:
+  - cake
+message:
+  craftDeny: '&cYou are not allowed to craft this item.'
+  enchantContainer:
+    levelsStored: '&eYour levels have been stored in the bottle!'
+    inventoryFull: '&cYour inventory is a bit too full to do that..'
+    noLevels: '&cYou do not have any levels to put in there.'
+    usedBottle: '&aGained %d levels!'
+  traders:
+    purchaceComplete: '&aPurchase complete!'
+    lowFunds: '&cYou do not have enough to buy that!'
+  commands:
+    shopCreate: '&eClick a button to turn it into a shop!'
+    shopCreateTag: '&eClick a button to turn it into a shop using the tag: %s'
 spawnerDrop:
   - world
   - world_the_end

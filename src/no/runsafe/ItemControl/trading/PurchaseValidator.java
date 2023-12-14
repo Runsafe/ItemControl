@@ -1,5 +1,6 @@
 package no.runsafe.ItemControl.trading;
 
+import no.runsafe.ItemControl.Globals;
 import no.runsafe.ItemControl.ItemControl;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.player.IPlayer;
@@ -100,7 +101,7 @@ public class PurchaseValidator
 	{//
 		if (!playerCanPurchase(player))
 		{
-			player.sendColouredMessage("&cYou don't have enough to buy that!");
+			player.sendColouredMessage(Globals.getTradersLowFundsMessage());
 			return;
 		}
 
@@ -132,7 +133,7 @@ public class PurchaseValidator
 		if (location != null)
 			location.playSound(Sound.Item.PickUp, 2F, 0F);
 
-		player.sendColouredMessage("&aPurchase complete!");
+		player.sendColouredMessage(Globals.getTradersPurchaceCompleteMessage());
 	}
 
 	private boolean strictItemMatch(RunsafeMeta item, RunsafeMeta check)

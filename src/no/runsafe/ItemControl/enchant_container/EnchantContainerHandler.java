@@ -1,5 +1,6 @@
 package no.runsafe.ItemControl.enchant_container;
 
+import no.runsafe.ItemControl.Globals;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.event.player.IPlayerRightClick;
@@ -27,7 +28,7 @@ public class EnchantContainerHandler implements IPlayerRightClick
 			int playerLevel = player.getLevel();
 			if (playerLevel <= 0)
 			{
-				player.sendColouredMessage("&cYou do not have any levels to put in there.");
+				player.sendColouredMessage(Globals.getEnchantContainerNoLevelsMessage());
 				return false;
 			}
 
@@ -35,7 +36,7 @@ public class EnchantContainerHandler implements IPlayerRightClick
 
 			if (inventory.getContents().size() >= inventory.getSize())
 			{
-				player.sendColouredMessage("&cYour inventory is a bit too full to do that..");
+				player.sendColouredMessage(Globals.getEnchantContainerInventoryFullMessage());
 				return false;
 			}
 
@@ -46,7 +47,7 @@ public class EnchantContainerHandler implements IPlayerRightClick
 			item.addLore("§3Contains:§f " + playerLevel + " levels");
 			inventory.addItems(item);
 			player.updateInventory();
-			player.sendColouredMessage("&eYour levels have been stored in the bottle!");
+			player.sendColouredMessage(Globals.getEnchantContainerLevelsStoredMessage());
 
 			return false;
 		}
@@ -74,7 +75,7 @@ public class EnchantContainerHandler implements IPlayerRightClick
 			item.setAmount(1);
 			inventory.addItems(item);
 			player.updateInventory();
-			player.sendColouredMessage("&aGained " + levels + " levels!");
+			player.sendColouredMessage(Globals.getEnchantContainerUsedBottleMessage(), levels);
 
 			ILocation playerLocation = player.getLocation();
 			if (playerLocation != null)

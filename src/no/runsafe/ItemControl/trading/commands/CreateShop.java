@@ -1,5 +1,6 @@
 package no.runsafe.ItemControl.trading.commands;
 
+import no.runsafe.ItemControl.Globals;
 import no.runsafe.ItemControl.trading.PurchaseData;
 import no.runsafe.ItemControl.trading.TradingHandler;
 import no.runsafe.framework.api.command.argument.BooleanArgument;
@@ -35,7 +36,7 @@ public class CreateShop extends PlayerCommand
 			parameters.getRequired(COMPARE_LORE), parameters.getRequired(COMPARE_ENCHANTS)
 		));
 
-		return "&eClick a button to turn it into a shop!";
+		return Globals.getCommandsShopCreateMessage();
 	}
 
 	private final TradingHandler handler;
