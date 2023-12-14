@@ -23,10 +23,9 @@ import java.util.List;
 
 public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, ICraftItem, IConfigurationChanged
 {
-	public PlayerListener(IRegionControl worldGuardInterface, Globals globals, SpawnerHandler spawnerHandler)
+	public PlayerListener(IRegionControl worldGuardInterface, SpawnerHandler spawnerHandler)
 	{
 		this.worldGuardInterface = worldGuardInterface;
-		this.globals = globals;
 		this.spawnerHandler = spawnerHandler;
 	}
 
@@ -43,9 +42,9 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 		if (usingItem == null)
 			return;
 
-		if (globals.itemIsDisabled(world, usingItem))
+		if (Globals.itemIsDisabled(world, usingItem))
 		{
-			if (globals.blockedItemShouldBeRemoved())
+			if (Globals.blockedItemShouldBeRemoved())
 				player.removeItem(usingItem.getItemType());
 
 			event.cancel();
@@ -80,7 +79,7 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 		ItemControl.Debugger.debugFine("player: %s attempting to craft item: %s",
 			crafter.getName(), event.getRecipe().getResult().getNormalName());
 
-		if (globals.itemIsCraftable(crafter.getWorld(), event.getRecipe().getResult().getItem()))
+		if (Globals.itemIsCraftable(crafter.getWorld(), event.getRecipe().getResult().getItem()))
 			return;
 
 		event.cancel();
@@ -145,6 +144,5 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 	private final List<String> noDeathItemsWorlds = new ArrayList<>();
 	private final IRegionControl worldGuardInterface;
 
-	private final Globals globals;
 	private final SpawnerHandler spawnerHandler;
 }
