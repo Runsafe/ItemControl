@@ -39,10 +39,14 @@ public class Globals implements IConfigurationChanged
 	public static Boolean itemIsDisabled(IWorld world, RunsafeMeta item)
 	{
 		String worldName = world.getName();
-		return ((disabledItemIDs.containsKey("*") && disabledItemIDs.get("*").contains(item.getItemId())) // Check item IDs
-			|| (disabledItemIDs.containsKey(worldName) && disabledItemIDs.get(worldName).contains(item.getItemId())))
-			|| ((disabledItemNames.containsKey("*") && disabledItemNames.get("*").contains(item.getNormalName())) // Check item names
-			|| (disabledItemNames.containsKey(worldName) && disabledItemNames.get(worldName).contains(item.getNormalName())));
+		return ((disabledItemIDs.containsKey("*") // Check item IDs
+				&& disabledItemIDs.get("*").contains(item.getItemId()))
+			|| (disabledItemIDs.containsKey(worldName)
+				&& disabledItemIDs.get(worldName).contains(item.getItemId())))
+			|| ((disabledItemNames.containsKey("*") // Check item names
+				&& disabledItemNames.get("*").contains(item.getNormalName()))
+			|| (disabledItemNames.containsKey(worldName)
+				&& disabledItemNames.get(worldName).contains(item.getNormalName())));
 	}
 
 	public static Boolean itemIsCraftable(IWorld world, RunsafeMeta item)
@@ -51,8 +55,11 @@ public class Globals implements IConfigurationChanged
 			return false;
 
 		String worldName = world.getName();
-		return ((disabledCraftableItems.containsKey("*") && disabledCraftableItems.get("*").contains(item.getNormalName()))
-			|| (disabledCraftableItems.containsKey(worldName) && disabledCraftableItems.get(worldName).contains(item.getNormalName())));
+		return !((disabledCraftableItems.containsKey("*")
+				&& disabledCraftableItems.get("*").contains(item.getNormalName()))
+			|| (disabledCraftableItems.containsKey(worldName)
+				&& disabledCraftableItems.get(worldName).contains(item.getNormalName()))
+		);
 	}
 
 	public static boolean blockedItemShouldBeRemoved()
