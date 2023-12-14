@@ -77,6 +77,8 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 			ItemControl.Debugger.debugFine("Invalid player attempted to craft item.");
 			return;
 		}
+		ItemControl.Debugger.debugFine("player: %s attempting to craft item: %s",
+			crafter.getName(), event.getRecipe().getResult().getNormalName());
 
 		if (globals.itemIsCraftable(crafter.getWorld(), event.getRecipe().getResult().getItem()))
 			return;
