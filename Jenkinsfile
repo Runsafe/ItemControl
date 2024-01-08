@@ -6,7 +6,7 @@ pipeline {
   }
   environment { plugin = "ItemControl" }
   triggers {
-    upstream '/Runsafe/Framework/master'
+    upstream '/Runsafe/WorldGuardBridge/master'
     pollSCM '@monthly'
   }
   stages {
@@ -16,7 +16,7 @@ pipeline {
         ant 'Default'
         jdk 'Default'
       }
-      steps { buildPluginWithAnt env.plugin, '', 'build/jar/*.jar' }
+      steps { buildPluginWithAnt env.plugin, 'WorldGuardBridge', 'build/jar/*.jar' }
     }
     stage('Deploy to test server') {
       agent { label 'server4' }
