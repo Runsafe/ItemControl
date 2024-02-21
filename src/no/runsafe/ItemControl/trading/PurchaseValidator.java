@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@SuppressWarnings("unchecked")
 public class PurchaseValidator
 {
 	public PurchaseValidator(boolean compareName, boolean compareDurability, boolean compareLore, boolean compareEnchants)

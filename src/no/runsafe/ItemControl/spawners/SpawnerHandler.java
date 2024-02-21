@@ -48,15 +48,7 @@ public class SpawnerHandler implements IConfigurationChanged
 	{
 		if (entityType == null && actor != null)
 		{
-			console.logInformation(
-				"SPAWNER WARNING: %s tried to create/break a NULL spawner [%s,%d,%d,%d]!",
-				actor.getPrettyName(),
-				actor.getWorld().getName(),
-				actor.getLocation().getBlockX(),
-				actor.getLocation().getBlockY(),
-				actor.getLocation().getBlockZ()
-			);
-			return false;
+			LogSpawnerManipulation(null, actor);
 		}
 
 		if (entityType != null && validSpawner.contains(entityType.getName().toLowerCase()))
@@ -65,16 +57,30 @@ public class SpawnerHandler implements IConfigurationChanged
 		if (actor == null)
 			return false;
 
+		LogSpawnerManipulation(entityType, actor);
+		return false;
+	}
+
+	private void LogSpawnerManipulation(RunsafeEntityType entityType, IPlayer actor)
+	{
+		ILocation location = actor.getLocation();
+		if (location == null)
+		{
+			console.logWarning(
+				"SPAWNER WARNING: NULL tried to create/break an invalid %s spawner",
+				entityType == null ? "NULL" : entityType
+			);
+			return;
+		}
 		console.logInformation(
 			"SPAWNER WARNING: %s tried to create/break an invalid %s spawner [%s,%d,%d,%d]!",
 			actor.getPrettyName(),
-			entityType,
-			actor.getWorld().getName(),
-			actor.getLocation().getBlockX(),
-			actor.getLocation().getBlockY(),
-			actor.getLocation().getBlockZ()
+			entityType == null ? "NULL" : entityType,
+			location.getWorld().getName(),
+			location.getBlockX(),
+			location.getBlockY(),
+			location.getBlockZ()
 		);
-		return false;
 	}
 
 	private boolean setSpawnerEntityID(IBlock block, RunsafeEntityType entityType)

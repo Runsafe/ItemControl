@@ -30,7 +30,7 @@ public class List extends ExecutableCommand
 		info.append("&eCurrently used tags:&a\n");
 
 		for(String tag : tags.keySet())
-			info.append("(" + tag + " ID: " + tags.get(tag) + ") ");
+			info.append("(").append(tag).append(" ID: ").append(tags.get(tag)).append(") ");
 
 		return info.toString();
 	}
