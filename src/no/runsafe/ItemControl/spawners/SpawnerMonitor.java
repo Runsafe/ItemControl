@@ -38,7 +38,7 @@ public class SpawnerMonitor implements IBlockBreakEvent, IMobSpawnerPulsed
 		RunsafeItemStack heldItem = thePlayer.getItemInMainHand();
 		final IBlock theBlock = event.getBlock();
 
-		if (!Enchant.SilkTouch.isOn(heldItem) || !handler.spawnerIsHarvestable(thePlayer.getWorld()))
+		if (!Enchant.SilkTouch.isOn(heldItem) || handler.spawnerIsNotHarvestable(thePlayer.getWorld()))
 			return;
 
 		try

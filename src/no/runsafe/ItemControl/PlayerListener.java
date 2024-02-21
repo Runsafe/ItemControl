@@ -31,7 +31,7 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 	@Override
 	public void OnPlayerInteractEvent(RunsafePlayerInteractEvent event)
 	{
-		if (!event.isRightClick())
+		if (event.isNotRightClick())
 			return;
 
 		IPlayer player = event.getPlayer();
@@ -50,10 +50,10 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 		}
 
 		IBlock targetBlock = event.getBlock();
-		if (!player.canBuildNow() || targetBlock == null)
+		if (player.cannotBuild() || targetBlock == null)
 			return;
 
-		if (!(usingItem instanceof RunsafeSpawnEgg) || !spawnerHandler.spawnerIsHarvestable(world))
+		if (!(usingItem instanceof RunsafeSpawnEgg) || spawnerHandler.spawnerIsNotHarvestable(world))
 			return;
 
 		// If the block has an interface or is interact block, don't let them place a spawner

@@ -22,9 +22,9 @@ public class SpawnerHandler implements IConfigurationChanged
 		this.console = console;
 	}
 
-	public boolean spawnerIsHarvestable(IWorld world)
+	public boolean spawnerIsNotHarvestable(IWorld world)
 	{
-		return spawnerWorlds.contains("*") || spawnerWorlds.contains(world.getName());
+		return !spawnerWorlds.contains("*") && !spawnerWorlds.contains(world.getName());
 	}
 
 	public boolean createSpawner(IPlayer actor, ILocation location, RunsafeSpawnEgg spawnEgg)
