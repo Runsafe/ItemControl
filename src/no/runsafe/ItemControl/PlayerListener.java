@@ -56,7 +56,7 @@ public class PlayerListener implements IPlayerInteractEvent, IPlayerDeathEvent, 
 		if (!(usingItem instanceof RunsafeSpawnEgg) || spawnerHandler.spawnerIsNotHarvestable(world))
 			return;
 
-		// If the block has an interface or is interact block, don't let them place a spawner
+		// If the block has an interface or is interactive block, don't let them place a spawner
 		if (event.isCancelled() || targetBlock.hasInterface() || targetBlock.isInteractBlock())
 			return;
 
