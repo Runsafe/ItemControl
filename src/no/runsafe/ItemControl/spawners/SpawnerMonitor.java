@@ -1,5 +1,6 @@
 package no.runsafe.ItemControl.spawners;
 
+import no.runsafe.ItemControl.ItemControl;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.block.IBlock;
@@ -38,6 +39,7 @@ public class SpawnerMonitor implements IBlockBreakEvent, IMobSpawnerPulsed
 		RunsafeItemStack heldItem = thePlayer.getItemInMainHand();
 		final IBlock theBlock = event.getBlock();
 
+		ItemControl.Debugger.debugFine("Player %s attempting to mine spawner", thePlayer.getName());
 		if (!Enchant.SilkTouch.isOn(heldItem) || handler.spawnerIsNotHarvestable(thePlayer.getWorld()))
 			return;
 
@@ -76,6 +78,15 @@ public class SpawnerMonitor implements IBlockBreakEvent, IMobSpawnerPulsed
 	@Override
 	public boolean OnMobSpawnerPulsed(RunsafeLivingEntity entity, ILocation location)
 	{
+		ItemControl.Debugger.debugFine(
+			"Player attempting to place spawner: &e%s&c at (%s,%d,%d,%d)",
+			entity.getRaw().getType().name(),
+			location.getWorld().getName(),
+			location.getBlockX(),
+			location.getBlockY(),
+			location.getBlockZ()
+		);
+
 		if (handler.spawnerTypeValid(entity.getEntityType(), null))
 			return true;
 
