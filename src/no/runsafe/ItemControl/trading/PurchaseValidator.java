@@ -96,12 +96,12 @@ public class PurchaseValidator
 		return StringUtils.join(items, ", ");
 	}
 
-	public void purchase(IPlayer player, String tag, ItemTagIDRepository tagRepository)
+	public boolean purchase(IPlayer player, String tag, ItemTagIDRepository tagRepository)
 	{//
 		if (!playerCanPurchase(player))
 		{
 			player.sendColouredMessage(Globals.getTradersLowFundsMessage());
-			return;
+			return false;
 		}
 
 		RunsafeInventory playerInventory = player.getInventory();
@@ -133,6 +133,7 @@ public class PurchaseValidator
 			location.playSound(Sound.Item.PickUp, 2F, 0F);
 
 		player.sendColouredMessage(Globals.getTradersPurchaceCompleteMessage());
+		return true;
 	}
 
 	private boolean strictItemMatch(RunsafeMeta item, RunsafeMeta check)
