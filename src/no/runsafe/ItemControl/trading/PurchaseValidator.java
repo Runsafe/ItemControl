@@ -97,7 +97,7 @@ public class PurchaseValidator
 	}
 
 	public boolean purchase(IPlayer player, String tag, ItemTagIDRepository tagRepository)
-	{//
+	{
 		if (!playerCanPurchase(player))
 		{
 			player.sendColouredMessage(Globals.getTradersLowFundsMessage());
