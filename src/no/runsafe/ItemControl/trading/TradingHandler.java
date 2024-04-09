@@ -130,7 +130,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 					node.setCompareLore(purchaseData.shouldCompareLore());
 					node.setCompareEnchants(purchaseData.shouldCompareEnchants());
 					editShop(player, node);
-					return true;
+					return false;
 				}
 
 				String shopTag = node.getTag();
@@ -161,8 +161,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		data.get(worldName).add(newData);
 		editShop(player, newData);
 
-
-		return true;
+		return false;
 	}
 
 	private void editShop(IPlayer player, TraderData traderData)
