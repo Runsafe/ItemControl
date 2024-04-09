@@ -135,11 +135,8 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 
 				String shopTag = node.getTag();
 				if (shopTag != null)
-					node.getPurchaseValidator().purchase(player, shopTag, tagRepository);
-				else
-					node.getPurchaseValidator().purchase(player, null, null);
-
-				return true;
+					return node.getPurchaseValidator().purchase(player, shopTag, tagRepository);
+				return node.getPurchaseValidator().purchase(player, null, null);
 			}
 		}
 
