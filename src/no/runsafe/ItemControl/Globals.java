@@ -34,6 +34,7 @@ public class Globals implements IConfigurationChanged
 
 		commandsShopCreateMessage = config.getConfigValueAsString("message.commands.shopCreate");
 		commandsShopCreateTagMessage = config.getConfigValueAsString("message.commands.shopCreateTag");
+		commandsShopDeleteMessage = config.getConfigValueAsString("message.commands.shopDelete");
 	}
 
 	public static Boolean itemIsDisabled(IWorld world, RunsafeMeta item)
@@ -112,6 +113,11 @@ public class Globals implements IConfigurationChanged
 		return commandsShopCreateTagMessage;
 	}
 
+	public static String getCommandsShopDeleteMessage()
+	{
+		return commandsShopDeleteMessage;
+	}
+
 	private static final Map<String, List<Integer>> disabledItemIDs = new HashMap<>();
 	private static final Map<String, List<String>> disabledItemNames = new HashMap<>();
 	private static final Map<String, List<String>> disabledCraftableItems = new HashMap<>();
@@ -124,5 +130,6 @@ public class Globals implements IConfigurationChanged
 	private static String tradersLowFundsMessage;
 	private static String commandsShopCreateMessage;
 	private static String commandsShopCreateTagMessage;
+	private static String commandsShopDeleteMessage;
 	private static boolean removeBlocked;
 }

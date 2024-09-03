@@ -78,6 +78,17 @@ public class TradingRepository extends Repository
 		);
 	}
 
+	public void deleteTrader(ILocation location)
+	{
+		database.execute(
+			"DELETE FROM `" + getTableName() + "` WHERE `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
+			location.getWorld().getName(),
+			(double) location.getBlockX(),
+			(double) location.getBlockY(),
+			(double) location.getBlockZ()
+		);
+	}
+
 	public void deleteTag(String tag)
 	{
 		database.execute("UPDATE `traders` SET `tagName` = NULL WHERE `tagName` = ?;", tag);
