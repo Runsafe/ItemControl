@@ -8,7 +8,7 @@ import no.runsafe.framework.api.player.IPlayer;
 
 public class DeleteShop extends PlayerCommand
 {
-	protected DeleteShop(TradingHandler handler)
+	public DeleteShop(TradingHandler handler)
 	{
 		super("delete", "Deletes a shop", "runsafe.traders.create");
 		this.handler = handler;
