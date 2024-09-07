@@ -10,7 +10,7 @@ public class DeleteShop extends PlayerCommand
 {
 	public DeleteShop(TradingHandler handler)
 	{
-		super("delete", "Deletes a shop", "runsafe.traders.create");
+		super("delete", "Deletes a shop", "runsafe.traders.delete");
 		this.handler = handler;
 	}
 
