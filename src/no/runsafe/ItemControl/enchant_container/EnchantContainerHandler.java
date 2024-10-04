@@ -34,7 +34,7 @@ public class EnchantContainerHandler implements IPlayerRightClick
 
 			RunsafeInventory inventory = player.getInventory();
 
-			if (inventory.getContents().size() >= inventory.getSize())
+			if (player.getInventoryFreeSpaces() < 1)
 			{
 				player.sendColouredMessage(Globals.getEnchantContainerInventoryFullMessage());
 				return false;
