@@ -7,6 +7,7 @@ import no.runsafe.framework.api.event.player.IPlayerRightClickBlock;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
+import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.inventory.RunsafeInventory;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 
@@ -28,6 +29,11 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 
 	@Override
 	public void OnConfigurationChanged(IConfiguration configuration)
+	{
+		reloadTraderData();
+	}
+
+	private void reloadTraderData()
 	{
 		data.clear(); // Clear existing data.
 		List<TraderData> rawData = tradingRepository.getTraders(); // Grab trader data from the database.
@@ -61,6 +67,11 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		return creatingPlayers;
 	}
 
+	public List<IPlayer> getDeletingPlayers()
+	{
+		return deletingPlayers;
+	}
+
 	public boolean createTag(String tag)
 	{
 		if (tag == null || tagRepository.getTags().contains(tag))
@@ -91,6 +102,9 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 	{
 		if (!targetBlock.is(Item.Redstone.Button.Wood) && !targetBlock.is(Item.Redstone.Button.Stone))
 			return true;
+
+		if (handleTraderDeletion(player, targetBlock.getLocation()))
+			return false;
 
 		boolean isEditing = creatingPlayers.containsKey(player);
 		ItemControl.Debugger.debugFine(isEditing ? "Player is editing shop" : "Player not editing shop");
@@ -164,6 +178,22 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		return false;
 	}
 
+	private boolean handleTraderDeletion(IPlayer player, ILocation location)
+	{
+		if (!deletingPlayers.contains(player))
+			return false;
+
+		deletingPlayers.remove(player);
+		ItemControl.Debugger.debugFine(
+			"Player %s is attempting to delete a shop at %s",
+			player.getName(), location.toString()
+		);
+		tradingRepository.deleteTrader(location);
+		reloadTraderData();
+		location.playSound(Sound.Redstone.ComparatorClick, 2F, 0F);
+		return true;
+	}
+
 	private void editShop(IPlayer player, TraderData traderData)
 	{
 		creatingPlayers.remove(player); // Remove the player from the tracking list.
@@ -210,6 +240,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 
 	private final ConcurrentHashMap<String, List<TraderData>> data = new ConcurrentHashMap<>(0);
 	private final Map<IPlayer, PurchaseData> creatingPlayers = new HashMap<>(0);
+	private final List<IPlayer> deletingPlayers = new ArrayList<>(0);
 	private final TradingRepository tradingRepository;
 	private final ItemTagIDRepository tagRepository;
 	private final IScheduler scheduler;

@@ -24,6 +24,7 @@ message:
   commands:
     shopCreate: '&eClick a button to turn it into a shop!'
     shopCreateTag: '&eClick a button to turn it into a shop using the tag: %s'
+    shopDelete: '&eClick a shop button to delete it.'
 spawnerDrop:
   - world
   - world_the_end
