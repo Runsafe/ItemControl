@@ -72,6 +72,11 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		return deletingPlayers;
 	}
 
+    public List<IPlayer> getDebuggingPlayers()
+    {
+        return debuggingPlayers;
+    }
+
 	public boolean createTag(String tag)
 	{
 		if (tag == null || tagRepository.getTags().contains(tag))
@@ -106,52 +111,34 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		if (handleTraderDeletion(player, targetBlock.getLocation()))
 			return false;
 
+		if (handleTraderDebugging(player, targetBlock.getLocation()))
+			return false;
+
 		boolean isEditing = creatingPlayers.containsKey(player);
 		ItemControl.Debugger.debugFine(isEditing ? "Player is editing shop" : "Player not editing shop");
 
 		PurchaseData purchaseData = creatingPlayers.get(player);
 
 		String worldName = player.getWorldName();
-		if (data.containsKey(worldName))
+
+		TraderData targetedTrader = getTraderFromLocation(targetBlock.getLocation());
+		if (targetedTrader != null)
 		{
-			ItemControl.Debugger.debugFine("Traders exist for this world: " + worldName);
-			List<TraderData> nodes = data.get(worldName);
-			for (TraderData node : nodes)
+			if (isEditing)
 			{
-				if (!node.getLocation().getWorld().isWorld(targetBlock.getWorld()))
-				{
-					ItemControl.Debugger.debugFine(
-						"Location is in wrong world." +
-						" Shop: " + node.getLocation().getWorld().getName() +
-						" TargetBlock: " + targetBlock.getWorld().getName()
-					);
-					continue;
-				}
-
-				ItemControl.Debugger.debugFine("Distance checking shop at : " + node.getLocation().toString());
-				if (!(node.getLocation().distance(targetBlock.getLocation()) < 1))
-				{
-					ItemControl.Debugger.debugFine("Location is greater or equal to 1");
-					continue;
-				}
-
-				ItemControl.Debugger.debugFine("Location is less than 1");
-				if (isEditing)
-				{
-					node.setTag(purchaseData.getTag());
-					node.setCompareName(purchaseData.shouldCompareName());
-					node.setCompareDurability(purchaseData.shouldCompareDurability());
-					node.setCompareLore(purchaseData.shouldCompareLore());
-					node.setCompareEnchants(purchaseData.shouldCompareEnchants());
-					editShop(player, node);
-					return false;
-				}
-
-				String shopTag = node.getTag();
-				if (shopTag != null)
-					return node.getPurchaseValidator().purchase(player, shopTag, tagRepository);
-				return node.getPurchaseValidator().purchase(player, null, null);
+				targetedTrader.setTag(purchaseData.getTag());
+				targetedTrader.setCompareName(purchaseData.shouldCompareName());
+				targetedTrader.setCompareDurability(purchaseData.shouldCompareDurability());
+				targetedTrader.setCompareLore(purchaseData.shouldCompareLore());
+				targetedTrader.setCompareEnchants(purchaseData.shouldCompareEnchants());
+				editShop(player, targetedTrader);
+				return false;
 			}
+
+			String shopTag = targetedTrader.getTag();
+			if (shopTag != null)
+				return targetedTrader.getPurchaseValidator().purchase(player, shopTag, tagRepository);
+			return targetedTrader.getPurchaseValidator().purchase(player, null, null);
 		}
 
 		// We're editing but nothing is linked to this button.
@@ -178,6 +165,40 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		return false;
 	}
 
+	private TraderData getTraderFromLocation(ILocation location)
+	{
+		String worldName = location.getWorld().getName();
+		if (!data.containsKey(worldName))
+			return null;
+
+		ItemControl.Debugger.debugFine("Traders exist for this world: " + worldName);
+		List<TraderData> nodes = data.get(worldName);
+		for (TraderData node : nodes)
+		{
+			if (!node.getLocation().getWorld().isWorld(location.getWorld()))
+			{
+				ItemControl.Debugger.debugFine(
+						"Location is in wrong world." +
+								" Shop: " + node.getLocation().getWorld().getName() +
+								" TargetLocation: " + location.getWorld().getName()
+				);
+				continue;
+			}
+
+			ItemControl.Debugger.debugFine("Distance checking shop at : " + node.getLocation().toString());
+			if (!(node.getLocation().distance(location) < 1))
+			{
+				ItemControl.Debugger.debugFine("Location is greater or equal to 1");
+				continue;
+			}
+
+			ItemControl.Debugger.debugFine("Location is less than 1");
+			return node;
+		}
+
+		return null;
+	}
+
 	private boolean handleTraderDeletion(IPlayer player, ILocation location)
 	{
 		if (!deletingPlayers.contains(player))
@@ -191,6 +212,27 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		tradingRepository.deleteTrader(location);
 		reloadTraderData();
 		location.playSound(Sound.Redstone.ComparatorClick, 2F, 0F);
+		return true;
+	}
+
+	private boolean handleTraderDebugging(IPlayer player, ILocation location)
+	{
+		if (!debuggingPlayers.contains(player))
+			return false;
+
+		debuggingPlayers.remove(player);
+
+		TraderData shop = getTraderFromLocation(location);
+		player.sendColouredMessage("&5Getting information for trader.&r");
+		player.sendColouredMessage("&9Location: &r" + shop.getLocation().toString());
+		player.sendColouredMessage("&9Compare Item Name: &r" + (shop.shouldCompareName() ? "True" : "False"));
+		player.sendColouredMessage("&9Compare Durability: &r" + (shop.shouldCompareDurability() ? "True" : "False"));
+		player.sendColouredMessage("&9Compare Lore: &r" + (shop.shouldCompareLore() ? "True" : "False"));
+		player.sendColouredMessage("&9Compare Enchants: &r" + (shop.shouldCompareEnchants() ? "True" : "False"));
+		if (shop.getTag() != null)
+			player.sendColouredMessage("&9 Using the shop tag: &r" + shop.getTag());
+
+
 		return true;
 	}
 
@@ -241,6 +283,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 	private final ConcurrentHashMap<String, List<TraderData>> data = new ConcurrentHashMap<>(0);
 	private final Map<IPlayer, PurchaseData> creatingPlayers = new HashMap<>(0);
 	private final List<IPlayer> deletingPlayers = new ArrayList<>(0);
+	private final List<IPlayer> debuggingPlayers = new ArrayList<>(0);
 	private final TradingRepository tradingRepository;
 	private final ItemTagIDRepository tagRepository;
 	private final IScheduler scheduler;

@@ -53,6 +53,7 @@ public class ItemControl extends RunsafeConfigurablePlugin
 		traderCommand.addSubCommand(getInstance(CreateTagShop.class));
 		traderCommand.addSubCommand(getInstance(CreateShop.class));
 		traderCommand.addSubCommand(getInstance(DeleteShop.class));
+		traderCommand.addSubCommand(getInstance(Info.class));
 
 		Command tag = new Command("tag", "Shop tag ID commands.", null);
 		tag.addSubCommand(getInstance(Create.class));
