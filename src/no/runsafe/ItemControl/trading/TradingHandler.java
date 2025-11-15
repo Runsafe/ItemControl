@@ -19,9 +19,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class TradingHandler implements IConfigurationChanged, IPlayerRightClickBlock
 {
-	public TradingHandler(TradingRepository tradingRepository, ItemTagIDRepository tagRepository, IScheduler scheduler, IServer server)
+	public TradingHandler(TradingRepository tradingRepository, PlayerTransactionRepository playerTransactionRepository, ItemTagIDRepository tagRepository, IScheduler scheduler, IServer server)
 	{
 		this.tradingRepository = tradingRepository;
+		this.playerTransactionRepository = playerTransactionRepository;
 		this.tagRepository = tagRepository;
 		this.scheduler = scheduler;
 		this.server = server;
@@ -90,6 +91,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 	{
 		tradingRepository.deleteTag(tag);
 		tagRepository.deleteTag(tag);
+		playerTransactionRepository.deleteTagRecords(tag);
 	}
 
 	public List<String> getAllTags()
@@ -137,7 +139,10 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 
 			String shopTag = targetedTrader.getTag();
 			if (shopTag != null)
+			{
+				playerTransactionRepository.recordPurchase(player, shopTag);
 				return targetedTrader.getPurchaseValidator().purchase(player, shopTag, tagRepository);
+			}
 			return targetedTrader.getPurchaseValidator().purchase(player, null, null);
 		}
 
@@ -285,6 +290,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 	private final List<IPlayer> deletingPlayers = new ArrayList<>(0);
 	private final List<IPlayer> debuggingPlayers = new ArrayList<>(0);
 	private final TradingRepository tradingRepository;
+	private final PlayerTransactionRepository playerTransactionRepository;
 	private final ItemTagIDRepository tagRepository;
 	private final IScheduler scheduler;
 	private final IServer server;
