@@ -5,10 +5,7 @@ import no.runsafe.ItemControl.spawners.SpawnerHandler;
 import no.runsafe.ItemControl.spawners.SpawnerMonitor;
 import no.runsafe.ItemControl.trading.*;
 import no.runsafe.ItemControl.trading.commands.*;
-import no.runsafe.ItemControl.trading.commands.Tag.Create;
-import no.runsafe.ItemControl.trading.commands.Tag.Delete;
-import no.runsafe.ItemControl.trading.commands.Tag.List;
-import no.runsafe.ItemControl.trading.commands.Tag.TagArgument;
+import no.runsafe.ItemControl.trading.commands.Tag.*;
 import no.runsafe.framework.RunsafeConfigurablePlugin;
 import no.runsafe.framework.api.command.Command;
 import no.runsafe.framework.api.log.IDebug;
@@ -60,6 +57,8 @@ public class ItemControl extends RunsafeConfigurablePlugin
 		tag.addSubCommand(getInstance(Create.class));
 		tag.addSubCommand(getInstance(Delete.class));
 		tag.addSubCommand(getInstance(List.class));
+		tag.addSubCommand(getInstance(Assign.class));
+		tag.addSubCommand(getInstance(Remove.class));
 		traderCommand.addSubCommand(tag);
 
 		plugin = this;

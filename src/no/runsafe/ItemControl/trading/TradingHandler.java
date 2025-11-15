@@ -73,10 +73,20 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		return deletingPlayers;
 	}
 
-    public List<IPlayer> getDebuggingPlayers()
-    {
-        return debuggingPlayers;
-    }
+	public List<IPlayer> getDebuggingPlayers()
+	{
+		return debuggingPlayers;
+	}
+
+	public Map<IPlayer, String> getTagAddingPlayers()
+	{
+		return tagAddingPlayers;
+	}
+
+	public List<IPlayer> getTagRemovingPlayers()
+	{
+		return tagRemovingPlayers;
+	}
 
 	public boolean createTag(String tag)
 	{
@@ -110,10 +120,17 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		if (!targetBlock.is(Item.Redstone.Button.Wood) && !targetBlock.is(Item.Redstone.Button.Stone))
 			return true;
 
-		if (handleTraderDeletion(player, targetBlock.getLocation()))
+		ILocation targetBlockLoc = targetBlock.getLocation();
+		if (handleTraderDeletion(player, targetBlockLoc))
 			return false;
 
-		if (handleTraderDebugging(player, targetBlock.getLocation()))
+		if (handleTraderDebugging(player, targetBlockLoc))
+			return false;
+
+		if (handleTraderTagAssign(player, targetBlockLoc))
+			return false;
+
+		if(handleTraderTagRemoval(player, targetBlockLoc))
 			return false;
 
 		boolean isEditing = creatingPlayers.containsKey(player);
@@ -123,7 +140,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 
 		String worldName = player.getWorldName();
 
-		TraderData targetedTrader = getTraderFromLocation(targetBlock.getLocation());
+		TraderData targetedTrader = getTraderFromLocation(targetBlockLoc);
 		if (targetedTrader != null)
 		{
 			if (isEditing)
@@ -152,7 +169,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 
 		ItemControl.Debugger.debugFine("Shop does not exist, creating new.");
 		RunsafeInventory inventory = server.createInventory(null, 27);
-		TraderData newData = new TraderData(targetBlock.getLocation(), inventory, purchaseData.getTag(),
+		TraderData newData = new TraderData(targetBlockLoc, inventory, purchaseData.getTag(),
 			purchaseData.shouldCompareName(), purchaseData.shouldCompareDurability(),
 			purchaseData.shouldCompareLore(), purchaseData.shouldCompareEnchants()
 		);
@@ -241,6 +258,43 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		return true;
 	}
 
+	private boolean handleTraderTagAssign(IPlayer player, ILocation location)
+	{
+		if (!tagAddingPlayers.containsKey(player))
+			return false;
+
+		String tag = tagAddingPlayers.get(player);
+		tagAddingPlayers.remove(player);
+
+		TraderData targetedTrader = getTraderFromLocation(location);
+		if (targetedTrader == null)
+			return true;
+
+		targetedTrader.setTag(tag);
+		tradingRepository.updateTrader(targetedTrader);
+		reloadTraderData();
+
+		return true;
+	}
+
+	private boolean handleTraderTagRemoval(IPlayer player, ILocation location)
+	{
+		if (!tagRemovingPlayers.contains(player))
+			return false;
+
+		tagRemovingPlayers.remove(player);
+
+		TraderData targetedTrader = getTraderFromLocation(location);
+		if (targetedTrader == null)
+			return true;
+
+		targetedTrader.setTag(null);
+		tradingRepository.updateTrader(targetedTrader);
+		reloadTraderData();
+
+		return true;
+	}
+
 	private void editShop(IPlayer player, TraderData traderData)
 	{
 		creatingPlayers.remove(player); // Remove the player from the tracking list.
@@ -289,6 +343,8 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 	private final Map<IPlayer, PurchaseData> creatingPlayers = new HashMap<>(0);
 	private final List<IPlayer> deletingPlayers = new ArrayList<>(0);
 	private final List<IPlayer> debuggingPlayers = new ArrayList<>(0);
+	private final Map<IPlayer, String> tagAddingPlayers = new HashMap<>(0);
+	private final List<IPlayer> tagRemovingPlayers = new ArrayList<>(0);
 	private final TradingRepository tradingRepository;
 	private final PlayerTransactionRepository playerTransactionRepository;
 	private final ItemTagIDRepository tagRepository;
