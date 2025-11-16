@@ -121,17 +121,15 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 			return true;
 
 		ILocation targetBlockLoc = targetBlock.getLocation();
-		if (handleTraderDeletion(player, targetBlockLoc))
+		if (handleTraderDeletion(player, targetBlockLoc)
+			|| handleTraderDebugging(player, targetBlockLoc)
+			|| handleTraderTagAssign(player, targetBlockLoc)
+			|| handleTraderTagRemoval(player, targetBlockLoc)
+		)
+		{
+			targetBlockLoc.playSound(Sound.Redstone.ComparatorClick, 2F, 0F);
 			return false;
-
-		if (handleTraderDebugging(player, targetBlockLoc))
-			return false;
-
-		if (handleTraderTagAssign(player, targetBlockLoc))
-			return false;
-
-		if(handleTraderTagRemoval(player, targetBlockLoc))
-			return false;
+		}
 
 		boolean isEditing = creatingPlayers.containsKey(player);
 		ItemControl.Debugger.debugFine(isEditing ? "Player is editing shop" : "Player not editing shop");
@@ -151,6 +149,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 				targetedTrader.setCompareLore(purchaseData.shouldCompareLore());
 				targetedTrader.setCompareEnchants(purchaseData.shouldCompareEnchants());
 				editShop(player, targetedTrader);
+				targetBlockLoc.playSound(Sound.Redstone.ComparatorClick, 2F, 0F);
 				return false;
 			}
 
@@ -183,6 +182,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 
 		data.get(worldName).add(newData);
 		editShop(player, newData);
+		targetBlockLoc.playSound(Sound.Redstone.ComparatorClick, 2F, 0F);
 
 		return false;
 	}
@@ -233,7 +233,6 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		);
 		tradingRepository.deleteTrader(location);
 		reloadTraderData();
-		location.playSound(Sound.Redstone.ComparatorClick, 2F, 0F);
 		return true;
 	}
 
