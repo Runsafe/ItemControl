@@ -22,7 +22,7 @@ public class  PlayerTransactionRepository extends Repository
 	public void recordPurchase(IPlayer player, String tag)
 	{
 		database.execute(
-			"INSERT INTO `" + getTableName() + "` (`tag`,`name`,`purchases`) VALUES (?, ?, 1) " +
+			"INSERT INTO `" + getTableName() + "` (`tag`,`player`,`purchases`) VALUES (?, ?, 1) " +
 				"ON DUPLICATE KEY UPDATE `purchases`= purchases + 1",
 			tag, player
 		);
