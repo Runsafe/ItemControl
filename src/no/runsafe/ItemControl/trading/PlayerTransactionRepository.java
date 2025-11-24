@@ -70,7 +70,7 @@ public class  PlayerTransactionRepository extends Repository
 				"`tag` VARCHAR(32) NOT NULL," +
 				"`player` varchar(36) NOT NULL," +
 				"`purchases` int NOT NULL DEFAULT 0" +
-				"PRIMARY KEY(`tag`,`player)" +
+				"PRIMARY KEY(`tag`,`player`)" +
 			")"
 		);
 		return updates;
