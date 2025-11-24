@@ -1,11 +1,13 @@
 package no.runsafe.ItemControl;
 
 import no.runsafe.framework.api.IConfiguration;
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +38,17 @@ public class Globals implements IConfigurationChanged
 		commandsShopCreateTagMessage = config.getConfigValueAsString("message.commands.shopCreateTag");
 		commandsShopDeleteMessage = config.getConfigValueAsString("message.commands.shopDelete");
 		commandsShopInfoMessage = config.getConfigValueAsString("message.commands.shopInfo");
+
+		//TODO allow for multiple tag scoreboard signs
+		String tag = config.getConfigValueAsString("shopSigns.tag");
+		ILocation signUsername = config.getConfigValueAsLocation("shopSigns.playerList.location");
+		ILocation signScore = config.getConfigValueAsLocation("shopSigns.playerScore.location");
+		if (signUsername == null || signScore == null || tag == null)
+			return;
+		List<ILocation> signList = new LinkedList<>();
+		signList.add(signUsername);
+		signList.add(signScore);
+		shopScoreboardList.put(tag, signList);
 	}
 
 	public static Boolean itemIsDisabled(IWorld world, RunsafeMeta item)
@@ -124,9 +137,15 @@ public class Globals implements IConfigurationChanged
 		return commandsShopInfoMessage;
 	}
 
+	public static Map<String, List<ILocation>> getShopScoreboardList()
+	{
+		return shopScoreboardList;
+	}
+
 	private static final Map<String, List<Integer>> disabledItemIDs = new HashMap<>();
 	private static final Map<String, List<String>> disabledItemNames = new HashMap<>();
 	private static final Map<String, List<String>> disabledCraftableItems = new HashMap<>();
+	private static final Map<String, List<ILocation>> shopScoreboardList = new HashMap<>();
 	private static String craftDenyMessage;
 	private static String enchantContainerLevelsStoredMessage;
 	private static String enchantContainerInventoryFullMessage;

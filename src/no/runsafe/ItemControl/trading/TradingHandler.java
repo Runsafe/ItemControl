@@ -1,8 +1,10 @@
 package no.runsafe.ItemControl.trading;
 
+import no.runsafe.ItemControl.Globals;
 import no.runsafe.ItemControl.ItemControl;
 import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.block.IBlock;
+import no.runsafe.framework.api.block.ISign;
 import no.runsafe.framework.api.event.player.IPlayerRightClickBlock;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.player.IPlayer;
@@ -32,6 +34,9 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 	public void OnConfigurationChanged(IConfiguration configuration)
 	{
 		reloadTraderData();
+
+		shopScoreSignList.clear();
+		shopScoreSignList.putAll(Globals.getShopScoreboardList());
 	}
 
 	private void reloadTraderData()
@@ -156,6 +161,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 			String shopTag = targetedTrader.getTag();
 			if (shopTag != null)
 			{
+				updateSigns(shopTag);
 				playerTransactionRepository.recordPurchase(player, shopTag);
 				return targetedTrader.getPurchaseValidator().purchase(player, shopTag, tagRepository);
 			}
@@ -338,12 +344,84 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		}, 10, 10);
 	}
 
+	private void updateSigns(String tag)
+	{
+		if (shopScoreSignList.isEmpty() || !shopScoreSignList.containsKey(tag))
+			return;
+
+		List<ILocation> shopSigns = shopScoreSignList.get(tag);
+
+		if (shopSigns.size() != 2)
+		{
+			ItemControl.Debugger.debugFine("Failed to update shop signs for %s, wrong number of sign locations.", tag);
+			return;
+		}
+
+		Map<IPlayer, Integer> playerList = playerTransactionRepository.getTopPlayers(tag);
+
+		IBlock signBlockUsernames = shopSigns.get(0).getBlock();
+		IBlock signBlockScores = shopSigns.get(1).getBlock();
+
+		if (!(signBlockUsernames instanceof ISign) || !(signBlockScores instanceof ISign))
+		{
+			ItemControl.Debugger.debugFine("Failed to update shop signs for %s, block locatinos are not signs.", tag);
+			return;
+		}
+
+		if (playerList.isEmpty())
+		{
+			((ISign) signBlockUsernames).setLine( 0, "");
+			((ISign) signBlockUsernames).setLine(1, "N/A");
+			((ISign) signBlockUsernames).setLine(2, "");
+			((ISign) signBlockUsernames).setLine(3, "");
+
+			((ISign) signBlockScores).setLine(0, "");
+			((ISign) signBlockScores).setLine(1, "N/A");
+			((ISign) signBlockScores).setLine(2, "");
+			((ISign) signBlockScores).setLine(3, "");
+
+			return;
+		}
+
+		int line = 0;
+		for (Map.Entry<IPlayer, Integer> node : playerList.entrySet())
+		{
+			String username = node.getKey().getName();
+			int score = node.getValue();
+
+			((ISign) signBlockUsernames).setLine(line, username);
+			((ISign) signBlockScores).setLine(line, score + " " + tag);
+
+			line++;
+			if (line == 4)
+				return;
+		}
+
+		// make sure remaining lines are blank if sign score has been reset
+		if (line < 2)
+		{
+			((ISign) signBlockUsernames).setLine(1, "");
+			((ISign) signBlockScores).setLine(1, "");
+		}
+		if (line < 3)
+		{
+			((ISign) signBlockUsernames).setLine(2, "");
+			((ISign) signBlockScores).setLine(2, "");
+		}
+		if (line < 4)
+		{
+			((ISign) signBlockUsernames).setLine(3, "");
+			((ISign) signBlockScores).setLine(3, "");
+		}
+	}
+
 	private final ConcurrentHashMap<String, List<TraderData>> data = new ConcurrentHashMap<>(0);
 	private final Map<IPlayer, PurchaseData> creatingPlayers = new HashMap<>(0);
 	private final List<IPlayer> deletingPlayers = new ArrayList<>(0);
 	private final List<IPlayer> debuggingPlayers = new ArrayList<>(0);
 	private final Map<IPlayer, String> tagAddingPlayers = new HashMap<>(0);
 	private final List<IPlayer> tagRemovingPlayers = new ArrayList<>(0);
+	private final Map<String, List<ILocation>> shopScoreSignList = new HashMap<>(0);
 	private final TradingRepository tradingRepository;
 	private final PlayerTransactionRepository playerTransactionRepository;
 	private final ItemTagIDRepository tagRepository;
