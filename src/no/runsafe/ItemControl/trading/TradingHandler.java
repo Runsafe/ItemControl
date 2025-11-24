@@ -162,8 +162,11 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 			if (shopTag != null)
 			{
 				updateSigns(shopTag);
+				if (!targetedTrader.getPurchaseValidator().purchase(player, shopTag, tagRepository))
+					return false;
+
 				playerTransactionRepository.recordPurchase(player, shopTag);
-				return targetedTrader.getPurchaseValidator().purchase(player, shopTag, tagRepository);
+				return true;
 			}
 			return targetedTrader.getPurchaseValidator().purchase(player, null, null);
 		}
