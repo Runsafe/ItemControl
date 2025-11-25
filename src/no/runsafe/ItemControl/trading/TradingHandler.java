@@ -349,6 +349,8 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 
 	private void updateSigns(String tag)
 	{
+		ItemControl.Debugger.debugFine("Attempting to update signs for tag: %s", tag);
+
 		if (shopScoreSignList.isEmpty() || !shopScoreSignList.containsKey(tag))
 			return;
 
