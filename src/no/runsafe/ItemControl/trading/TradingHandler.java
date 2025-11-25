@@ -394,6 +394,8 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 			((ISign) signBlockScores).setLine(2, "");
 			((ISign) signBlockScores).setLine(3, "");
 
+			((ISign) signBlockUsernames).update(true);
+			((ISign) signBlockScores).update(true);
 			return;
 		}
 
@@ -408,7 +410,11 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 
 			line++;
 			if (line == 4)
+			{
+				((ISign) signBlockUsernames).update(true);
+				((ISign) signBlockScores).update(true);
 				return;
+			}
 		}
 
 		// make sure remaining lines are blank if sign score has been reset
@@ -427,6 +433,9 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 			((ISign) signBlockUsernames).setLine(3, "");
 			((ISign) signBlockScores).setLine(3, "");
 		}
+
+		((ISign) signBlockUsernames).update(true);
+		((ISign) signBlockScores).update(true);
 	}
 
 	private final ConcurrentHashMap<String, List<TraderData>> data = new ConcurrentHashMap<>(0);
