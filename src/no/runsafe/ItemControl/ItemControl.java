@@ -59,6 +59,7 @@ public class ItemControl extends RunsafeConfigurablePlugin
 		tag.addSubCommand(getInstance(List.class));
 		tag.addSubCommand(getInstance(Assign.class));
 		tag.addSubCommand(getInstance(Remove.class));
+		tag.addSubCommand(getInstance(ResetScore.class));
 		traderCommand.addSubCommand(tag);
 
 		plugin = this;

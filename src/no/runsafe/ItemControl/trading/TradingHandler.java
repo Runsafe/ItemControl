@@ -109,6 +109,11 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		playerTransactionRepository.deleteTagRecords(tag);
 	}
 
+	public void deleteTagPlayerScore(String tag)
+	{
+		playerTransactionRepository.deleteTagRecords(tag);
+	}
+
 	public List<String> getAllTags()
 	{
 		return tagRepository.getTags();
