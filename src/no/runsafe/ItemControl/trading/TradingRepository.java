@@ -22,7 +22,7 @@ public class TradingRepository extends Repository
 		List<TraderData> data = new ArrayList<>(0);
 		for (IRow row : database.query(
 			"SELECT `inventory`,`tagName`,`compareName`,`compareDurability`," +
-					"`compareLore`,`compareEnchants`,`world`, `x`, `y`, `z` FROM `traders`"
+					"`compareLore`,`compareEnchants`,`shouldPrintTagID`,`world`, `x`, `y`, `z` FROM `traders`"
 		))
 		{
 			RunsafeInventory inventory = server.createInventory(null, 27);
@@ -31,9 +31,11 @@ public class TradingRepository extends Repository
 			int compareDurability = row.Integer("compareDurability");
 			int compareLore = row.Integer("compareLore");
 			int compareEnchants = row.Integer("compareEnchants");
+			int shouldPrintTagID = row.Integer("shouldPrintTagID");
 
 			data.add(new TraderData(row.Location(), inventory, row.String("tagName"),
-				(compareName != 0), (compareDurability != 0), (compareLore != 0), (compareEnchants != 0)
+				(compareName != 0), (compareDurability != 0), (compareLore != 0), (compareEnchants != 0),
+				(shouldPrintTagID != 0)
 			));
 		}
 
@@ -45,13 +47,14 @@ public class TradingRepository extends Repository
 		ILocation location = data.getLocation();
 		database.execute(
 				"INSERT INTO `traders` (`inventory`, `tagName`, `compareName`, `compareDurability`, " +
-					"`compareLore`, `compareEnchants`, `world`, `x`, `y`, `z`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+					"`compareLore`, `compareEnchants`, `shouldPrintTagID`, `world`, `x`, `y`, `z`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 				data.getInventory().serialize(),
 				data.getTag(),
 				data.shouldCompareName() ? 1 : 0,
 				data.shouldCompareDurability() ? 1 : 0,
 				data.shouldCompareLore() ? 1 : 0,
 				data.shouldCompareEnchants() ? 1 : 0,
+				data.shouldPrintTagID() ? 1 : 0,
 				location.getWorld().getName(),
 				location.getX(),
 				location.getY(),
@@ -64,13 +67,14 @@ public class TradingRepository extends Repository
 		ILocation location = data.getLocation();
 		database.execute(
 				"UPDATE `traders` SET `inventory` = ?, `tagName` = ?, `compareName` = ?, `compareDurability` = ?," +
-					"`compareLore` = ?,`compareEnchants` = ? WHERE `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
+					"`compareLore` = ?,`compareEnchants` = ?, `shouldPrintTagID` = ?, WHERE `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
 				data.getInventory().serialize(),
 				data.getTag(),
 				data.shouldCompareName() ? 1 : 0,
 				data.shouldCompareDurability() ? 1 : 0,
 				data.shouldCompareLore() ? 1 : 0,
 				data.shouldCompareEnchants() ? 1 : 0,
+				data.shouldPrintTagID() ? 1 : 0,
 				location.getWorld().getName(),
 				(double) location.getBlockX(),
 				(double) location.getBlockY(),
@@ -153,6 +157,8 @@ public class TradingRepository extends Repository
 				"ADD COLUMN `compareLore` TINYINT(2) NOT NULL DEFAULT 1 AFTER `compareDurability`," +
 				"ADD COLUMN `compareEnchants` TINYINT(2) NOT NULL DEFAULT 1 AFTER `compareLore`;"
 		);
+
+		updates.addQueries("ALTER TABLE `traders` ADD COLUMN `shouldPrintTagID` TINYINT(2) NOT NULL DEFAULT 1 AFTER `compareEnchants`");
 
 		return updates;
 	}

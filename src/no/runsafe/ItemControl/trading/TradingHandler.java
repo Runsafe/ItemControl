@@ -158,6 +158,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 				targetedTrader.setCompareDurability(purchaseData.shouldCompareDurability());
 				targetedTrader.setCompareLore(purchaseData.shouldCompareLore());
 				targetedTrader.setCompareEnchants(purchaseData.shouldCompareEnchants());
+				targetedTrader.setShouldPrintTagID(purchaseData.shouldPrintTagID());
 				editShop(player, targetedTrader);
 				targetBlockLoc.playSound(Sound.Redstone.ComparatorClick, 2F, 0F);
 				return false;
@@ -167,8 +168,12 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 			if (shopTag != null)
 			{
 				updateSigns(shopTag);
-				if (!targetedTrader.getPurchaseValidator().purchase(player, shopTag, tagRepository))
-					return false;
+				if (targetedTrader.shouldPrintTagID())
+					if (!targetedTrader.getPurchaseValidator().purchase(player, shopTag, tagRepository))
+						return false;
+				else
+					if (!targetedTrader.getPurchaseValidator().purchase(player, null, null))
+						return false;
 
 				playerTransactionRepository.recordPurchase(player, shopTag);
 				return true;
@@ -184,7 +189,8 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		RunsafeInventory inventory = server.createInventory(null, 27);
 		TraderData newData = new TraderData(targetBlockLoc, inventory, purchaseData.getTag(),
 			purchaseData.shouldCompareName(), purchaseData.shouldCompareDurability(),
-			purchaseData.shouldCompareLore(), purchaseData.shouldCompareEnchants()
+			purchaseData.shouldCompareLore(), purchaseData.shouldCompareEnchants(),
+			purchaseData.shouldPrintTagID()
 		);
 		tradingRepository.persistTrader(newData);
 
@@ -264,8 +270,9 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		player.sendColouredMessage("&9Compare Durability: &r" + (shop.shouldCompareDurability() ? "True" : "False"));
 		player.sendColouredMessage("&9Compare Lore: &r" + (shop.shouldCompareLore() ? "True" : "False"));
 		player.sendColouredMessage("&9Compare Enchants: &r" + (shop.shouldCompareEnchants() ? "True" : "False"));
+		player.sendColouredMessage("&9Prints tag ID number: &r" + (shop.shouldPrintTagID() ? "True" : "False"));
 		if (shop.getTag() != null)
-			player.sendColouredMessage("&9 Using the shop tag: &r" + shop.getTag());
+			player.sendColouredMessage("&9Using the shop tag: &r" + shop.getTag());
 
 
 		return true;
