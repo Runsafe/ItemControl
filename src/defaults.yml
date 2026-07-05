@@ -11,6 +11,7 @@ disabledCraftableItems:
   - purple_shulker_box
   world:
   - cake
+tradersShopCooldownMilliseconds: 500
 message:
   craftDeny: '&cYou are not allowed to craft this item.'
   enchantContainer:
@@ -21,6 +22,7 @@ message:
   traders:
     purchaceComplete: '&aPurchase complete!'
     lowFunds: '&cYou do not have enough to buy that!'
+    timeOut: '&cClicking too fast, please wait a moment.'
   commands:
     shopCreate: '&eClick a button to turn it into a shop!'
     shopCreateTag: '&eClick a button to turn it into a shop using the tag: %s'

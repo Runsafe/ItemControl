@@ -23,6 +23,7 @@ public class Globals implements IConfigurationChanged
 		disabledItemNames.putAll(config.getConfigSectionsAsList("disabledItemNames"));
 		disabledCraftableItems.putAll(config.getConfigSectionsAsList("disabledCraftableItems"));
 		removeBlocked = config.getConfigValueAsBoolean("remove.disabledItems");
+		tradersShopCooldownMilliseconds = config.getConfigValueAsInt("tradersShopCooldownMilliseconds");
 
 		craftDenyMessage = config.getConfigValueAsString("message.craftDeny");
 
@@ -33,6 +34,7 @@ public class Globals implements IConfigurationChanged
 
 		tradersPurchaceCompleteMessage = config.getConfigValueAsString("message.traders.purchaceComplete");
 		tradersLowFundsMessage = config.getConfigValueAsString("message.traders.lowFunds");
+		tradersTimedOutMessage = config.getConfigValueAsString("message.traders.timeOut");
 
 		commandsShopCreateMessage = config.getConfigValueAsString("message.commands.shopCreate");
 		commandsShopCreateTagMessage = config.getConfigValueAsString("message.commands.shopCreateTag");
@@ -77,6 +79,11 @@ public class Globals implements IConfigurationChanged
 		);
 	}
 
+	public static int getTradersShopCooldownMilliseconds()
+	{
+		return tradersShopCooldownMilliseconds;
+	}
+
 	public static boolean blockedItemShouldBeRemoved()
 	{
 		return removeBlocked;
@@ -117,6 +124,11 @@ public class Globals implements IConfigurationChanged
 		return tradersLowFundsMessage;
 	}
 
+	public static String getTradersTimedOutMessage()
+	{
+		return tradersTimedOutMessage;
+	}
+
 	public static String getCommandsShopCreateMessage()
 	{
 		return commandsShopCreateMessage;
@@ -146,6 +158,7 @@ public class Globals implements IConfigurationChanged
 	private static final Map<String, List<String>> disabledItemNames = new HashMap<>();
 	private static final Map<String, List<String>> disabledCraftableItems = new HashMap<>();
 	private static final Map<String, List<ILocation>> shopScoreboardList = new HashMap<>();
+	private static int tradersShopCooldownMilliseconds;
 	private static String craftDenyMessage;
 	private static String enchantContainerLevelsStoredMessage;
 	private static String enchantContainerInventoryFullMessage;
@@ -153,6 +166,7 @@ public class Globals implements IConfigurationChanged
 	private static String enchantContainerUsedBottleMessage;
 	private static String tradersPurchaceCompleteMessage;
 	private static String tradersLowFundsMessage;
+	private static String tradersTimedOutMessage;
 	private static String commandsShopCreateMessage;
 	private static String commandsShopCreateTagMessage;
 	private static String commandsShopDeleteMessage;
