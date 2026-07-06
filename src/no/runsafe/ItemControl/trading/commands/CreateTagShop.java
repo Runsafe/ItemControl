@@ -22,7 +22,8 @@ public class CreateTagShop extends PlayerCommand
 			new BooleanArgument(COMPARE_DURABILITY).withDefault(true),
 			new BooleanArgument(COMPARE_LORE).withDefault(true),
 			new BooleanArgument(COMPARE_ENCHANTS).withDefault(true),
-			new BooleanArgument(PRINT_TAG_ID).withDefault(true)
+			new BooleanArgument(PRINT_TAG_ID).withDefault(true),
+			new BooleanArgument(HAS_COOLDOWN).withDefault(false)
 		);
 		this.handler = handler;
 	}
@@ -33,6 +34,7 @@ public class CreateTagShop extends PlayerCommand
 	private static final String COMPARE_LORE = "compareLore";
 	private static final String COMPARE_ENCHANTS = "compareEnchants";
 	private static final String PRINT_TAG_ID = "printTagID";
+	private static final String HAS_COOLDOWN = "hasCooldown";
 
 	@Override
 	public String OnExecute(IPlayer executor, IArgumentList parameters)
@@ -44,7 +46,7 @@ public class CreateTagShop extends PlayerCommand
 		handler.getCreatingPlayers().put(executor, new PurchaseData(tag,
 			parameters.getRequired(COMPARE_NAME), parameters.getRequired(COMPARE_DURABILITY),
 			parameters.getRequired(COMPARE_LORE), parameters.getRequired(COMPARE_ENCHANTS),
-			parameters.getRequired(PRINT_TAG_ID)
+			parameters.getRequired(PRINT_TAG_ID), parameters.getRequired(HAS_COOLDOWN)
 		));
 
 		if (tag == null)

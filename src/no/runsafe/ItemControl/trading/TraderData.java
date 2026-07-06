@@ -9,7 +9,8 @@ import javax.annotation.Nullable;
 public class TraderData
 {
 	public TraderData(ILocation location, RunsafeInventory inventory, @Nullable String tag,
-		boolean compareName, boolean compareDurability, boolean compareLore, boolean compareEnchants, boolean shouldPrintTagID
+		boolean compareName, boolean compareDurability, boolean compareLore,
+		 boolean compareEnchants, boolean shouldPrintTagID, boolean cooldownEnabled
 	)
 	{
 		this.location = location;
@@ -20,6 +21,7 @@ public class TraderData
 		this.compareLore = compareLore;
 		this.compareEnchants = compareEnchants;
 		this.shouldPrintTagID = shouldPrintTagID;
+		this.cooldownEnabled = cooldownEnabled;
 		refresh();
 	}
 
@@ -103,6 +105,16 @@ public class TraderData
 		shouldPrintTagID = value;
 	}
 
+	public boolean isCooldownEnabled()
+	{
+		return cooldownEnabled;
+	}
+
+	public void setCooldownEnabled(boolean value)
+	{
+		cooldownEnabled = value;
+	}
+
 	public void refresh()
 	{
 		purchaseValidator = new PurchaseValidator(compareName, compareDurability, compareLore, compareEnchants);
@@ -135,6 +147,7 @@ public class TraderData
 	private boolean compareLore;
 	private boolean compareEnchants;
 	private boolean shouldPrintTagID;
+	private boolean cooldownEnabled;
 	private final ILocation location;
 	private final RunsafeInventory inventory;
 	private boolean isSaved = true;

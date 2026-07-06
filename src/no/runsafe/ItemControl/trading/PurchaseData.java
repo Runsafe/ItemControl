@@ -5,7 +5,8 @@ import javax.annotation.Nullable;
 public class PurchaseData
 {
 	public PurchaseData(@Nullable String tag,
-		boolean compareName, boolean compareDurability, boolean compareLore, boolean compareEnchants, boolean shouldPrintTagID
+		boolean compareName, boolean compareDurability, boolean compareLore,
+		boolean compareEnchants, boolean shouldPrintTagID, boolean cooldownEnabled
 	)
 	{
 		this.tag = tag;
@@ -14,6 +15,7 @@ public class PurchaseData
 		this.compareLore = compareLore;
 		this.compareEnchants = compareEnchants;
 		this.shouldPrintTagID = shouldPrintTagID;
+		this.cooldownEnabled = cooldownEnabled;
 	}
 
 	public String getTag()
@@ -46,10 +48,16 @@ public class PurchaseData
 		return shouldPrintTagID;
 	}
 
+	public boolean isCooldownEnabled()
+	{
+		return cooldownEnabled;
+	}
+
 	private final String tag;
 	private final boolean compareName;
 	private final boolean compareDurability;
 	private final boolean compareLore;
 	private final boolean compareEnchants;
 	private final boolean shouldPrintTagID;
+	private final boolean cooldownEnabled;
 }

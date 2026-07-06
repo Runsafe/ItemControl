@@ -190,7 +190,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		TraderData newData = new TraderData(targetBlockLoc, inventory, purchaseData.getTag(),
 			purchaseData.shouldCompareName(), purchaseData.shouldCompareDurability(),
 			purchaseData.shouldCompareLore(), purchaseData.shouldCompareEnchants(),
-			purchaseData.shouldPrintTagID()
+			purchaseData.shouldPrintTagID(), purchaseData.isCooldownEnabled()
 		);
 		tradingRepository.persistTrader(newData);
 
@@ -271,6 +271,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		player.sendColouredMessage("&9Compare Lore: &r" + (shop.shouldCompareLore() ? "True" : "False"));
 		player.sendColouredMessage("&9Compare Enchants: &r" + (shop.shouldCompareEnchants() ? "True" : "False"));
 		player.sendColouredMessage("&9Prints tag ID number: &r" + (shop.shouldPrintTagID() ? "True" : "False"));
+		player.sendColouredMessage("&9Cooldown Enabled: &r" + (shop.isCooldownEnabled() ? "True" : "False"));
 		if (shop.getTag() != null)
 			player.sendColouredMessage("&9Using the shop tag: &r" + shop.getTag());
 
