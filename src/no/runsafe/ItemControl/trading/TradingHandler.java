@@ -168,6 +168,17 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 			if (shopTag != null)
 			{
 				updateSigns(shopTag);
+
+				if (targetedTrader.isCooldownEnabled())
+				{
+					if (clickTimer.containsKey(player))
+					{
+						player.sendColouredMessage(Globals.getTradersTimedOutMessage());
+						return false;
+					}
+					registerClickTimer(player);
+				}
+
 				if (targetedTrader.shouldPrintTagID())
 					if (!targetedTrader.getPurchaseValidator().purchase(player, shopTag, tagRepository))
 						return false;
@@ -451,6 +462,14 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		((ISign) signBlockScores).update(true);
 	}
 
+	private void registerClickTimer(final IPlayer player)
+	{
+		if (clickTimer.containsKey(player))
+			scheduler.cancelTask(clickTimer.get(player));
+
+		clickTimer.put(player, scheduler.startSyncTask(() -> clickTimer.remove(player), Globals.getTradersShopCooldownSeconds()));
+	}
+
 	private final ConcurrentHashMap<String, List<TraderData>> data = new ConcurrentHashMap<>(0);
 	private final Map<IPlayer, PurchaseData> creatingPlayers = new HashMap<>(0);
 	private final List<IPlayer> deletingPlayers = new ArrayList<>(0);
@@ -458,6 +477,7 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 	private final Map<IPlayer, String> tagAddingPlayers = new HashMap<>(0);
 	private final List<IPlayer> tagRemovingPlayers = new ArrayList<>(0);
 	private final Map<String, List<ILocation>> shopScoreSignList = new HashMap<>(0);
+	private final ConcurrentHashMap<IPlayer, Integer> clickTimer = new ConcurrentHashMap<>();
 	private final TradingRepository tradingRepository;
 	private final PlayerTransactionRepository playerTransactionRepository;
 	private final ItemTagIDRepository tagRepository;

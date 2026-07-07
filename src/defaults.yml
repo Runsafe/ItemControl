@@ -11,7 +11,7 @@ disabledCraftableItems:
   - purple_shulker_box
   world:
   - cake
-tradersShopCooldownMilliseconds: 500
+tradersShopCooldownSeconds: 3
 message:
   craftDeny: '&cYou are not allowed to craft this item.'
   enchantContainer:

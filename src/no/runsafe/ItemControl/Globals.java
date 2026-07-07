@@ -23,7 +23,7 @@ public class Globals implements IConfigurationChanged
 		disabledItemNames.putAll(config.getConfigSectionsAsList("disabledItemNames"));
 		disabledCraftableItems.putAll(config.getConfigSectionsAsList("disabledCraftableItems"));
 		removeBlocked = config.getConfigValueAsBoolean("remove.disabledItems");
-		tradersShopCooldownMilliseconds = config.getConfigValueAsInt("tradersShopCooldownMilliseconds");
+		tradersShopCooldownSeconds = config.getConfigValueAsInt("tradersShopCooldownSeconds");
 
 		craftDenyMessage = config.getConfigValueAsString("message.craftDeny");
 
@@ -79,9 +79,9 @@ public class Globals implements IConfigurationChanged
 		);
 	}
 
-	public static int getTradersShopCooldownMilliseconds()
+	public static int getTradersShopCooldownSeconds()
 	{
-		return tradersShopCooldownMilliseconds;
+		return tradersShopCooldownSeconds;
 	}
 
 	public static boolean blockedItemShouldBeRemoved()
@@ -158,7 +158,7 @@ public class Globals implements IConfigurationChanged
 	private static final Map<String, List<String>> disabledItemNames = new HashMap<>();
 	private static final Map<String, List<String>> disabledCraftableItems = new HashMap<>();
 	private static final Map<String, List<ILocation>> shopScoreboardList = new HashMap<>();
-	private static int tradersShopCooldownMilliseconds;
+	private static int tradersShopCooldownSeconds;
 	private static String craftDenyMessage;
 	private static String enchantContainerLevelsStoredMessage;
 	private static String enchantContainerInventoryFullMessage;
