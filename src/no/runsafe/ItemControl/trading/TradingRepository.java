@@ -48,7 +48,7 @@ public class TradingRepository extends Repository
 		ILocation location = data.getLocation();
 		database.execute(
 				"INSERT INTO `traders` (`inventory`, `tagName`, `compareName`, `compareDurability`, " +
-					"`compareLore`, `compareEnchants`, `shouldPrintTagID`, `cooldownEnabled`, `world`, `x`, `y`, `z`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+					"`compareLore`, `compareEnchants`, `shouldPrintTagID`, `cooldownEnabled`, `world`, `x`, `y`, `z`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 				data.getInventory().serialize(),
 				data.getTag(),
 				data.shouldCompareName() ? 1 : 0,
