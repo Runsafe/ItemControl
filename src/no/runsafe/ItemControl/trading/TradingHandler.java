@@ -262,6 +262,13 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 			"Player %s is attempting to delete a shop at %s",
 			player.getName(), location.toString()
 		);
+
+		if (getTraderFromLocation(location) == null)
+		{
+			player.sendColouredMessage("&cShop not found.&r");
+			return true;
+		}
+
 		tradingRepository.deleteTrader(location);
 		reloadTraderData();
 		return true;
@@ -275,6 +282,12 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 		debuggingPlayers.remove(player);
 
 		TraderData shop = getTraderFromLocation(location);
+		if (shop == null)
+		{
+			player.sendColouredMessage("&cShop not found.&r");
+			return true;
+		}
+
 		player.sendColouredMessage("&5Getting information for trader.&r");
 		player.sendColouredMessage("&9Location: &r" + shop.getLocation().toString());
 		player.sendColouredMessage("&9Compare Item Name: &r" + (shop.shouldCompareName() ? "True" : "False"));
@@ -300,7 +313,10 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 
 		TraderData targetedTrader = getTraderFromLocation(location);
 		if (targetedTrader == null)
+		{
+			player.sendColouredMessage("&cShop not found.&r");
 			return true;
+		}
 
 		targetedTrader.setTag(tag);
 		tradingRepository.updateTrader(targetedTrader);
@@ -318,7 +334,10 @@ public class TradingHandler implements IConfigurationChanged, IPlayerRightClickB
 
 		TraderData targetedTrader = getTraderFromLocation(location);
 		if (targetedTrader == null)
+		{
+			player.sendColouredMessage("&cShop not found.&r");
 			return true;
+		}
 
 		targetedTrader.setTag(null);
 		tradingRepository.updateTrader(targetedTrader);
