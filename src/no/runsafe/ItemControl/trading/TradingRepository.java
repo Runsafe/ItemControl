@@ -69,7 +69,7 @@ public class TradingRepository extends Repository
 		ILocation location = data.getLocation();
 		database.execute(
 				"UPDATE `traders` SET `inventory` = ?, `tagName` = ?, `compareName` = ?, `compareDurability` = ?," +
-					"`compareLore` = ?,`compareEnchants` = ?, `shouldPrintTagID` = ?, `cooldownEnabled` = ?, WHERE `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
+					"`compareLore` = ?,`compareEnchants` = ?, `shouldPrintTagID` = ?, `cooldownEnabled` = ? WHERE `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?",
 				data.getInventory().serialize(),
 				data.getTag(),
 				data.shouldCompareName() ? 1 : 0,
