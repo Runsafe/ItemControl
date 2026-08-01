@@ -15,7 +15,7 @@ permission: runsafe.traders.delete
 
 Run this command and right click a shop button, it will delete it **without** removing tag data.
 
-/traders createshop <compare_name> <compare_durability> <compare_lore> <compare_enchants> <should_print_tag_id>
+/traders createshop <compare_name> <compare_durability> <compare_lore> <compare_enchants> <should_print_tag_id> <has_cooldown>
 
 permission: runsafe.traders.create
 
